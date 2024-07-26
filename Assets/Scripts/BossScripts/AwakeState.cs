@@ -12,6 +12,7 @@ public class AwakeState : State
         {
             //눈에서 뜨면
             //에니메이션 재생하고
+            BossAnimationManager.bossAnimationManager.SetTrigger("IsAwake");
             //hp바 활성화시킨다.
             //창 콜라이더 활성화시킨다.
             return idleState;

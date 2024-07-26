@@ -4,14 +4,29 @@ using UnityEngine;
 
 public class IdleState : State
 {
-    public bool canSeeThePlayer;
     public AttackState attackState;
-    
+    public BossLocomotion boss;
+
+    [SerializeField] float idleTime = 2.0f;
+    float currentTime = 0;
     
     public override State RunCurrentState()
     {
-        //일정 시간 동안 움직인 다음
-        //플레이어를 공격한다.
+        currentTime += Time.deltaTime;
+        //print(currentTime);
+        if (currentTime > idleTime)
+        {
+            //만약 타이머 시간이 다 되면
+            currentTime = 0;
+            //애니메이션 trigger을 킨다.
+            BossAnimationManager.bossAnimationManager.SetTrigger("WalkToAttackDelay");
+            //BossAnimationManager.bossAnimationManager.ResetTrigger("");
+            //현재 상태를 attack state로 바꾼다.
+
+            return attackState;
+        }
+        boss.MoveToDirection();
+        //움직이자.
         return this;
     }
 

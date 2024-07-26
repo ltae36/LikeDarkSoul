@@ -8,6 +8,7 @@ public class BossLocomotion : MonoBehaviour
     public float vertical;
     public float horizontal;
     public Vector3 moveDirection;
+    public float targetDistance;
 
     [HideInInspector]
     public Transform myTransform;
@@ -51,6 +52,8 @@ public class BossLocomotion : MonoBehaviour
 
         vertical = moveDirection.x;
         horizontal = moveDirection.z;
+
+        targetDistance = moveDirection.magnitude;
     }
 
     //내움직임 방향에 맞추어서 나의 회전방향을 바꾸고 싶다.
@@ -60,7 +63,7 @@ public class BossLocomotion : MonoBehaviour
         myTransform.rotation = Quaternion.Slerp(myTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
-    void HandleMovement()
+    public void MoveToDirection()
     {
         //이동방향으로 이동하고 싶다.
         //p=p0 + vt

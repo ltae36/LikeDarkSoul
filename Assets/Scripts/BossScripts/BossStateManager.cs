@@ -5,7 +5,12 @@ using UnityEngine;
 public class BossStateManager : MonoBehaviour
 {
     State currentState;
+    public AwakeState awakeState;
 
+    private void Start()
+    {
+        currentState = awakeState;
+    }
     void Update()
     {
         RunStateMachine();
