@@ -13,7 +13,7 @@ public class PlayerMove : MonoBehaviour
     public float sprintSpeed = 10f;
     public float walkSpeed = 10f;
 
-    Vector3 dir;
+    public Vector3 dir;
     Animator animator;
     CharacterController cc;
 
