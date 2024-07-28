@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    // WASDÅ° ÀÔ·Â¿¡ µû¶ó ÇÃ·¹ÀÌ¾î°¡ ÀÌµ¿ÇÑ´Ù.
+    // WASDÅ° ï¿½Ô·Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ìµï¿½ï¿½Ñ´ï¿½.
     float moveSpeed;
 
     public float runSpeed = 8f;
@@ -13,15 +13,20 @@ public class PlayerMove : MonoBehaviour
     public float sprintSpeed = 10f;
     public float walkSpeed = 10f;
 
+    bool isSprint = false;
+    bool isWalking = false;
+
     public Vector3 dir;
     Animator animator;
     CharacterController cc;
+    StatManager statManager;
+
 
     void Start()
     {
         animator = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
-        moveSpeed = runSpeed;
+        moveSpeed = runSpeed;        
     }
 
     void Update()
@@ -31,19 +36,54 @@ public class PlayerMove : MonoBehaviour
         dir = new Vector3(h, 0, v);
         dir.Normalize();
 
-        // WASD¸¦ ´©¸£¸é ÇØ´ç ¹æÇâÀ¸·Î ¶Ú´Ù.
+        //float stam = statManager.stamina;
+
+        // WASDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú´ï¿½.
         animator.SetBool("Run", dir != Vector3.zero);
-        // WASD¸¦ ´©¸¥ »óÅÂ¿¡¼­ ½ºÆäÀÌ½º¹Ù¸¦ ´©¸£°í ÀÖÀ¸¸é ´Þ¸°´Ù.
+        // WASDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¸ï¿½ï¿½ï¿½.
+        if (Input.GetKey(KeyCode.Space)) 
+        {
+            isSprint = true;            
+        }
+        else 
+        {
+            isSprint = false; 
+        }
+        if (isSprint)
+        {
+            animator.SetFloat("MoveSpeed", sprintSpeed);
+            moveSpeed = sprintSpeed;
+        }
+        else
+        {
+            animator.SetFloat("MoveSpeed", runSpeed);
+            moveSpeed = runSpeed;
+        }
 
-        // WASD¸¦ ´©¸¥ »óÅÂ¿¡¼­ LeftAlt¸¦ ´©¸£°í ÀÖÀ¸¸é ÃµÃµÈ÷ °È´Â´Ù.
-              
-        
-        
+        if (Input.GetKey(KeyCode.LeftAlt))
+        {
+            isWalking = true;
+        }
+        else
+        {
+            isWalking = false;
+        }
+        if (isWalking)
+        {
+            animator.SetFloat("MoveSpeed", walkSpeed);
+            moveSpeed = walkSpeed;
+        }
+        else
+        {
+            animator.SetFloat("MoveSpeed", runSpeed);
+            moveSpeed = runSpeed;
+        }
 
-        // ÀÌµ¿
+        // WASDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ LeftAltï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ÃµÃµï¿½ï¿½ ï¿½È´Â´ï¿½.
+        // ï¿½Ìµï¿½
         cc.Move(dir * moveSpeed * Time.deltaTime);
 
-        // È¸Àü
+        // È¸ï¿½ï¿½
         if (dir != Vector3.zero)
         {
             Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
