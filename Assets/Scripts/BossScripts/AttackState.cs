@@ -1,11 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class AttackState : State
 {
     public IdleState idleState;
-    public BossLocomotion locomotion;
     public float recoveryTime;
     public bool isRecoveryTime = false;
 
@@ -19,43 +20,95 @@ public class AttackState : State
     [SerializeField]
     float farAttackRange;
 
+    State returnState;
 
-
+    private void Start()
+    {
+        points = new List<Vector3>();
+    }
     public override State RunCurrentState()
     {
-        //지금 attack delay 상태일 때
-        if(BossAnimationManager.bossAnimationManager.IsAttackDelay() == true)
-        {
-            float distance = locomotion.targetDistance;
-            print(distance);
-            //recovery time에 계속 현재 시간을 더해준다.
-            currentTime += Time.deltaTime;
-            //만약 recovery timer가 세팅된 값보다 커지면
-            if (currentTime > recoveryTime)
-            {
-                //상태를 attack 상태로 바꾼다.
-                BossAnimationManager.bossAnimationManager.SetTrigger("AttackDelayToAttack");
-                //거리에 따라 어떤 공격을 할지 결정한다.
+        //공격을 할 것임
+        //공격을 할 건데 공격 타입을 정할 것임
+        //공격 타입은 지금 플레이어의 위치에 따라 결정 된다.
+        //그 외에는 랜덤으로 지정할 것이다.
+        //공격 패턴은 다음과 같다
+        //근거리: 잡기, 철권, 철사장
+        //일반거리: 찌르기, 횡베기, naereo zzigi
+        //원거리: 점프, 점프후 내려찍기
 
-                //만약 거리가 너무 멀면
-                if (distance > farAttackRange)
-                {
-                    //idle 상태로 바꾼다.
-                    BossAnimationManager.bossAnimationManager.SetTrigger("AttackDelayToWalk");
-                    return idleState;
-                }
-            }
+        // 타겟과의 거리를 받아오자
+        float distance = BossLocomotion.instance.targetDistance;
+
+        //근거리 공격
+        if (distance < nearAttackRange)
+        {
+            BossAnimationManager.instance.SetAttackType(0);
+            BossAnimationManager.instance.SetTrigger("WalkToAttack");
+            returnState = this;
+
         }
-        //지금 attack 상태일 때
+        //중거리공격
+        else if (distance < normalAttackRange)
+        {
+            BossAnimationManager.instance.SetAttackType(1);
+            BossAnimationManager.instance.SetTrigger("WalkToAttack");
+            returnState = this;
+
+        }
+        //원거리 공격
+        else if(distance < farAttackRange)
+        {
+            BossAnimationManager.instance.SetAttackType(2);
+            BossAnimationManager.instance.SetTrigger("WalkToAttack");
+            returnState = this;
+
+        }
+        //원거리 보다 멀면 걍 idle 하삼
         else
         {
-            //타이머는 세팅되면 안된다.
-            currentTime = 0;
-            //공격이 끝나면 has exit time으로 바로 attack delay로 넘어가게 된다.
+            print("attack -> idle");
+            return idleState;
         }
 
-        return this;
+        //공격 애니메이션이 끝날 때까지 기다린다.
+        if (BossAnimationManager.instance.IsAttacking())
+        {
+            returnState = this;
+        }
+        else
+        {
+            BossLocomotion.instance.SetMoveDirection();
+            returnState = idleState;
+            print("attack -> idle");
+        }
+
+        return returnState;
     }
 
+    IEnumerator AttackToWalkProcess()
+    {
+        yield return new WaitForSeconds(1);
 
+        BossLocomotion.instance.SetMoveDirection();
+        returnState = idleState;
+        print("attack -> idle");
+        StopAllCoroutines();
+    }
+
+    List<Vector3> points;
+    private void OnDrawGizmos()
+    {
+        
+        for(int i =0; i<360; i++)
+        {
+            points.Add(new Vector3(Mathf.Cos(Mathf.Deg2Rad * i), 0, Mathf.Sin(Mathf.Deg2Rad * i)));
+        }
+        for(int i =0; i<points.Count -1; i++)
+        {
+            Gizmos.DrawLine(BossLocomotion.instance.myTransform.position +points[i] * nearAttackRange, BossLocomotion.instance.myTransform.position+points[i+1] * nearAttackRange);
+            Gizmos.DrawLine(BossLocomotion.instance.myTransform.position+points[i] * normalAttackRange, BossLocomotion.instance.myTransform.position + points[i + 1] * normalAttackRange);
+            Gizmos.DrawLine(BossLocomotion.instance.myTransform.position+points[i] * farAttackRange, BossLocomotion.instance.myTransform.position+ points[i + 1] * farAttackRange);
+        }
+    }
 }

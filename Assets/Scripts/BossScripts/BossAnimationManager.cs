@@ -4,19 +4,21 @@ using UnityEngine;
 public class BossAnimationManager : MonoBehaviour
 {
     //animation을 관리하는 클래스 singletone으로 구현하자
-    public static BossAnimationManager bossAnimationManager;
+    public static BossAnimationManager instance;
 
     [SerializeField] Animator animator;
-    BossLocomotion bossLocomotion;
+
+
+    //public AnimationCurve myCurve;
 
     float vertical;
     float horizontal;
 
     private void Awake()
     {
-        if (bossAnimationManager == null)
+        if (instance == null)
         {
-            bossAnimationManager = this;
+            instance = this;
         }
         else
         {
@@ -24,18 +26,15 @@ public class BossAnimationManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        bossLocomotion = GetComponent<BossLocomotion>();
-    }
-
     
     void Update()
     {
-        vertical = bossLocomotion.vertical;
-        horizontal = bossLocomotion.horizontal;
+        vertical = BossLocomotion.instance.vertical;
+        horizontal = BossLocomotion.instance.horizontal;
         //animator의 변수를 업데이트 하고 싶다.
         UpdateValuesInAnimator();
+
+        //myCurve.Evaluate()
     }
 
     void UpdateValuesInAnimator()
@@ -54,8 +53,34 @@ public class BossAnimationManager : MonoBehaviour
         animator.ResetTrigger(trigger);
     }
 
-    public bool IsAttackDelay()
+
+    public bool IsAttacking()
     {
-        return animator.GetCurrentAnimatorStateInfo(0).IsTag("AttackDelay");
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+        {
+            float animeTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+            if(animeTime > 2)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public bool IsAwaking()
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).IsTag("Awake");
+    }
+    public void SetAttackType(int attackType)
+    {
+        //attack type 0 = near attack
+        //attack type 1 = normal attack
+        //attack type 2 = far attack
+        animator.SetInteger("AttackType", attackType);
     }
 }

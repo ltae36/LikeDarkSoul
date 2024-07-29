@@ -8,6 +8,7 @@ public class BossLocomotion : MonoBehaviour
     public float vertical;
     public float horizontal;
     public Vector3 moveDirection;
+    public Vector3 targetDirection;
     public float targetDistance;
 
     [HideInInspector]
@@ -20,8 +21,18 @@ public class BossLocomotion : MonoBehaviour
     [SerializeField] float dashSpeed;
     [SerializeField] float rotationSpeed;
 
+    public static BossLocomotion instance;
 
-
+    private void Awake()
+    {
+        if (instance == null) {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         myTransform = transform;
@@ -34,7 +45,7 @@ public class BossLocomotion : MonoBehaviour
     void Update()
     {
         // 매 프레임마다 움직임 방향을 구하고 싶다.
-        SetMoveDirection();
+        SetTargetDirection();
 
         // 움직임 방향에 맞추어서 나의 회전을 바꾸고 싶다.
         HandleRotation();
@@ -43,23 +54,44 @@ public class BossLocomotion : MonoBehaviour
         //HandleMovement();
     }
 
-    // target의 위치에 맞추어서 내 움직임 방향을 구하고 싶다.
-    void SetMoveDirection()
+    // target의 위치를 정하고 싶다
+    void SetTargetDirection()
     {
-        moveDirection = target.transform.position - transform.position;
-        moveDirection.y = 0;
-        moveDirection.Normalize();
+        targetDirection = target.transform.position - transform.position;
+        targetDirection.y = 0;
+        targetDistance = targetDirection.magnitude;
+        targetDirection.Normalize();
+        
+    }
 
+    //움직임 방향이란, 걸을 때 앞을 보고 걸을 수도 있지만 옆으로 걸을 수도 있어서 추가함.
+    public void SetMoveDirection()
+    {
+        //0이면 앞, 1이면 왼쪽, 2이면 오른쪽으로 가볼까
+        int randomDirection = Random.Range((int)0, (int)3);
+        Vector3 direction = Vector3.forward;
+        switch (randomDirection)
+        {
+            case 0:
+                direction = Vector3.forward;
+                break;
+            case 1:
+                direction = Vector3.left;
+                break;
+            case 2:
+                direction = Vector3.right;
+                break;
+        }
+
+        moveDirection = transform.TransformDirection(direction).normalized;
         vertical = moveDirection.x;
         horizontal = moveDirection.z;
-
-        targetDistance = moveDirection.magnitude;
     }
 
     //내움직임 방향에 맞추어서 나의 회전방향을 바꾸고 싶다.
     void HandleRotation()
     {
-        Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
         myTransform.rotation = Quaternion.Slerp(myTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
@@ -67,8 +99,7 @@ public class BossLocomotion : MonoBehaviour
     {
         //이동방향으로 이동하고 싶다.
         //p=p0 + vt
-
         transform.position += moveSpeed * moveDirection * Time.deltaTime;
-
     }
+
 }
