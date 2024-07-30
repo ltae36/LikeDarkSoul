@@ -15,13 +15,16 @@ public class BossLocomotion : MonoBehaviour
     public Transform myTransform;
 
     [Header("attack target")]
-    [SerializeField] GameObject target;
+    public GameObject target;
+
     [Header("status")]
     [SerializeField] float moveSpeed;
     [SerializeField] float dashSpeed;
     [SerializeField] float rotationSpeed;
 
     public static BossLocomotion instance;
+
+    CharacterController cc;
 
     private void Awake()
     {
@@ -39,6 +42,8 @@ public class BossLocomotion : MonoBehaviour
         target = GameObject.Find("Player");
         if (target == null)
             Destroy(this);
+
+        cc = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -65,7 +70,7 @@ public class BossLocomotion : MonoBehaviour
     }
 
     //움직임 방향이란, 걸을 때 앞을 보고 걸을 수도 있지만 옆으로 걸을 수도 있어서 추가함.
-    public void SetMoveDirection()
+    public void SetIdleDirection()
     {
         //0이면 앞, 1이면 왼쪽, 2이면 오른쪽으로 가볼까
         int randomDirection = Random.Range((int)0, (int)3);
@@ -87,6 +92,13 @@ public class BossLocomotion : MonoBehaviour
         vertical = moveDirection.x;
         horizontal = moveDirection.z;
     }
+    
+    public void SetMoveDirection()
+    {
+        moveDirection = targetDirection;
+        vertical = moveDirection.x;
+        horizontal = moveDirection.z;
+    }
 
     //내움직임 방향에 맞추어서 나의 회전방향을 바꾸고 싶다.
     void HandleRotation()
@@ -95,11 +107,14 @@ public class BossLocomotion : MonoBehaviour
         myTransform.rotation = Quaternion.Slerp(myTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
-    public void MoveToDirection()
+    public void MoveBoss()
     {
-        //이동방향으로 이동하고 싶다.
-        //p=p0 + vt
-        transform.position += moveSpeed * moveDirection * Time.deltaTime;
+        
+        cc.Move(moveDirection * moveSpeed *  Time.deltaTime);
     }
 
+    public void DashBoss()
+    {
+        cc.Move(moveDirection * dashSpeed * Time.deltaTime);
+    }
 }

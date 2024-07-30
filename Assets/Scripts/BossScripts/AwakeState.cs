@@ -30,7 +30,7 @@ public class AwakeState : State
         yield return new WaitForSeconds(1.34f);
 
         returnState = idleState;
-        BossLocomotion.instance.SetMoveDirection();
+        BossLocomotion.instance.SetIdleDirection();
         StopAllCoroutines();
     }
 }
