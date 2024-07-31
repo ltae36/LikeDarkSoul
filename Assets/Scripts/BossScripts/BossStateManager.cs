@@ -18,6 +18,7 @@ public class BossStateManager : MonoBehaviour
 
     private void RunStateMachine()
     {
+        print(currentState.ToString());
         State nextState =currentState?.RunCurrentState();
 
         if(nextState != null )

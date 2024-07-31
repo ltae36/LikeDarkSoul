@@ -2,17 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NearAttack : MonoBehaviour
+public class NearAttack : State
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public CatchAttack catchAttackState;
 
-    // Update is called once per frame
-    void Update()
+    public override State RunCurrentState()
     {
-        
+        return catchAttackState;
     }
 }

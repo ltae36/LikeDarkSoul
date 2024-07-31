@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class IdleState : State
 {
-    public AttackState attackState;
+    public NearAttack nearAttackState;
+    public NormalAttack normalAttackState;
     public FarAttack farAttackState;
-    public DashAttack dashAttackState;
+
 
     [SerializeField] float idleTime = 2.0f;
     float currentTime = 0;
@@ -43,24 +44,24 @@ public class IdleState : State
             //근거리 공격
             if (distance < nearAttackRange)
             {
-
+                return nearAttackState;
             }
             //중거리공격
             else if (distance < normalAttackRange)
             {
-
+                return normalAttackState;
             }
             //원거리 공격
             else if (distance < farAttackRange)
             {
-                dashAttackState.SetDashPosition(BossLocomotion.instance.target.transform.position);
-                return dashAttackState;
+                return farAttackState;
 
             }
         }
         currentTime += Time.deltaTime;
 
         //print(currentTime);
+        
         //만약 타이머 시간이 다 되면
         BossLocomotion.instance.MoveBoss();
         //움직이자.

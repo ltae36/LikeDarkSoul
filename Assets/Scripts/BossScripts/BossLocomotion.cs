@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class BossLocomotion : MonoBehaviour
 {
-    // Start is called before the first frame update
     public float vertical;
     public float horizontal;
+    public float targetDistance;
     public Vector3 moveDirection;
     public Vector3 targetDirection;
-    public float targetDistance;
 
     [HideInInspector]
     public Transform myTransform;
@@ -46,7 +45,6 @@ public class BossLocomotion : MonoBehaviour
         cc = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         // 매 프레임마다 움직임 방향을 구하고 싶다.
@@ -55,8 +53,6 @@ public class BossLocomotion : MonoBehaviour
         // 움직임 방향에 맞추어서 나의 회전을 바꾸고 싶다.
         HandleRotation();
 
-        // 움직임 방향으로 이동하고 싶다.
-        //HandleMovement();
     }
 
     // target의 위치를 정하고 싶다

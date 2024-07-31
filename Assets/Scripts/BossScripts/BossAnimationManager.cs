@@ -76,6 +76,10 @@ public class BossAnimationManager : MonoBehaviour
     {
         return animator.GetCurrentAnimatorStateInfo(0).IsTag("Awake");
     }
+    /// <summary>
+    /// attack type에 따라 근거리, 중거리, 원거리 공격 애니메이션 트리거가 바뀝니다.
+    /// </summary>
+    /// <param name="attackType">0 = near attack 1 = normal attack 2 = far attack</param>
     public void SetAttackType(int attackType)
     {
         //attack type 0 = near attack
