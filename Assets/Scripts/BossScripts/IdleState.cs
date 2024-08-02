@@ -37,9 +37,10 @@ public class IdleState : State
             //일반거리: 찌르기, 횡베기, naereo zzigi (일반거리 공격을 하면 보스는 플레이어 가까이 다가가게 된다 이 때 스텝은 애니메이션의 스텝을 따르기로 하자)
             //원거리: 점프, 점프후 내려찍기 (원거리 공격은 대쉬와 점프를 동반한다. 원거리 공격 후 일반 거리 공격 콤보가 들어가기도 한다.)
 
-
+            currentTime = 0;
             // 타겟과의 거리를 받아오자
             float distance = BossLocomotion.instance.targetDistance;
+            print(distance);
 
             //근거리 공격
             if (distance < nearAttackRange)
@@ -57,6 +58,7 @@ public class IdleState : State
                 return farAttackState;
 
             }
+            
         }
         currentTime += Time.deltaTime;
 

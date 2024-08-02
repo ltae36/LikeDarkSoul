@@ -40,4 +40,15 @@ public class BossAttack : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, normalAttackRange);
         Gizmos.DrawWireSphere(transform.position, farAttackRange);
     }
+
+    public string[] comboList = { "vertical", "vertical" };
+
+    public float timer;
+
+    private void Update()
+    {
+        if(timer > 0)
+            timer -= Time.deltaTime;
+           
+    }
 }

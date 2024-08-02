@@ -22,8 +22,9 @@ public class JumpAttack : State
 
         //만약 도착하면, idlestate로 바꾼다.
         print(Vector3.Distance(target, BossLocomotion.instance.myTransform.position));
-        if (Vector3.Distance(target, BossLocomotion.instance.myTransform.position) < 1.1f)
+        if (Vector3.Distance(target, BossLocomotion.instance.myTransform.position) < 2f)
         {
+            BossAnimationManager.instance.SetTrigger("JumpDown");
             BossLocomotion.instance.SetIdleDirection();
             return idleState;
         }

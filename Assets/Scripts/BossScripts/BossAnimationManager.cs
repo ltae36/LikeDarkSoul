@@ -79,12 +79,24 @@ public class BossAnimationManager : MonoBehaviour
     /// <summary>
     /// attack type에 따라 근거리, 중거리, 원거리 공격 애니메이션 트리거가 바뀝니다.
     /// </summary>
-    /// <param name="attackType">0 = near attack 1 = normal attack 2 = far attack</param>
-    public void SetAttackType(int attackType)
+    /// <param name="distanceType">0 = near attack 1 = normal attack 2 = far attack</param>
+    public void SetDistanceType(int distanceType)
     {
         //attack type 0 = near attack
         //attack type 1 = normal attack
         //attack type 2 = far attack
+        animator.SetInteger("DistanceType", distanceType);
+    }
+
+    /// <summary>
+    /// 공격 유형을 정합니다.
+    /// </summary>
+    /// <param name="attackType">0 = first attack 1 = second attack 2 = third attack</param>
+    public void SetAttackType(int attackType)
+    {
+        //attack type 0 = first attack
+        //attack type 1 = second attack
+        //attack type 2 = third attack
         animator.SetInteger("AttackType", attackType);
     }
 }

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class FarAttack : State
 {
@@ -13,11 +10,17 @@ public class FarAttack : State
         float randNum = Random.Range(0.0f, 1.0f);
         if(randNum > 0.5f)
         {
+            BossAnimationManager.instance.SetDistanceType(2);
+            BossAnimationManager.instance.SetAttackType(1);
+            BossAnimationManager.instance.SetTrigger("WalkToAttack");
             jumpAttackState.SetJumpVelocity();
             return jumpAttackState;
         }
         else
         {
+            BossAnimationManager.instance.SetDistanceType(2);
+            BossAnimationManager.instance.SetAttackType(0);
+            BossAnimationManager.instance.SetTrigger("WalkToAttack");
             dashAttackState.SetDashPosition(BossLocomotion.instance.target.transform.position);
             return dashAttackState;
         }
