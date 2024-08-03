@@ -7,7 +7,7 @@ public class StatManager : MonoBehaviour
 {
     float fullHP = 12;
     float fullFP = 10;
-    public float fullStamina = 11;
+    float fullStamina = 11;
 
     public float HP;
     public float FP;
@@ -17,8 +17,11 @@ public class StatManager : MonoBehaviour
     public Slider fpSlider;
     public Slider stamSlider;
 
+    PlayerMove move;
+
     void Start()
     {
+
         hpSlider.maxValue = fullHP;
         fpSlider.maxValue = fullFP;
         stamSlider.maxValue = fullStamina;
@@ -34,5 +37,13 @@ public class StatManager : MonoBehaviour
         hpSlider.value = HP;
         fpSlider.value = FP;
         stamSlider.value = stam;
+        if (Input.GetKey(KeyCode.Space))
+        {
+            stam -= Time.deltaTime;
+        }
+        else if(stam < fullStamina)
+        {
+            stam += Time.deltaTime;
+        }
     }
 }

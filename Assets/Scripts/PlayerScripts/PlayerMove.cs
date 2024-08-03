@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     float moveSpeed;
+    public float stamina;
 
     public float runSpeed = 8f;
     public float turnSpeed = 8f;
@@ -13,12 +14,11 @@ public class PlayerMove : MonoBehaviour
     public float walkSpeed = 10f;
     public Vector3 dir;
 
-    bool isSprint = false;
-    bool isWalking = false;
+    public bool isSprint = false;
+    public bool isWalking = false;
     
     Animator animator;
     CharacterController cc;
-    StatManager stat;
     PlayerAttack attack;
 
     void Start()
@@ -26,8 +26,8 @@ public class PlayerMove : MonoBehaviour
         attack = GetComponent<PlayerAttack>();
         animator = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
-        stat = GetComponent<StatManager>();
-        moveSpeed = runSpeed;        
+        moveSpeed = runSpeed;
+
     }
 
     void Update()
@@ -49,8 +49,6 @@ public class PlayerMove : MonoBehaviour
             animator.SetTrigger("Jump_Back");
         }
 
-        //float stam = statManager.stamina;
-
         // WASD를 누르면 해당 방향으로 달리는 애니메이션이 재생된다.
         animator.SetBool("Run", dir != Vector3.zero);        
 
@@ -68,28 +66,33 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             isSprint = true;
+            //stamina -= Time.deltaTime;
         }
         else
         {
             isSprint = false;
+            //stamina += Time.deltaTime;
         }
 
         if (isSprint)
         {
-            animator.SetFloat("MoveSpeed", sprintSpeed);
-            moveSpeed = sprintSpeed;
-            stat.stam -= Time.deltaTime;
-            if(stat.stam < 0) 
-            {
-                animator.SetFloat("MoveSpeed", runSpeed);
-                moveSpeed = runSpeed;
-            }
-            
+            animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
+            moveSpeed += Time.deltaTime;
+            //while (moveSpeed > sprintSpeed)
+            //{
+            //    moveSpeed += Time.deltaTime;
+            //}
+            //if (stamina < 0)
+            //{
+            //    animator.SetFloat("movespeed", runSpeed);
+            //    moveSpeed = runSpeed;
+            //}
+
         }
         else if (isWalking)
         {
-            animator.SetFloat("MoveSpeed", walkSpeed);
-            moveSpeed = walkSpeed;
+            animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
+            moveSpeed -= Time.deltaTime;
         }
         else
         {

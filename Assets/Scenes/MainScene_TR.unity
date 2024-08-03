@@ -429,11 +429,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb4fb90a9bb3dc479f01f86e74f4b4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stamina: 0
   runSpeed: 4
   turnSpeed: 4
   sprintSpeed: 6
   walkSpeed: 2
   dir: {x: 0, y: 0, z: 0}
+  isSprint: 0
+  isWalking: 0
 --- !u!143 &317328424
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2426,7 +2429,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5cb28ae169a1a24d955a618e4da2c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fullStamina: 11
   HP: 0
   FP: 0
   stam: 0
