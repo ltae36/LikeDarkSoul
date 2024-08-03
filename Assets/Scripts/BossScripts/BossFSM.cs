@@ -124,6 +124,7 @@ public class BossFSM : MonoBehaviour
         //공격 대기 시간
         currentTime += Time.deltaTime;
         //이동 목표를 향해서 조금씩 이동한다.
+        BossLocomotion.instance.SetMoveDirection(BossLocomotion.MoveType.Linear);
         BossLocomotion.instance.MoveBoss(BossLocomotion.MoveType.Linear);
 
 
@@ -254,6 +255,7 @@ public class BossFSM : MonoBehaviour
         if (BossLocomotion.instance.IsDashing() == false)
         {
             bossState = BossState.AttackDelay;
+            BossAnimationManager.instance.SetTrigger("RunToWalk");
             print("attack -> linear move");
             SelectAttackDelayMovement();
         }

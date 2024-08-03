@@ -118,6 +118,7 @@ public class BossLocomotion : MonoBehaviour
                 horizontal = moveDirection.z;
                 break;
             case MoveType.Dash:
+                isDash = true;
                 moveDirection = targetDirection.normalized;
                 vertical = moveDirection.x;
                 horizontal = moveDirection.z;
@@ -153,24 +154,30 @@ public class BossLocomotion : MonoBehaviour
                 currentTime += Time.deltaTime;
                 //각 순간마다 jump 속도는 다음의 식을 이용해서 구할 수 있다.
                 jumpDirection = targetDirection.normalized * BossStatus.jumpSpeed + Vector3.up * BossStatus.jumpSpeed + Physics.gravity * Mathf.Pow(currentTime, 2.0f) / 2;
-                
-                Vector3 currentJumpPosition = transform.position + jumpDirection * Time.deltaTime;
 
-                //땅에 충돌하는지 검사해야 한다.
-                //만약 0.1f 아래로 ray를 쐈을 때 땅에 부딪친다면...
-                print(currentJumpPosition);
-                Ray ray = new Ray(currentJumpPosition, Vector3.down);
-                RaycastHit hit;
-                //Layer 7이 ground임 0.6f 로 쏘는 이유 내 현재 크기도 고려해야 된다!
-                if (Physics.Raycast(ray, out hit, raySize))
+                if (jumpDirection.y < 0)
                 {
-                    if (hit.collider.name.Equals("Ground"))
+                    Vector3 currentJumpPosition = transform.position + jumpDirection * Time.deltaTime;
+
+                    //땅에 충돌하는지 검사해야 한다.
+                    //만약 0.1f 아래로 ray를 쐈을 때 땅에 부딪친다면...
+                    print(currentJumpPosition);
+                    Ray ray = new Ray(currentJumpPosition, Vector3.down);
+                    RaycastHit hit;
+                    //Layer 7이 ground임 0.6f 로 쏘는 이유 내 현재 크기도 고려해야 된다!
+                    if (Physics.Raycast(ray, out hit, raySize))
                     {
-                        //현재 위치를 땅에 달라붙은 targetPosition으로 바꾼다. 
-                        transform.position = targetPosition;
-                        //jump를 종료한다
-                        isJump = false;
-                        return;
+                        if (hit.collider.name.Equals("Ground"))
+                        {
+                            //현재 위치를 땅에 달라붙은 targetPosition으로 바꾼다. 
+                            print(targetPosition);
+                            targetPosition.y = 0;
+                            transform.position = targetPosition;
+                            
+                            //jump를 종료한다
+                            isJump = false;
+                            return;
+                        }
                     }
                 }
                 cc.Move(jumpDirection * Time.deltaTime);
@@ -183,9 +190,10 @@ public class BossLocomotion : MonoBehaviour
                 cc.Move(moveDirection * BossStatus.dashSpeed * Time.deltaTime);
 
                 //만약 targetPosition과 거리 차이가 0.1f미만이라면
-                if(Vector3.Distance(transform.position, targetPosition) < 0.1f)
+                if(Vector3.Distance(transform.position, targetPosition) < 1f)
                 {
                     //현재 위치를 target Position으로 잡는다.
+                    targetPosition.y = 0;
                     transform.position = targetPosition;
                     isDash = false;
                 }
