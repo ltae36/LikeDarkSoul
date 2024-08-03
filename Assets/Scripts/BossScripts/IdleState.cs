@@ -65,7 +65,7 @@ public class IdleState : State
         //print(currentTime);
         
         //만약 타이머 시간이 다 되면
-        BossLocomotion.instance.MoveBoss();
+        BossLocomotion.instance.MoveBoss(BossLocomotion.MoveType.Linear);
         //움직이자.
         return this;
     }

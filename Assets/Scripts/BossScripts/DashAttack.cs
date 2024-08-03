@@ -19,7 +19,7 @@ public class DashAttack : State
 
     public void SetDashPosition(Vector3 target)
     {
-        BossLocomotion.instance.SetMoveDirection();
+        BossLocomotion.instance.SetMoveDirection(BossLocomotion.MoveType.Dash);
         targetPosition = target;
     }
 }

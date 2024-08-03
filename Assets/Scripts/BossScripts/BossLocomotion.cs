@@ -4,18 +4,29 @@ using UnityEngine;
 
 public class BossLocomotion : MonoBehaviour
 {
-    enum MoveType
+    public enum MoveType
     {
         Linear = 0,
-        Circle = 1
+        Circle = 1,
+        Jump = 2,
+        Dash = 4
     }
     public float vertical;
     public float horizontal;
     public float targetDistance;
+    /// <summary>
+    /// 정규화된 vector
+    /// </summary>
     public Vector3 moveDirection;
+    public Vector3 jumpDirection;
+    /// <summary>
+    /// 정규화 되지 않은 vector
+    /// </summary>
     public Vector3 targetDirection;
     public Vector3 targetPosition;
-    MoveType moveType;
+    public bool isJump;
+    public bool isDash;
+
 
     [HideInInspector]
     public Transform myTransform;
@@ -27,6 +38,10 @@ public class BossLocomotion : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float dashSpeed;
     [SerializeField] float rotationSpeed;
+    float currentTime;
+
+    [Header("RaySize")]
+    [SerializeField] float raySize = 0.6f;
 
     public static BossLocomotion instance;
 
@@ -54,17 +69,17 @@ public class BossLocomotion : MonoBehaviour
 
 
     // target의 위치를 정하고 싶다
-    void SetTargetPosition()
+    public void SetTargetPosition()
     {
         targetPosition = target.transform.position; 
     }
     //target direction
-    void SetTargetDirection()
+    public void SetTargetDirection()
     {
         targetDirection = targetPosition - transform.position;
         targetDirection.y = 0;
         targetDistance = targetDirection.magnitude;
-        targetDirection.Normalize();
+//        targetDirection.Normalize();
     }
 
     //움직임 방향이란, 걸을 때 앞을 보고 걸을 수도 있지만 옆으로 걸을 수도 있어서 추가함.
@@ -90,12 +105,28 @@ public class BossLocomotion : MonoBehaviour
         vertical = moveDirection.x;
         horizontal = moveDirection.z;
     }
-    
-    public void SetMoveDirection()
+
+    public void SetMoveDirection(MoveType moveType)
     {
-        moveDirection = targetDirection;
-        vertical = moveDirection.x;
-        horizontal = moveDirection.z;
+        SetTargetPosition();
+        SetTargetDirection();
+
+        switch (moveType) {
+            case MoveType.Linear:
+                moveDirection = targetDirection.normalized;
+                vertical = moveDirection.x;
+                horizontal = moveDirection.z;
+                break;
+            case MoveType.Dash:
+                moveDirection = targetDirection.normalized;
+                vertical = moveDirection.x;
+                horizontal = moveDirection.z;
+                break;
+            case MoveType.Jump:
+                isJump = true;
+                SetJumpDirection();
+                break;
+        }
     }
 
     //내움직임 방향에 맞추어서 나의 회전방향을 바꾸고 싶다.
@@ -105,38 +136,83 @@ public class BossLocomotion : MonoBehaviour
         myTransform.rotation = Quaternion.Slerp(myTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
-    public void MoveBoss()
+    //움직이는 함수 움직이기 전에 set target direction 한 번 해준 다음 움직인다.
+    public void MoveBoss(MoveType moveType)
     {
-        
-        cc.Move(moveDirection * moveSpeed *  Time.deltaTime);
+        switch (moveType)
+        {
+            //직선 움직임
+            case MoveType.Linear:
+                cc.Move(moveDirection * BossStatus.moveSpeed * Time.deltaTime); 
+                break;
+            case MoveType.Jump:
+                if (!isJump)
+                {
+                    return;
+                }
+                currentTime += Time.deltaTime;
+                //각 순간마다 jump 속도는 다음의 식을 이용해서 구할 수 있다.
+                jumpDirection = targetDirection.normalized * BossStatus.jumpSpeed + Vector3.up * BossStatus.jumpSpeed + Physics.gravity * Mathf.Pow(currentTime, 2.0f) / 2;
+                
+                Vector3 currentJumpPosition = transform.position + jumpDirection * Time.deltaTime;
+
+                //땅에 충돌하는지 검사해야 한다.
+                //만약 0.1f 아래로 ray를 쐈을 때 땅에 부딪친다면...
+                print(currentJumpPosition);
+                Ray ray = new Ray(currentJumpPosition, Vector3.down);
+                RaycastHit hit;
+                //Layer 7이 ground임 0.6f 로 쏘는 이유 내 현재 크기도 고려해야 된다!
+                if (Physics.Raycast(ray, out hit, raySize))
+                {
+                    if (hit.collider.name.Equals("Ground"))
+                    {
+                        //현재 위치를 땅에 달라붙은 targetPosition으로 바꾼다. 
+                        transform.position = targetPosition;
+                        //jump를 종료한다
+                        isJump = false;
+                        return;
+                    }
+                }
+                cc.Move(jumpDirection * Time.deltaTime);
+                break;
+            case MoveType.Dash:
+                if (!isDash)
+                {
+                    return;
+                }
+                cc.Move(moveDirection * BossStatus.dashSpeed * Time.deltaTime);
+
+                //만약 targetPosition과 거리 차이가 0.1f미만이라면
+                if(Vector3.Distance(transform.position, targetPosition) < 0.1f)
+                {
+                    //현재 위치를 target Position으로 잡는다.
+                    transform.position = targetPosition;
+                    isDash = false;
+                }
+                break;
+        }
     }
 
-    public void DashBoss()
+    private void SetJumpDirection()
+    {
+        //v0을 구한다.
+        float jumpVelocity = Mathf.Sqrt(targetDirection.magnitude * Physics.gravity.magnitude / 2);
+        BossStatus.SetJumpSpeed(jumpVelocity);
+        currentTime = 0;
+    }
+
+        public void DashBoss()
     {
         cc.Move(moveDirection * dashSpeed * Time.deltaTime);
     }
 
-    //현재 target 
-
-    //직선 이동을 한다.
-    public void LinearMovement(float speed)
+    public bool IsJumping()
     {
-        //target의 위치, 방향, 거리를 계산한다.
-        SetTargetPosition();
-        //나는 target으로 향하는 방향으로 이동하고 싶다.
-        moveDirection = targetDirection;
-        cc.Move(moveDirection * speed * Time.deltaTime);
+        return isJump;
     }
-    //곡선 이동을 한다.
-    /// <summary>
-    /// 곡선이동을 하기 위한 함수, 호출하기 전에 SetTargetDirection을 호출해야 하고, 호출 중에는 target direction을 바꿔서는 안 됨.
-    /// </summary>
-    /// <param name="speed"></param>
-    public void CircleMovement(float speed)
+
+    public bool IsDashing()
     {
-        //target의 위치는 호출되기 전에 한 번만 계산한다.
-        SetTargetDirection();
-        moveDirection = new Vector3(targetDirection.z, 0, targetDirection.x);
-        cc.Move(moveDirection * speed * Time.deltaTime);
+        return isDash;
     }
 }

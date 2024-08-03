@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
+
 
 [RequireComponent(typeof(BossLocomotion))]
 public class BossAnimationManager : MonoBehaviour
@@ -26,7 +29,13 @@ public class BossAnimationManager : MonoBehaviour
         }
     }
 
+    public Dictionary<string, float> animationTime = new Dictionary<string, float>() {
+        {"Base Layer.Awake",0.8f },
+        {"Base Layer.Attack.Vertical", 0.85f },
+        {"Base Layer.Attack.Horizontal",0.88f }
     
+    };
+
     void Update()
     {
         vertical = BossLocomotion.instance.vertical;
@@ -48,33 +57,55 @@ public class BossAnimationManager : MonoBehaviour
         animator.SetTrigger(trigger);
     }
 
-    public void ResetTrigger(string trigger)
+    public void AwakeAnimationStart()
     {
-        animator.ResetTrigger(trigger);
+        animator.SetTrigger("IsAwake");
     }
 
 
-    public bool IsAttacking()
-    {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
-        {
-            float animeTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
-            if(animeTime > 2)
-            {
-                return false;
-            }
-            else
-            {
+    public void AttackAnimationStart(int distanceType, int attackType)
+    {
+        animator.SetTrigger("WalkToAttack");
+        animator.SetInteger("DistanceType", distanceType);
+        animator.SetInteger("AttackType", attackType);
+    }
+
+    public bool IsAwakeAnimationEnd()
+    {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        int awakeHash = Animator.StringToHash("Base Layer.Awake");
+        if(stateInfo.fullPathHash == awakeHash)
+        {
+            if (stateInfo.normalizedTime > 0.8f)
                 return true;
-            }
         }
         return false;
+
     }
-    
-    public bool IsAwaking()
+
+    public bool IsAttackAnimationEnd(int distanceType, int attackType)
     {
-        return animator.GetCurrentAnimatorStateInfo(0).IsTag("Awake");
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        string stateName = "Base Layer.Attack.Vertical";
+
+        if(distanceType == 1 && attackType == 0)
+        {
+            stateName = "Base Layer.Attack.Vertical";
+        }
+        else if(distanceType == 1 && attackType == 1)
+        {
+            stateName = "Base Layer.Attack.Horizontal";
+        }
+        int attackHash = Animator.StringToHash(stateName);
+        if (stateInfo.fullPathHash == attackHash)
+        {
+            if (stateInfo.normalizedTime > animationTime[stateName])
+                return true;
+        }
+        return false;
+
     }
     /// <summary>
     /// attack type에 따라 근거리, 중거리, 원거리 공격 애니메이션 트리거가 바뀝니다.
