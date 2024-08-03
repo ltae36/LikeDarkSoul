@@ -5,7 +5,12 @@ using UnityEngine;
 public class BossStateManager : MonoBehaviour
 {
     State currentState;
+    public AwakeState awakeState;
 
+    private void Start()
+    {
+        currentState = awakeState;
+    }
     void Update()
     {
         RunStateMachine();
@@ -13,6 +18,7 @@ public class BossStateManager : MonoBehaviour
 
     private void RunStateMachine()
     {
+        print(currentState.ToString());
         State nextState =currentState?.RunCurrentState();
 
         if(nextState != null )
