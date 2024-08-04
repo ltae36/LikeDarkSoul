@@ -16,6 +16,9 @@ public class PlayerMove : MonoBehaviour
 
     public bool isSprint = false;
     public bool isWalking = false;
+    public bool isrun;
+
+    float onSpace;
     
     Animator animator;
     CharacterController cc;
@@ -27,11 +30,14 @@ public class PlayerMove : MonoBehaviour
         animator = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
         moveSpeed = runSpeed;
+        
 
     }
 
     void Update()
     {
+        print(onSpace);
+
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         if (!attack.inAction)
@@ -43,12 +49,6 @@ public class PlayerMove : MonoBehaviour
         {
             dir = Vector3.zero;
         }
-
-        if (Input.GetKeyDown(KeyCode.Space) && !isSprint)
-        {
-            animator.SetTrigger("Jump_Back");
-        }
-
         // WASD를 누르면 해당 방향으로 달리는 애니메이션이 재생된다.
         animator.SetBool("Run", dir != Vector3.zero);        
 
@@ -56,43 +56,44 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftAlt))
         {
             isWalking = true;
+            isrun = false;
         }
         else
         {
             isWalking = false;
+            isrun = true;
         }        
 
         // WASD를 누른 채로 스페이스바를 누르면 속도가 빨라지고, sprint애니메이션이 재생된다.
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) && ( Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S) ))
         {
-            isSprint = true;
-            //stamina -= Time.deltaTime;
+            onSpace += Input.GetAxis("Jump");
+            if (onSpace > 60)
+            {
+                isSprint = true;
+                isrun = false;
+            }
         }
         else
         {
             isSprint = false;
-            //stamina += Time.deltaTime;
+            isrun = true;
+            if (onSpace > 0)
+            {
+                onSpace -= Time.deltaTime * onSpace;
+            }
         }
 
         if (isSprint)
         {
             animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
-            moveSpeed += Time.deltaTime;
-            //while (moveSpeed > sprintSpeed)
-            //{
-            //    moveSpeed += Time.deltaTime;
-            //}
-            //if (stamina < 0)
-            //{
-            //    animator.SetFloat("movespeed", runSpeed);
-            //    moveSpeed = runSpeed;
-            //}
+            moveSpeed += Time.deltaTime * 1.5f;
 
         }
         else if (isWalking)
         {
             animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
-            moveSpeed -= Time.deltaTime;
+            moveSpeed -= Time.deltaTime * 1.5f;
         }
         else
         {
@@ -106,6 +107,19 @@ public class PlayerMove : MonoBehaviour
         {
             Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, rot, turnSpeed * Time.deltaTime);
+        }
+
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (dir == Vector3.zero)
+            {
+                animator.SetTrigger("Jump_Back");
+            }
+            else if ( dir != Vector3.zero && (isWalking || isrun || !isSprint) && onSpace < 59)
+            {
+                animator.SetTrigger("Roll 1");
+            }
         }
     }
 }

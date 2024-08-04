@@ -9,39 +9,49 @@ public class PlayerAttack : MonoBehaviour
     PlayerMove move;
 
     float actionTime;
+    int comboCount;
 
     public bool inAction;  
 
     void Start()
     {        
         inAction = false;
+        comboCount = 0;
         attack = GetComponent<Animator>();
         move = GetComponent<PlayerMove>();
     }
 
     void Update()
     {
-        // ¿ÞÅ¬¸¯½Ã °ø°Ý, ¿ìÅ¬¸¯½Ã ¹æ¾î
+        if(Input.GetMouseButtonDown(0) || Input.GetMouseButton(1)) 
+        {
+            inAction = true;
+        }
+
+        attack.SetBool("Shield", Input.GetMouseButton(1));
+
+        // ï¿½ï¿½Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         if (Input.GetMouseButtonDown(0))
         {
-            // °ø°Ý ¾Ö´Ï¸ÞÀÌ¼ÇÀÌ Àç»ýµÇ´Â µ¿¾ÈÀº WASD¸¦ ´­·¯µµ ¾È¿òÁ÷ÀÓ.
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ WASDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È¿ï¿½ï¿½ï¿½ï¿½ï¿½.
             //actionTime = attack.GetCurrentAnimatorClipInfo(0).Length;
-            inAction = true;
-            attack.SetTrigger("Sword");            
+            comboCount++;
+            attack.SetTrigger("Sword");
+            attack.SetInteger("Combo", comboCount);
             
         }
-        // ¿ìÅ¬¸¯À» °è¼Ó ´©¸£°í ÀÖÀ» °æ¿ì °è¼ÓÇØ¼­ ¹æ¾î
-        attack.SetBool("Shield", Input.GetMouseButton(1));
+        // ï¿½ï¿½Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½
+
         if (inAction)
         {
             actionTime += Time.deltaTime;
             print(actionTime);
-            if (actionTime > 2.19)
+            if (actionTime > 1.5)
             {
                 inAction = false;
                 actionTime = 0;
+                comboCount = 0;
             }
-        }
-        
+        }        
     }
 }
