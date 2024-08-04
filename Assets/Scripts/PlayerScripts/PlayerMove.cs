@@ -5,49 +5,121 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    // WASDÅ° ÀÔ·Â¿¡ µû¶ó ÇÃ·¹ÀÌ¾î°¡ ÀÌµ¿ÇÑ´Ù.
     float moveSpeed;
+    public float stamina;
 
     public float runSpeed = 8f;
     public float turnSpeed = 8f;
     public float sprintSpeed = 10f;
     public float walkSpeed = 10f;
+    public Vector3 dir;
 
-    Vector3 dir;
+    public bool isSprint = false;
+    public bool isWalking = false;
+    public bool isrun;
+
+    float onSpace;
+    
     Animator animator;
     CharacterController cc;
+    PlayerAttack attack;
 
     void Start()
     {
+        attack = GetComponent<PlayerAttack>();
         animator = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
         moveSpeed = runSpeed;
+        
+
     }
 
     void Update()
     {
+        print(onSpace);
+
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        dir = new Vector3(h, 0, v);
-        dir.Normalize();
+        if (!attack.inAction)
+        {
+            dir = new Vector3(h, 0, v);
+            dir.Normalize();
+        }
+        else
+        {
+            dir = Vector3.zero;
+        }
+        // WASDë¥¼ ëˆ„ë¥´ë©´ í•´ë‹¹ ë°©í–¥ìœ¼ë¡œ ë‹¬ë¦¬ëŠ” ì• ë‹ˆë©”ì´ì…˜ì´ ìž¬ìƒëœë‹¤.
+        animator.SetBool("Run", dir != Vector3.zero);        
 
-        // WASD¸¦ ´©¸£¸é ÇØ´ç ¹æÇâÀ¸·Î ¶Ú´Ù.
-        animator.SetBool("Run", dir != Vector3.zero);
-        // WASD¸¦ ´©¸¥ »óÅÂ¿¡¼­ ½ºÆäÀÌ½º¹Ù¸¦ ´©¸£°í ÀÖÀ¸¸é ´Þ¸°´Ù.
+        // WASDë¥¼ ëˆ„ë¥¸ ì±„ë¡œ LeftAltë¥¼ ëˆ„ë¥´ë©´ ì†ë„ê°€ ëŠë ¤ì§€ê³ , walkì• ë‹ˆë©”ì´ì…˜ì´ ìž¬ìƒëœë‹¤.
+        if (Input.GetKey(KeyCode.LeftAlt))
+        {
+            isWalking = true;
+            isrun = false;
+        }
+        else
+        {
+            isWalking = false;
+            isrun = true;
+        }        
 
-        // WASD¸¦ ´©¸¥ »óÅÂ¿¡¼­ LeftAlt¸¦ ´©¸£°í ÀÖÀ¸¸é ÃµÃµÈ÷ °È´Â´Ù.
-              
-        
-        
+        // WASDë¥¼ ëˆ„ë¥¸ ì±„ë¡œ ìŠ¤íŽ˜ì´ìŠ¤ë°”ë¥¼ ëˆ„ë¥´ë©´ ì†ë„ê°€ ë¹¨ë¼ì§€ê³ , sprintì• ë‹ˆë©”ì´ì…˜ì´ ìž¬ìƒëœë‹¤.
+        if (Input.GetKey(KeyCode.Space) && ( Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S) ))
+        {
+            onSpace += Input.GetAxis("Jump");
+            if (onSpace > 60)
+            {
+                isSprint = true;
+                isrun = false;
+            }
+        }
+        else
+        {
+            isSprint = false;
+            isrun = true;
+            if (onSpace > 0)
+            {
+                onSpace -= Time.deltaTime * onSpace;
+            }
+        }
 
-        // ÀÌµ¿
-        cc.Move(dir * moveSpeed * Time.deltaTime);
+        if (isSprint)
+        {
+            animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
+            moveSpeed += Time.deltaTime * 1.5f;
 
-        // È¸Àü
+        }
+        else if (isWalking)
+        {
+            animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
+            moveSpeed -= Time.deltaTime * 1.5f;
+        }
+        else
+        {
+            animator.SetFloat("MoveSpeed", runSpeed);
+            moveSpeed = runSpeed;
+        }
+
+        cc.Move(dir * moveSpeed * Time.deltaTime); 
+     
         if (dir != Vector3.zero)
         {
             Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, rot, turnSpeed * Time.deltaTime);
+        }
+
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (dir == Vector3.zero)
+            {
+                animator.SetTrigger("Jump_Back");
+            }
+            else if ( dir != Vector3.zero && (isWalking || isrun || !isSprint) && onSpace < 59)
+            {
+                animator.SetTrigger("Roll 1");
+            }
         }
     }
 }
