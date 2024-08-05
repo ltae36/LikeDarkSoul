@@ -273,6 +273,9 @@ public class BossFSM : MonoBehaviour
 
         BossAnimationManager.instance.DeathAnimationStart();
         //FSM을 2페이즈 FSM으로 바꾼다.
+
+        //이 스크립트를 파괴한다.
+        this.enabled = false;
     }
 
     //애니메이션이 끝났는지 확인하는 함수
