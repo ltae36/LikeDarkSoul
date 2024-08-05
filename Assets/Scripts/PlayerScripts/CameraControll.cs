@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraControll : MonoBehaviour
 {
     public float mouseSenstv = 400f;
+
+    public Transform player;
+    public float moveSpeed = 0.5f;
+    public float rotationSpeed = 0.5f;
 
     float mouseY;
     float mouseX;
@@ -29,5 +34,13 @@ public class CameraControll : MonoBehaviour
 
         // 카메라의 로컬 회전을 설정
         transform.localRotation = Quaternion.Euler(mouseX, mouseY, 0f);
+
+        //따라가는 거
+        transform.position = Vector3.Lerp(Camera.main.transform.position, player.transform.position, moveSpeed * Time.deltaTime);
+
+        //보는 것
+        Quaternion lookRotation = Quaternion.LookRotation(player.position - Camera.main.transform.position, Vector3.up);
+        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
+
     }
 }
