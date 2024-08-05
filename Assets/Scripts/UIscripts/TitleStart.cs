@@ -10,7 +10,6 @@ public class TitleStart : MonoBehaviour
 
     void Start()
     {
-        NextScene();
     }
 
     private void Update()
@@ -22,8 +21,4 @@ public class TitleStart : MonoBehaviour
         }
     }
 
-    public void NextScene() 
-    {
-        SceneManager.LoadScene(1);
-    }
 }

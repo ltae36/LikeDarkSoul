@@ -7,11 +7,13 @@ public class PlayerAttack : MonoBehaviour
 {
     Animator attack;
     PlayerMove move;
+    StatManager hp;
 
     float actionTime;
     int comboCount;
 
     public bool inAction;  
+
 
     void Start()
     {        
@@ -19,6 +21,7 @@ public class PlayerAttack : MonoBehaviour
         comboCount = 0;
         attack = GetComponent<Animator>();
         move = GetComponent<PlayerMove>();
+        hp = GetComponent<StatManager>();
     }
 
     void Update()
@@ -53,5 +56,13 @@ public class PlayerAttack : MonoBehaviour
                 comboCount = 0;
             }
         }        
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit != null)
+        {
+            hp.HP -= 2;
+        }
     }
 }

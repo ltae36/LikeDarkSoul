@@ -17,12 +17,16 @@ public class StatManager : MonoBehaviour
     public Slider fpSlider;
     public Slider stamSlider;
 
+    public GameObject deadScene;
+
     PlayerMove move;
 
     void Start()
     {
+        deadScene.SetActive(false);
 
         hpSlider.maxValue = fullHP;
+        hpSlider.minValue = 0;
         fpSlider.maxValue = fullFP;
         stamSlider.maxValue = fullStamina;
 
