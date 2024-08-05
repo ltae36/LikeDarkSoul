@@ -5,8 +5,7 @@ using UnityEngine;
 public class BossHealth : MonoBehaviour
 {
     [SerializeField] int health;
-    [SerializeField] int maxHealth;
-    [SerializeField] bool isDead = false;
+    public int maxHealth;
 
 
     // Start is called before the first frame update
@@ -21,16 +20,12 @@ public class BossHealth : MonoBehaviour
         
     }
 
-    public void BossGetDamaged(int damage)
+    public void TakeDamage(int damage)
     {
-        if(health > 0)
-        {
-            health -= damage;
-        }
-        if (health < 0)
-        {
-            isDead = true;
-        }
+        health -= damage;
+
+        if(health <0)
+            health = 0;
     }
 
     public int GetHp()

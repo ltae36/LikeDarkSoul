@@ -34,11 +34,13 @@ public class BossFSM : MonoBehaviour
 
 
     float currentTime;
+    BossHealth hpController;
 
     // Start is called before the first frame update
     void Start()
     {
         bossState = BossState.Sleep;
+        hpController = GetComponent<BossHealth>();
     }
 
     // Update is called once per frame
@@ -78,6 +80,9 @@ public class BossFSM : MonoBehaviour
 
             //awake 애니메이션을 실행한다.
             BossAnimationManager.instance.AwakeAnimationStart();
+
+            //boss hp bar를 active 상태로 바꾼다
+            UIManager.instance.ShowBossHpBar();
         }
     }
 
@@ -274,9 +279,9 @@ public class BossFSM : MonoBehaviour
     {
         return true;
     }
-    void TakeDamage(float damage)
+    void TakeDamage(int damage)
     {
-
+        hpController.TakeDamage(damage);
     }
     //거리를 기준으로 앞으로 움직일지 옆으로 움직일 지 선택하는 함수
     void SelectAttackDelayMovement()
@@ -287,4 +292,6 @@ public class BossFSM : MonoBehaviour
         //플레이어 주위로 원을 하나 그린다음, 그 원의 특이한 지점을 잡는다
         BossLocomotion.instance.SetMoveDirection(BossLocomotion.MoveType.Linear);
     }
+
+    
 }
