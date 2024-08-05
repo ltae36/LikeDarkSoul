@@ -7,11 +7,12 @@ public class BossHealth : MonoBehaviour
     [SerializeField] int health;
     public int maxHealth;
 
-
+    BossFSM BossFSM;
     // Start is called before the first frame update
     void Start()
     {
         health = maxHealth;
+        BossFSM = GetComponent<BossFSM>();
     }
 
     // Update is called once per frame
@@ -24,8 +25,12 @@ public class BossHealth : MonoBehaviour
     {
         health -= damage;
 
-        if(health <0)
+        if (health <= 0)
+        {
             health = 0;
+            BossFSM.Die();
+        }
+    
     }
 
     public int GetHp()

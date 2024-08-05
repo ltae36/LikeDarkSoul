@@ -359,6 +359,7 @@ MonoBehaviour:
   hpSlider: {fileID: 1194965192}
   fpSlider: {fileID: 1244518191}
   stamSlider: {fileID: 1584654212}
+  deadScene: {fileID: 0}
 --- !u!4 &179062458
 Transform:
   m_ObjectHideFlags: 0
@@ -651,6 +652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inAction: 0
+  swordCol: {fileID: 0}
 --- !u!1 &346968505
 GameObject:
   m_ObjectHideFlags: 0
@@ -2975,8 +2977,31 @@ PrefabInstance:
         type: 3}
       insertIndex: 0
       addedObject: {fileID: 2033459068}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7bdf76bf68a9cbb49acc814e05ed165a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1928842097}
   m_SourcePrefab: {fileID: 100100000, guid: 7bdf76bf68a9cbb49acc814e05ed165a, type: 3}
+--- !u!1 &1928842096 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7bdf76bf68a9cbb49acc814e05ed165a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1928842095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1928842097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928842096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23d38885c1846164c94099f1f74b29cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 1131024839}
 --- !u!1 &1937835101
 GameObject:
   m_ObjectHideFlags: 0

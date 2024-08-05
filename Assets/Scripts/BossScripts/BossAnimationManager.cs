@@ -130,4 +130,9 @@ public class BossAnimationManager : MonoBehaviour
         //attack type 2 = third attack
         animator.SetInteger("AttackType", attackType);
     }
+
+    public void DeathAnimationStart()
+    {
+        animator.SetTrigger("Death");
+    }
 }
