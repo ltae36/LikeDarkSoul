@@ -36,7 +36,6 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        print(onSpace);
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");

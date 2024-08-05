@@ -12,8 +12,8 @@ public class PlayerAttack : MonoBehaviour
     float actionTime;
     int comboCount;
 
-    public bool inAction;  
-
+    public bool inAction;
+    public Collider swordCol;
 
     void Start()
     {        
@@ -36,6 +36,8 @@ public class PlayerAttack : MonoBehaviour
         // ��Ŭ���� ����, ��Ŭ���� ���
         if (Input.GetMouseButtonDown(0))
         {
+            // swordCol를 활성화한다.
+            swordCol.enabled = true;
             // ���� �ִϸ��̼��� ����Ǵ� ������ WASD�� ������ �ȿ�����.
             //actionTime = attack.GetCurrentAnimatorClipInfo(0).Length;
             comboCount++;
@@ -43,26 +45,18 @@ public class PlayerAttack : MonoBehaviour
             attack.SetInteger("Combo", comboCount);
             
         }
-        // ��Ŭ���� ��� ������ ���� ��� ����ؼ� ���
+
 
         if (inAction)
         {
             actionTime += Time.deltaTime;
-            print(actionTime);
             if (actionTime > 1.5)
             {
                 inAction = false;
                 actionTime = 0;
                 comboCount = 0;
+                swordCol.enabled=false;
             }
         }        
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit != null)
-        {
-            hp.HP -= 2;
-        }
     }
 }

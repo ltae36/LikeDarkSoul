@@ -212,7 +212,7 @@ public class BossFSM : MonoBehaviour
     void Horizontal()
     {
         //horizontal 공격을 한다.
-        print("Horizontal");
+        //print("Horizontal");
         if(BossAnimationManager.instance.IsAttackAnimationEnd(1,1))
         {
             bossState = BossState.AttackDelay;
@@ -226,7 +226,7 @@ public class BossFSM : MonoBehaviour
     void Vertical()
     {
         //Vertical 공격을 한다.
-        print("Vertical");
+        //print("Vertical");
         if (BossAnimationManager.instance.IsAttackAnimationEnd(1, 0))
         {
             bossState = BossState.AttackDelay;
@@ -241,7 +241,7 @@ public class BossFSM : MonoBehaviour
     void JumpAttack()
     {
         //jump attack 공격을 한다.
-        print("JumpAttack");
+        //print("JumpAttack");
         BossLocomotion.instance.MoveBoss(BossLocomotion.MoveType.Jump);
         if(BossLocomotion.instance.IsJumping() == false)
         {
@@ -255,7 +255,7 @@ public class BossFSM : MonoBehaviour
     void DashAttack()
     {
         //dash attack 공격을 한다.
-        print("DashAttack");
+        //print("DashAttack");
         BossLocomotion.instance.MoveBoss(BossLocomotion.MoveType.Dash);
         if (BossLocomotion.instance.IsDashing() == false)
         {

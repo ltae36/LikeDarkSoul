@@ -4,22 +4,46 @@ using UnityEngine;
 
 public class Hit : MonoBehaviour
 {
-    BossHealth health;
+    public BossHealth health;
 
     void Start()
     {
-        health = GetComponent<BossHealth>();
+
     }
 
     void Update()
     {
         
     }
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
+        print(other.name);
         if (other.gameObject.tag == "Boss")
         {
-            health.TakeDamage(4);
+            print("공격");
+            health.TakeDamage(400);
         }
     }
+
+
+    //private void OnCollisionEnter(Collision other)
+    //{
+    //    print(other.gameObject.name);
+    //    if (other.gameObject.tag == "Boss")
+    //    {
+    //        print("공격");
+    //        health.TakeDamage(40);
+    //    }
+    //}
+
+    //private void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+
+    //    print(hit.collider.tag);
+    //    if (hit.gameObject.tag == "Boss")
+    //    {
+    //        print("공격");
+    //        health.TakeDamage(40);
+    //    }
+    //}
 }
