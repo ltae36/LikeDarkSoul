@@ -275,13 +275,15 @@ public class BossFSM : MonoBehaviour
 
     //애니메이션이 끝났는지 확인하는 함수
     //나중에 매개변수를 넣을 것이고, 아니면 bossanimationmanager로 차라리 빼버리자
-    bool IsAnimationEnd()
-    {
-        return true;
-    }
-    void TakeDamage(int damage)
+
+    public void TakeDamage(int damage)
     {
         hpController.TakeDamage(damage);
+
+        if(hpController.GetHp() < 0)
+        {
+            bossState = BossState.Die;
+        }
     }
     //거리를 기준으로 앞으로 움직일지 옆으로 움직일 지 선택하는 함수
     void SelectAttackDelayMovement()
