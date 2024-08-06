@@ -497,7 +497,7 @@ ModelImporter:
     second: root
   - first:
       74: 7400000
-    second: down attack
+    second: vertical
   - first:
       95: 9500000
     second: //RootNode
@@ -556,7 +556,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: down attack
+      name: vertical
       takeName: Take 001
       internalID: 7400000
       firstFrame: 0
@@ -569,10 +569,10 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 1
-      loopBlendPositionY: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
+      keepOriginalOrientation: 1
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
       heightFromFeet: 0

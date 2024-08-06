@@ -16,17 +16,20 @@ public class BossFSM : MonoBehaviour
 
     public enum AttackState
     {
+        Vertical = 1,
         Horizontal,
-        Vertical,
+        _360Low,
+        Kick,
+        Upercut,
         JumpAttack,
         DashAttack
     }
     [Header("Distance")]
-    [SerializeField] float awakeDistance;
-    [SerializeField] float attackDistance;
+    [SerializeField] float awakeDistance =20;
+    [SerializeField] float attackDistance = 6;
 
     [Header("Time")]
-    [SerializeField] float idleTime;
+    [SerializeField] float idleTime =3;
 
     [Header("State")]
     [SerializeField]BossState bossState;
@@ -156,17 +159,9 @@ public class BossFSM : MonoBehaviour
         print(BossLocomotion.instance.targetDistance);
         if (BossLocomotion.instance.targetDistance < attackDistance)
         {
-            int randNum = Random.Range(1, 3);
-            if (randNum == 1)
-            {
-                attackState = AttackState.Horizontal;
-                BossAnimationManager.instance.AttackAnimationStart(1, 1);
-            }
-            else
-            {
-                attackState = AttackState.Vertical;
-                BossAnimationManager.instance.AttackAnimationStart(1, 0);
-            }
+            int randNum = Random.Range(1, 6);
+            BossAnimationManager.instance.AttackAnimationStart(1, randNum);
+            attackState = (AttackState)randNum;
         }
         //만약 거리가 멀면, jump attack 이나 dash attack을 한다.
         else
@@ -198,6 +193,15 @@ public class BossFSM : MonoBehaviour
             case AttackState.Vertical:
                 Vertical();
                 break;
+            case AttackState._360Low:
+                _360Low();
+                break;
+            case AttackState.Kick:
+                Kick();
+                break;
+            case AttackState.Upercut:
+                Upercut();
+                break;
             case AttackState.JumpAttack:
                 JumpAttack();
                 break;
@@ -213,7 +217,7 @@ public class BossFSM : MonoBehaviour
     {
         //horizontal 공격을 한다.
         //print("Horizontal");
-        if(BossAnimationManager.instance.IsAttackAnimationEnd(1,1))
+        if(BossAnimationManager.instance.IsAttackAnimationEnd())
         {
             bossState = BossState.AttackDelay;
 
@@ -227,7 +231,7 @@ public class BossFSM : MonoBehaviour
     {
         //Vertical 공격을 한다.
         //print("Vertical");
-        if (BossAnimationManager.instance.IsAttackAnimationEnd(1, 0))
+        if (BossAnimationManager.instance.IsAttackAnimationEnd())
         {
             bossState = BossState.AttackDelay;
 
@@ -238,6 +242,43 @@ public class BossFSM : MonoBehaviour
         }
     }
 
+    void _360Low()
+    {
+        if (BossAnimationManager.instance.IsAttackAnimationEnd())
+        {
+            bossState = BossState.AttackDelay;
+
+            //만약 플레이어랑의 거리가 멀다면
+            //플레이어한테 다가오는 방향으로 설정한다.
+            print("attack -> linear move");
+            SelectAttackDelayMovement();
+        }
+    }
+
+    void Kick()
+    {
+        if (BossAnimationManager.instance.IsAttackAnimationEnd())
+        {
+            bossState = BossState.AttackDelay;
+
+            //만약 플레이어랑의 거리가 멀다면
+            //플레이어한테 다가오는 방향으로 설정한다.
+            print("attack -> linear move");
+            SelectAttackDelayMovement();
+        }
+    }
+    void Upercut()
+    {
+        if (BossAnimationManager.instance.IsAttackAnimationEnd())
+        {
+            bossState = BossState.AttackDelay;
+
+            //만약 플레이어랑의 거리가 멀다면
+            //플레이어한테 다가오는 방향으로 설정한다.
+            print("attack -> linear move");
+            SelectAttackDelayMovement();
+        }
+    }
     void JumpAttack()
     {
         //jump attack 공격을 한다.

@@ -64,11 +64,11 @@ public class BossAnimationManager : MonoBehaviour
 
 
 
-    public void AttackAnimationStart(int distanceType, int attackType)
+    public void AttackAnimationStart(int distanceType, float attackType)
     {
         animator.SetTrigger("WalkToAttack");
         animator.SetInteger("DistanceType", distanceType);
-        animator.SetInteger("AttackType", attackType);
+        animator.SetFloat("AttackType", attackType);
     }
 
     public bool IsAwakeAnimationEnd()
@@ -85,23 +85,15 @@ public class BossAnimationManager : MonoBehaviour
 
     }
 
-    public bool IsAttackAnimationEnd(int distanceType, int attackType)
+    public bool IsAttackAnimationEnd()
     {
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        string stateName = "Base Layer.Attack.Vertical";
+        string stateName = "Base Layer.Attack.AttackCombo";
 
-        if(distanceType == 1 && attackType == 0)
-        {
-            stateName = "Base Layer.Attack.Vertical";
-        }
-        else if(distanceType == 1 && attackType == 1)
-        {
-            stateName = "Base Layer.Attack.Horizontal";
-        }
         int attackHash = Animator.StringToHash(stateName);
         if (stateInfo.fullPathHash == attackHash)
         {
-            if (stateInfo.normalizedTime > animationTime[stateName])
+            if (stateInfo.normalizedTime > 0.89f)
                 return true;
         }
         return false;
@@ -123,12 +115,12 @@ public class BossAnimationManager : MonoBehaviour
     /// 공격 유형을 정합니다.
     /// </summary>
     /// <param name="attackType">0 = first attack 1 = second attack 2 = third attack</param>
-    public void SetAttackType(int attackType)
+    public void SetAttackType(float attackType)
     {
         //attack type 0 = first attack
         //attack type 1 = second attack
         //attack type 2 = third attack
-        animator.SetInteger("AttackType", attackType);
+        animator.SetFloat("AttackType", attackType);
     }
 
     public void DeathAnimationStart()

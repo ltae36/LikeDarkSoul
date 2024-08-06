@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class BossLocomotion : MonoBehaviour
 {
+
+    //추가하고 싶은 기능
+    //애니메이션의 root 움직임을 적용하고 싶다.
+    //단, fsm이 공격일때만, 걷기 깨어나기, 자기 일대는 root 움직임을 무시하기 위해서 back in pose를 다 세팅해놓을 것임.
+    //공격중일 때 handle movement랑 handle rotation을 꺼놓자
     public enum MoveType
     {
         Linear = 0,
@@ -80,30 +85,6 @@ public class BossLocomotion : MonoBehaviour
         targetDirection.y = 0;
         targetDistance = targetDirection.magnitude;
 //        targetDirection.Normalize();
-    }
-
-    //움직임 방향이란, 걸을 때 앞을 보고 걸을 수도 있지만 옆으로 걸을 수도 있어서 추가함.
-    public void SetIdleDirection()
-    {
-        //0이면 앞, 1이면 왼쪽, 2이면 오른쪽으로 가볼까
-        int randomDirection = Random.Range((int)0, (int)3);
-        Vector3 direction = Vector3.forward;
-        switch (randomDirection)
-        {
-            case 0:
-                direction = Vector3.forward;
-                break;
-            case 1:
-                direction = Vector3.left;
-                break;
-            case 2:
-                direction = Vector3.right;
-                break;
-        }
-
-        moveDirection = transform.TransformDirection(direction).normalized;
-        vertical = moveDirection.x;
-        horizontal = moveDirection.z;
     }
 
     public void SetMoveDirection(MoveType moveType)
@@ -207,11 +188,6 @@ public class BossLocomotion : MonoBehaviour
         float jumpVelocity = Mathf.Sqrt(targetDirection.magnitude * Physics.gravity.magnitude / 2);
         BossStatus.SetJumpSpeed(jumpVelocity);
         currentTime = 0;
-    }
-
-        public void DashBoss()
-    {
-        cc.Move(moveDirection * dashSpeed * Time.deltaTime);
     }
 
     public bool IsJumping()
