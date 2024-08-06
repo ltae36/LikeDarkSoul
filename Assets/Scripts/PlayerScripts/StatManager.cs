@@ -1,13 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class StatManager : MonoBehaviour
 {
-    float fullHP = 12;
-    float fullFP = 10;
-    float fullStamina = 11;
+    float fullHP = 454;
+    float fullFP = 93;
+    float fullStamina = 95;
 
     public float HP;
     public float FP;
@@ -19,10 +21,28 @@ public class StatManager : MonoBehaviour
 
     public GameObject deadScene;
 
-    PlayerMove move;
+    public Animator anim;
+
+    public enum PlayerState 
+    {
+        idleNmove,
+        dash,
+        attack,
+        defense,
+        roll,
+        jump
+    }
+
+    public PlayerState mystate = PlayerState.idleNmove;
+
+    //private void Awake()
+    //{
+    //    anim = GetComponent<Animator>();
+    //}
 
     void Start()
-    {
+    {           
+        stam = Mathf.Clamp(stam, 0, fullStamina);
         deadScene.SetActive(false);
 
         hpSlider.maxValue = fullHP;
@@ -38,16 +58,111 @@ public class StatManager : MonoBehaviour
 
     void Update()
     {
+        // 나의 상태에 따라서 스태미너 소모량과 패턴이 달라진다.
+        switch (mystate) 
+        {
+            case PlayerState.idleNmove:
+                idleNmove();
+                break;
+            case PlayerState.dash:
+                dash();
+                break;
+            case PlayerState.attack:
+                attack();
+                break;
+            case PlayerState.defense:
+                defense();
+                break;
+            case PlayerState.roll:
+                roll();
+                break;
+            case PlayerState.jump:
+                jump();
+                break;
+        
+        }
+
         hpSlider.value = HP;
         fpSlider.value = FP;
         stamSlider.value = stam;
-        if (Input.GetKey(KeyCode.Space))
+        //if (Input.GetKey(KeyCode.Space))
+        //{
+        //    stam -= Time.deltaTime * usage;
+        //}
+        //else if(stam < fullStamina)
+        //{
+        //    stam += Time.deltaTime * usage;
+        //}
+    }
+
+    private void jump()
+    {
+    }
+
+    private void roll()
+    {
+    }
+
+    private void defense()
+    {
+        stam -= 19f;
+        // 방패를 든 상태에서는 스태미너가 0.5배 느리게 회복
+        Recovery(5);
+    }
+
+    private void attack()
+    {
+    }
+
+    private void dash()
+    {
+        // dash상태에서는 지속적으로 스태미너 소모
+        Consumption(10);
+        if (!Input.GetKey(KeyCode.Space))
         {
-            stam -= Time.deltaTime;
+            mystate = PlayerState.idleNmove;
         }
-        else if(stam < fullStamina)
+    }
+
+    private void idleNmove()
+    {
+        Recovery(10);
+        // sprint애니메이션이 재생중이라면 playerState를 dash로 전환
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkSprintTree") == true)
         {
-            stam += Time.deltaTime;
+            float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            if (animTime > 0 && animTime < 1.0f) //애니메이션 플레이 중
+            {
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    print("달리는 중");
+                    mystate = PlayerState.dash;
+                }
+            }
+        }
+        if (Input.GetMouseButton(1)) 
+        {
+            mystate = PlayerState.defense;
+        }
+    }
+
+    void Recovery(float wastage) 
+    {
+        if (stam != fullStamina)
+        {
+            stam += Time.deltaTime * wastage;
+        }
+    }
+
+    void Consumption(float wastage) 
+    {
+        if (stam != 0)
+        {
+            stam -= Time.deltaTime * wastage;
+        }
+        else 
+        {
+            mystate = PlayerState.idleNmove;
         }
     }
 }
