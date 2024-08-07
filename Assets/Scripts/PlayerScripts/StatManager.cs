@@ -42,7 +42,6 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {           
-        stam = Mathf.Clamp(stam, 0, fullStamina);
         deadScene.SetActive(false);
 
         hpSlider.maxValue = fullHP;
@@ -101,17 +100,20 @@ public class StatManager : MonoBehaviour
 
     private void roll()
     {
+        // 구르기를 할 때 스태미너 감소
     }
 
     private void defense()
     {
-        stam -= 19f;
+        // 방패를 든 상태에서 공격을 받았다면 스태미너 감소
         // 방패를 든 상태에서는 스태미너가 0.5배 느리게 회복
         Recovery(5);
     }
 
     private void attack()
     {
+        // 공격을 할 경우 스태미너 감소
+        // 강공격일 경우에는 1.5배 더 감소
     }
 
     private void dash()
@@ -126,7 +128,10 @@ public class StatManager : MonoBehaviour
 
     private void idleNmove()
     {
-        Recovery(10);
+        if (stam < fullStamina)
+        {
+            Recovery(10);
+        }
         // sprint애니메이션이 재생중이라면 playerState를 dash로 전환
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkSprintTree") == true)
         {
