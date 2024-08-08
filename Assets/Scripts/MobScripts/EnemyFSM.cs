@@ -44,8 +44,15 @@ public class EnemyFSM : MonoBehaviour
                 hitted();
                 break;
             case EnemyState.death:
+                death();
                 break;
         }
+    }
+
+    private void death()
+    {
+        // hp가 0이 되면 사망 애니메이션이 재생되고 래그돌 상태가 된다.
+        // 컴포넌트는 비활성화 된다.
     }
 
     private void hitted()
@@ -79,7 +86,7 @@ public class EnemyFSM : MonoBehaviour
     {
         if (hit.collider.tag == "Sword") 
         {
-            hitted();
+            undeadState = EnemyState.hit;
         }
     }
 }

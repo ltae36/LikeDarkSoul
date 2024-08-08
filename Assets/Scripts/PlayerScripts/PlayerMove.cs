@@ -19,7 +19,10 @@ public class PlayerMove : MonoBehaviour
     public bool isrun;
 
     float onSpace;
-    
+    Vector3 camDir;
+
+    public Camera cam;
+    GameObject playerModel;
     Animator animator;
     CharacterController cc;
     PlayerAttack attack;
@@ -27,10 +30,9 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         attack = GetComponent<PlayerAttack>();
-        animator = GetComponent<Animator>();
-        cc = GetComponent<CharacterController>();
-        moveSpeed = runSpeed;
-        
+        animator = GetComponentInChildren<Animator>();
+        cc = GetComponent<CharacterController>();        
+        moveSpeed = runSpeed;      
 
     }
 
@@ -39,15 +41,35 @@ public class PlayerMove : MonoBehaviour
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
+
+        // 카메라의 Transform을 가져온다.
+        Transform cameraTransform = cam.transform;
+
+        // 카메라의 로컬 로테이션y값을 추출한다.
+        Quaternion cameraRotationY = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
+
         if (!attack.inAction)
         {
             dir = new Vector3(h, 0, v);
-            dir.Normalize();
+            camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
         }
         else
         {
-            dir = Vector3.zero;
+            camDir = Vector3.zero;
         }
+
+        // CharacterController를 이용한 이동
+        cc.Move(camDir * moveSpeed * Time.deltaTime);
+
+        // 방향전환
+        if (dir != Vector3.zero)
+        {
+            Quaternion rot = Quaternion.LookRotation(camDir, Vector3.up);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rot, turnSpeed * Time.deltaTime);
+        }
+
+        
+        #region 애니메이션 재생
         // WASD를 누르면 해당 방향으로 달리는 애니메이션이 재생된다.
         animator.SetBool("Run", dir != Vector3.zero);        
 
@@ -100,15 +122,6 @@ public class PlayerMove : MonoBehaviour
             moveSpeed = runSpeed;
         }
 
-        cc.Move(dir * moveSpeed * Time.deltaTime); 
-     
-        if (dir != Vector3.zero)
-        {
-            Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rot, turnSpeed * Time.deltaTime);
-        }
-
-
         if (Input.GetKeyUp(KeyCode.Space))
         {
             if (dir == Vector3.zero)
@@ -120,5 +133,7 @@ public class PlayerMove : MonoBehaviour
                 animator.SetTrigger("Roll 1");
             }
         }
+        #endregion
+        
     }
 }

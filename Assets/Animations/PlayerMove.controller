@@ -124,7 +124,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OneHand_Up_Attack_1_InPlace
+  m_Name: OneHand_Up_Attack_1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -140,8 +140,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -3283358075016109966, guid: 5bd282a2189f62141b10fab909750282,
-    type: 3}
+  m_Motion: {fileID: 7400000, guid: 86433005756babf4d89e6d2327ff5dad, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -179,7 +178,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OneHand_Up_Attack_2_InPlace
+  m_Name: OneHand_Up_Attack_2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -583,7 +582,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 6536522707908897095, guid: 5eb532550a80bbf45bf031b3d9918a1b,
       type: 3}
-    m_Threshold: 6
+    m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -592,7 +591,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: -4452440636216180258, guid: 7ae0a5d9769db55478a98ecf3d701a68,
       type: 3}
-    m_Threshold: 10
+    m_Threshold: 4
     m_Position: {x: 4, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -601,7 +600,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 2607429516404619790, guid: c1d64d86e87ea3b4b8dcd8c5b0f4c315,
       type: 3}
-    m_Threshold: 14
+    m_Threshold: 6
     m_Position: {x: 6, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -609,11 +608,11 @@ BlendTree:
     m_Mirror: 0
   m_BlendParameter: MoveSpeed
   m_BlendParameterY: Roll
-  m_MinThreshold: 6
-  m_MaxThreshold: 22
+  m_MinThreshold: 0
+  m_MaxThreshold: 6
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
-  m_BlendType: 2
+  m_BlendType: 0
 --- !u!1101 &2411486380416089491
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -746,7 +745,7 @@ AnimatorStateMachine:
     m_Position: {x: 300, y: -120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2127040345418340642}
-    m_Position: {x: 490, y: 120, z: 0}
+    m_Position: {x: 550, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5509152172557407118}
     m_Position: {x: 260, y: 180, z: 0}
@@ -755,7 +754,7 @@ AnimatorStateMachine:
     m_Position: {x: 270, y: -50, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5908035400151580482}
-    m_Position: {x: 490, y: 200, z: 0}
+    m_Position: {x: 550, y: 200, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
