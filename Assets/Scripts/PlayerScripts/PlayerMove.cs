@@ -12,41 +12,37 @@ public class PlayerMove : MonoBehaviour
     public float turnSpeed = 8f;
     public float sprintSpeed = 10f;
     public float walkSpeed = 10f;
-    public Vector3 dir;
+
+    Vector3 dir;
 
     public bool isSprint = false;
     public bool isWalking = false;
     public bool isrun;
 
     float onSpace;
-    Vector3 camDir;
 
+
+    public Vector3 camDir;
     public Camera cam;
+
     GameObject playerModel;
     Animator animator;
     CharacterController cc;
     PlayerAttack attack;
-    public StatManager stat;
+    StatManager stat;
 
     void Start()
     {
         attack = GetComponent<PlayerAttack>();
-        animator = GetComponentInChildren<Animator>();
+        animator = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();        
         moveSpeed = runSpeed;
-        stat = GetComponentInChildren<StatManager>();
+        stat = GetComponent<StatManager>();
     }
 
     void Update()
     {
-        if (camDir != Vector3.zero)
-        {
-            print("이동 가능 상태");
-        }
-        else if (camDir == Vector3.zero)
-        {
-            print("공격, 방어 중");
-        }
+        print(camDir);
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
@@ -61,13 +57,12 @@ public class PlayerMove : MonoBehaviour
         camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
 
         //// 액션이 작동 중일 때는 WASD이동이 작동하지 않는다.
-        if (stat.inAction)
-        {
-            camDir = Vector3.zero;
-        }
+        //if (stat.inAction)
+        //{
+        //    camDir = Vector3.zero;
+        //}
 
-        //dir = new Vector3(h, 0, v);
-        //camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
+
 
 
         // CharacterController를 이용한 이동
