@@ -53,16 +53,19 @@ public class PlayerMove : MonoBehaviour
         // 카메라의 로컬 로테이션y값을 추출한다.
         Quaternion cameraRotationY = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
 
-        dir = new Vector3(h, 0, v);
-        camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
 
-        //// 액션이 작동 중일 때는 WASD이동이 작동하지 않는다.
+        // 액션이 작동 중일 때는 WASD이동이 작동하지 않는다.
         //if (stat.inAction)
         //{
-        //    camDir = Vector3.zero;
+        //    dir = Vector3.zero;
         //}
+        //else 
+        //{
+        //    dir = new Vector3(h, 0, v);
+        //}
+        dir = new Vector3(h, 0, v);
 
-
+        camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
 
 
         // CharacterController를 이용한 이동
@@ -138,6 +141,23 @@ public class PlayerMove : MonoBehaviour
             else if ( dir != Vector3.zero && (isWalking || isrun || !isSprint) && onSpace < 59)
             {
                 animator.SetTrigger("Roll 1");
+                if (Input.GetKey(KeyCode.W)) 
+                {
+                    animator.SetFloat("Roll", 3);
+                }
+                else if (Input.GetKey(KeyCode.S)) 
+                {
+                    animator.SetFloat("Roll", 0);
+                }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    animator.SetFloat("Roll", 1);
+                }
+                else if (Input.GetKey(KeyCode.D)) 
+                {
+                    animator.SetFloat("Roll", 4);
+                }
+                
             }
         }
         #endregion

@@ -293,6 +293,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 28560270}
   m_CullTransparentMesh: 1
+--- !u!1 &29583482
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 29583483}
+  m_Layer: 0
+  m_Name: cuPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &29583483
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29583482}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2.398}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1424374403}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &55483826
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,14 +1072,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: c60e3ad5fc22a6544982f41d8271ab5b,
         type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-        'mixamorig:LeftHandThumb2'\n\tTransform 'mixamorig:LeftHandIndex1'\n\tTransform
-        'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:LeftHandThumb3'\n\tTransform
-        'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftHandMiddle3'\n\tand
-        more ...\n\tFrom animation clip 'Zombie Idle'\n\tFrom animation clip 'Zombie
-        Running'\n\tFrom animation clip 'Zombie Transition'"
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1577,7 +1601,6 @@ GameObject:
   - component: {fileID: 591148463}
   - component: {fileID: 591148462}
   - component: {fileID: 591148461}
-  - component: {fileID: 591148460}
   m_Layer: 8
   m_Name: Player (1)
   m_TagString: Player
@@ -1585,19 +1608,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &591148460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 591148459}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 475f91a896385b34f9fcbc0b0c95d727, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 55483832}
 --- !u!114 &591148461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1954,8 +1964,8 @@ Transform:
   m_GameObject: {fileID: 726245308}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.32, y: 3.35, z: 2.95}
-  m_LocalScale: {x: 2.0607, y: 6.10029, z: 2.0607}
+  m_LocalPosition: {x: 0.32, y: 3.35, z: 1.17}
+  m_LocalScale: {x: 12.517104, y: 6.10029, z: 0.47571257}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -4086,10 +4096,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1424374403}
   - component: {fileID: 1424374402}
+  - component: {fileID: 1424374404}
   m_Layer: 0
   m_Name: Camera Handler
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -4112,6 +4123,7 @@ MonoBehaviour:
   moveSpeed: 10
   rotationSpeed: 0.5
   playerDistance: 10
+  mouseX: 0
 --- !u!4 &1424374403
 Transform:
   m_ObjectHideFlags: 0
@@ -4125,9 +4137,27 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 29583483}
   - {fileID: 1926738318}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1424374404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424374401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b57cdf0386bc1234dba0eb9956f3daec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fov: 20
+  rayDist: 500
+  player: {fileID: 991740876}
+  origin: {fileID: 1926738318}
+  cuPos: {fileID: 29583483}
 --- !u!1 &1446824485
 GameObject:
   m_ObjectHideFlags: 0
@@ -5351,6 +5381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1926738318}
+  - component: {fileID: 1926738319}
   m_Layer: 0
   m_Name: CameraPosition
   m_TagString: Untagged
@@ -5374,6 +5405,23 @@ Transform:
   - {fileID: 55483827}
   m_Father: {fileID: 1424374403}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1926738319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926738317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b57cdf0386bc1234dba0eb9956f3daec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fov: 20
+  rayDist: 500
+  player: {fileID: 0}
+  origin: {fileID: 1424374403}
+  cuPos: {fileID: 29583483}
 --- !u!1 &2016557469
 GameObject:
   m_ObjectHideFlags: 0

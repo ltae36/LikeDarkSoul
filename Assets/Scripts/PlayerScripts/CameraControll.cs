@@ -17,12 +17,15 @@ public class CameraControll : MonoBehaviour
 
 
     float mouseY;
-    float mouseX;
+    public float mouseX;
+
+
 
     void Update()
     {
         HandleMove();
         HandleRotate();
+
     }
 
     private void HandleRotate() 
@@ -40,7 +43,8 @@ public class CameraControll : MonoBehaviour
         rotation.y = mouseY;
         rotation.x = mouseX;
         transform.rotation = Quaternion.Euler(rotation);
-        
+
+        print(rotation);
 
     }
 

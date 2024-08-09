@@ -38,7 +38,7 @@ public class StatManager : DamageCount
         defense,
         damaged,
         roll,
-        jump,
+        move,
         dead
     }
 
@@ -92,8 +92,8 @@ public class StatManager : DamageCount
             case PlayerState.roll:
                 roll();
                 break;
-            case PlayerState.jump:
-                jump();
+            case PlayerState.move:
+                move();
                 break;
             case PlayerState.dead:
                 dead();
@@ -132,14 +132,12 @@ public class StatManager : DamageCount
         beingIdle(playTime);
     }
 
-    private void jump()
+    private void move()
     {
+        // 스페이스바를 누를 경우 WASD방향으로 구름
+        // 구를때 마다 스태미너 감소
     }
 
-    private void roll()
-    {
-        // 구르기를 할 때 스태미너 감소
-    }
 
     private void defense()
     {
@@ -180,14 +178,17 @@ public class StatManager : DamageCount
             mystate = PlayerState.damaged;
         }
 
-        // sprint애니메이션이 재생중이라면 playerState를 dash로 전환
+        
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkSprintTree") == true)
         {
             float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
             if (animTime > 0 && animTime < 1.0f) //애니메이션 플레이 중
             {
+                mystate = PlayerState.move;
+
                 if (Input.GetKey(KeyCode.Space))
                 {
+                    // WalkSprintTree 재생중 스페이스바를 누른 상태라면 playerState를 dash로 전환
                     print("달리는 중");
                     mystate = PlayerState.dash;
                 }
