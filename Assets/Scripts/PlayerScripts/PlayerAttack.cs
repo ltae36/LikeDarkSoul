@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    Animator attack;
+    public Animator attack;
     PlayerMove move;
     StatManager hp;
 
@@ -18,7 +18,7 @@ public class PlayerAttack : MonoBehaviour
     {        
         inAction = false;
         comboCount = 0;
-        attack = GetComponent<Animator>();
+        attack = GetComponentInChildren<Animator>();
         move = GetComponent<PlayerMove>();
         hp = GetComponent<StatManager>();
     }

@@ -10,6 +10,7 @@ public class StatManager : MonoBehaviour
     float fullHP = 454;
     float fullFP = 93;
     float fullStamina = 95;
+    float playTime;
 
     public float HP;
     public float FP;
@@ -22,6 +23,10 @@ public class StatManager : MonoBehaviour
     public GameObject deadScene;
 
     public Animator anim;
+
+    PlayerAttack isAttack;
+
+    private bool isBeingIdle = false;
 
     public enum PlayerState 
     {
@@ -42,7 +47,6 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {           
-        stam = Mathf.Clamp(stam, 0, fullStamina);
         deadScene.SetActive(false);
 
         hpSlider.maxValue = fullHP;
@@ -101,17 +105,24 @@ public class StatManager : MonoBehaviour
 
     private void roll()
     {
+        // 구르기를 할 때 스태미너 감소
     }
 
     private void defense()
     {
-        stam -= 19f;
+        if (!Input.GetMouseButton(1)) 
+        {
+            mystate = PlayerState.idleNmove;
+        }
+        // 방패를 든 상태에서 공격을 받았다면 스태미너 감소
         // 방패를 든 상태에서는 스태미너가 0.5배 느리게 회복
         Recovery(5);
     }
 
     private void attack()
-    {
+    {        
+        // 공격을 할 경우 스태미너 감소
+        StartCoroutine(beingIdle(playTime));
     }
 
     private void dash()
@@ -126,7 +137,10 @@ public class StatManager : MonoBehaviour
 
     private void idleNmove()
     {
-        Recovery(10);
+        if (stam < fullStamina)
+        {
+            Recovery(10);
+        }
         // sprint애니메이션이 재생중이라면 playerState를 dash로 전환
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkSprintTree") == true)
         {
@@ -140,10 +154,20 @@ public class StatManager : MonoBehaviour
                 }
             }
         }
+        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("OneHand_Up_Attack_1") == true || anim.GetCurrentAnimatorStateInfo(0).IsName("OneHand_Up_Attack_2") == true) 
+        {
+            playTime = anim.GetCurrentAnimatorStateInfo(0).length;
+            float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            if (animTime > 0 && animTime < 1.0f) 
+            {
+                mystate = PlayerState.attack;
+            }
+        }
         if (Input.GetMouseButton(1)) 
         {
             mystate = PlayerState.defense;
         }
+
     }
 
     void Recovery(float wastage) 
@@ -164,5 +188,17 @@ public class StatManager : MonoBehaviour
         {
             mystate = PlayerState.idleNmove;
         }
+    }
+
+    IEnumerator beingIdle(float sec) 
+    {
+        isBeingIdle = true;
+        if (Input.GetMouseButtonDown(0))
+        {
+            stam -= 19;
+        }
+        yield return new WaitForSeconds(sec);
+        mystate = PlayerState.idleNmove;
+        isBeingIdle = false;
     }
 }
