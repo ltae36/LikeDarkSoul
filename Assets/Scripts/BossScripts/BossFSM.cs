@@ -34,14 +34,12 @@ public class BossFSM : MonoBehaviour
     [SerializeField]BossState bossState;
     [SerializeField] AttackState attackState;
 
-
     float currentTime;
     BossHealth hpController;
 
     // Start is called before the first frame update
     void Start()
     {
-        bossState = BossState.Sleep;
         hpController = GetComponent<BossHealth>();
     }
 
@@ -312,7 +310,8 @@ public class BossFSM : MonoBehaviour
         //변신 애니메이션을 실행한다.
 
         BossAnimationManager.instance.DeathAnimationStart();
-        //FSM을 2페이즈 FSM으로 바꾼다.
+
+        //Death animation 이 끝나면, FSM을 2페이즈 FSM으로 바꾼다.
 
         //이 스크립트를 파괴한다.
         this.enabled = false;

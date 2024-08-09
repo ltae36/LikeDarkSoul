@@ -69,6 +69,9 @@ public class BossAnimationManager : MonoBehaviour
         animator.SetTrigger("WalkToAttack");
         animator.SetInteger("DistanceType", distanceType);
         animator.SetFloat("AttackType", attackType);
+
+        if(distanceType ==2 && attackType == 1)
+            animator.applyRootMotion = false;
     }
 
     public bool IsAwakeAnimationEnd()

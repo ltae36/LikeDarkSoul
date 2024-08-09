@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Apple.ReplayKit;
 
 public class BossLocomotion : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class BossLocomotion : MonoBehaviour
     /// 정규화된 vector
     /// </summary>
     public Vector3 moveDirection;
+    public Vector3 movePosition;
     public Vector3 jumpDirection;
     /// <summary>
     /// 정규화 되지 않은 vector
@@ -95,11 +97,13 @@ public class BossLocomotion : MonoBehaviour
         switch (moveType) {
             case MoveType.Linear:
                 moveDirection = targetDirection.normalized;
+                movePosition = targetPosition;
                 vertical = moveDirection.x;
                 horizontal = moveDirection.z;
                 break;
             case MoveType.Dash:
                 isDash = true;
+                movePosition = targetPosition;
                 moveDirection = targetDirection.normalized;
                 vertical = moveDirection.x;
                 horizontal = moveDirection.z;
@@ -107,6 +111,9 @@ public class BossLocomotion : MonoBehaviour
             case MoveType.Jump:
                 isJump = true;
                 SetJumpDirection();
+                break;
+            case MoveType.Circle:
+                moveDirection = targetDirection.normalized;
                 break;
         }
     }
@@ -135,28 +142,24 @@ public class BossLocomotion : MonoBehaviour
                 currentTime += Time.deltaTime;
                 //각 순간마다 jump 속도는 다음의 식을 이용해서 구할 수 있다.
                 jumpDirection = targetDirection.normalized * BossStatus.jumpSpeed + Vector3.up * BossStatus.jumpSpeed + Physics.gravity * Mathf.Pow(currentTime, 2.0f) / 2;
-
+                print("위치:" +transform.position);
+                print("점프 방향: "+jumpDirection);
                 if (jumpDirection.y < 0)
                 {
-                    Vector3 currentJumpPosition = transform.position + jumpDirection * Time.deltaTime;
-
-                    //땅에 충돌하는지 검사해야 한다.
-                    //만약 0.1f 아래로 ray를 쐈을 때 땅에 부딪친다면...
-                    print(currentJumpPosition);
-                    Ray ray = new Ray(currentJumpPosition, Vector3.down);
+                    Ray ray = new Ray(transform.position, Vector3.down);
                     RaycastHit hit;
                     //Layer 7이 ground임 0.6f 로 쏘는 이유 내 현재 크기도 고려해야 된다!
                     if (Physics.Raycast(ray, out hit, raySize))
                     {
+                        print(hit.collider.name);
                         if (hit.collider.name.Equals("Ground"))
                         {
-                            //현재 위치를 땅에 달라붙은 targetPosition으로 바꾼다. 
-                            print(targetPosition);
-                            targetPosition.y = 0;
-                            transform.position = targetPosition;
-                            
+                            movePosition.y = 0;
+                            transform.position = movePosition;
+
                             //jump를 종료한다
                             isJump = false;
+                            GetComponent<Animator>().applyRootMotion = true;
                             return;
                         }
                     }
@@ -170,12 +173,12 @@ public class BossLocomotion : MonoBehaviour
                 }
                 cc.Move(moveDirection * BossStatus.dashSpeed * Time.deltaTime);
 
-                //만약 targetPosition과 거리 차이가 0.1f미만이라면
-                if(Vector3.Distance(transform.position, targetPosition) < 1f)
+                //만약 targetPosition과 거리 차이가 1f미만이라면
+                if(Vector3.Distance(transform.position, movePosition) < 1f)
                 {
-                    //현재 위치를 target Position으로 잡는다.
-                    targetPosition.y = 0;
-                    transform.position = targetPosition;
+                    
+                    //targetPosition.y = 0;
+                    //transform.position = targetPosition;
                     isDash = false;
                 }
                 break;
@@ -184,6 +187,7 @@ public class BossLocomotion : MonoBehaviour
 
     private void SetJumpDirection()
     {
+        movePosition = targetPosition;
         //v0을 구한다.
         float jumpVelocity = Mathf.Sqrt(targetDirection.magnitude * Physics.gravity.magnitude / 2);
         BossStatus.SetJumpSpeed(jumpVelocity);
