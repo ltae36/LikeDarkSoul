@@ -90,7 +90,7 @@ public class StatManager : DamageCount
                 damaged();
                 break;
             case PlayerState.roll:
-                roll();
+                //roll();
                 break;
             case PlayerState.move:
                 move();

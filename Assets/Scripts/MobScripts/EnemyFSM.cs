@@ -7,16 +7,17 @@ public class EnemyFSM : MonoBehaviour
 {
     public enum EnemyState 
     {
-        non,
-        revival,
-        idle,
-        chase,
-        attack,
-        hit,
-        death
+        Sleep,
+        Awake,
+        Idle,
+        Run,
+        Attack,
+        AttackDelay,
+        Hit,
+        Die
     }
 
-    public EnemyState undeadState = EnemyState.non;
+    public EnemyState undeadState;
 
     void Start()
     {
@@ -27,58 +28,79 @@ public class EnemyFSM : MonoBehaviour
     {
         switch (undeadState) 
         {
-            case EnemyState.non:
+            case EnemyState.Sleep:
                 break;
-            case EnemyState.revival:
-                revival();
+            case EnemyState.Awake:
                 break;
-            case EnemyState.idle:
+            case EnemyState.Idle:
                 break;
-            case EnemyState.chase:
-                chase();
+            case EnemyState.Run:
                 break;
-            case EnemyState.attack:
-                attack();
+            case EnemyState.Attack:        
                 break;
-            case EnemyState.hit:
-                hitted();
+            case EnemyState.AttackDelay:
                 break;
-            case EnemyState.death:
-                death();
+            case EnemyState.Hit:
                 break;
+            case EnemyState.Die:
+                break;
+
         }
     }
 
-    private void death()
+    private void Sleep()
     {
-        // hp가 0이 되면 사망 애니메이션이 재생되고 래그돌 상태가 된다.
-        // 컴포넌트는 비활성화 된다.
+        //자고 있는 상태
+        //만약 플레이어가 일정 거리 내로 들어오면...
+        //상태를 awake로 바꾼다.
+        //애니메이션을 실행한다.
     }
 
-    private void hitted()
+    private void Awake()
+    {
+        //일어나는 상태
+        //만약 awake 애니메이션이 끝나면...
+        //플레이어와의 거리에 따라
+        //가까우면 공격, 보통이면 걷고, 멀면 뛰자.
+    }
+    private void Idle()
+    {
+        //걸어서 player에게 다가오는 상태
+
+        //플레이어를 향해서 걸어온다.
+        //만약 거리가 일정 거리보다 작아지면
+        //공격한다.
+        //만약 거리가 일정 거리보다 멀면
+        //달린다.
+    }
+    private void Chase()
+    {
+        // 뒤어서 player에게 다가오는 상태
+
+        //플레이어를 향해서 뛰어온다.
+        //만약 거리가 일정 거리보다 작아지면
+        //공격한다.
+    }
+    private void Attack()
+    {
+        // 공격하는 상태
+
+        //공격애니메이션이 끝나면, 공격 대기 상태로 넘어간다.
+    }
+
+    private void AttackDelay()
+    {
+
+    }
+    private void Hitted()
     {
         // 피격 애니메이션이 재생된다.
         // hp가 감소한다.
     }
 
-    private void chase()
+    private void Death()
     {
-        // 플레이어를 쫓아간다 (NavMeshAgent)
-        // 플레이어가 공격 범위 안에 들어오면 attack 상태 전환
-        // 플레이어가 시야에서 사라지면 idle 상태 전환
-    }
-
-    private void attack()
-    {
-        // 공격 애니메이션을 재생한다.
-        // 플레이어의 거리가 멀어지면 chase 상태 전환
-        // 공격을 받으면 hit상태 전환
-    }
-
-    private void revival()
-    {
-        // 플레이어가 일정 범위 안에 들어오면 일어나는 애니메이션이 재생
-        // 애니메이션 재생이 끝나면 플레이어를 향해 바라본다
-        // attack 상태 전환
+        // hp가 0이 되면 사망 애니메이션이 재생되고 래그돌 상태가 된다.
+        // 컴포넌트는 비활성화 된다.
     }
 }
