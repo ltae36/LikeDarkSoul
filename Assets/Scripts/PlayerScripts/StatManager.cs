@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StatManager : MonoBehaviour
+public class StatManager : DamageCount
 {
     float fullHP = 454;
     float fullFP = 93;
@@ -15,6 +16,7 @@ public class StatManager : MonoBehaviour
     public float HP;
     public float FP;
     public float stam;
+    public bool inAction;
 
     public Slider hpSlider;
     public Slider fpSlider;
@@ -34,8 +36,10 @@ public class StatManager : MonoBehaviour
         dash,
         attack,
         defense,
+        damaged,
         roll,
-        jump
+        jump,
+        dead
     }
 
     public PlayerState mystate = PlayerState.idleNmove;
@@ -58,6 +62,7 @@ public class StatManager : MonoBehaviour
         FP = fullFP;
         stam = fullStamina;
 
+        inAction = false;
     }
 
     void Update()
@@ -66,22 +71,32 @@ public class StatManager : MonoBehaviour
         switch (mystate) 
         {
             case PlayerState.idleNmove:
+                inAction = false;
                 idleNmove();
                 break;
             case PlayerState.dash:
                 dash();
                 break;
             case PlayerState.attack:
+                inAction = true;
                 attack();
                 break;
             case PlayerState.defense:
+                inAction = true;
                 defense();
+                break;
+            case PlayerState.damaged:
+                inAction = true;
+                damaged();
                 break;
             case PlayerState.roll:
                 roll();
                 break;
             case PlayerState.jump:
                 jump();
+                break;
+            case PlayerState.dead:
+                dead();
                 break;
         
         }
@@ -97,6 +112,24 @@ public class StatManager : MonoBehaviour
         //{
         //    stam += Time.deltaTime * usage;
         //}
+    }
+
+    private void dead()
+    {
+        deadScene.SetActive(true);
+    }
+
+    private void damaged()
+    {
+        if (isDamaged && HP != 0)
+        {
+            HP -= 90;
+        }
+        else if (HP <= 0) 
+        {
+            mystate = PlayerState.dead;
+        }
+        beingIdle(playTime);
     }
 
     private void jump()
@@ -141,6 +174,12 @@ public class StatManager : MonoBehaviour
         {
             Recovery(10);
         }
+        // damaged가 체크되었다면 playerState를 damaged로 전환
+        if (isDamaged) 
+        {
+            mystate = PlayerState.damaged;
+        }
+
         // sprint애니메이션이 재생중이라면 playerState를 dash로 전환
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkSprintTree") == true)
         {
@@ -163,6 +202,16 @@ public class StatManager : MonoBehaviour
                 mystate = PlayerState.attack;
             }
         }
+        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Hit_F_1_InPlace") == true || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit_F_2_InPlace") == true) 
+        {
+            playTime = anim.GetCurrentAnimatorStateInfo(0).length;
+            float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            if (animTime > 0 && animTime < 1.0f) 
+            {
+                mystate = PlayerState.damaged;
+            }
+        }
+
         if (Input.GetMouseButton(1)) 
         {
             mystate = PlayerState.defense;

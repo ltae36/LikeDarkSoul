@@ -7,8 +7,8 @@ public class EnemyFSM : MonoBehaviour
 {
     public enum EnemyState 
     {
-        dead,
-        stand,
+        non,
+        revival,
         idle,
         chase,
         attack,
@@ -16,7 +16,7 @@ public class EnemyFSM : MonoBehaviour
         death
     }
 
-    public EnemyState undeadState = EnemyState.dead;
+    public EnemyState undeadState = EnemyState.non;
 
     void Start()
     {
@@ -27,10 +27,10 @@ public class EnemyFSM : MonoBehaviour
     {
         switch (undeadState) 
         {
-            case EnemyState.dead:
+            case EnemyState.non:
                 break;
-            case EnemyState.stand:
-                stand();
+            case EnemyState.revival:
+                revival();
                 break;
             case EnemyState.idle:
                 break;
@@ -75,18 +75,10 @@ public class EnemyFSM : MonoBehaviour
         // 공격을 받으면 hit상태 전환
     }
 
-    private void stand()
+    private void revival()
     {
         // 플레이어가 일정 범위 안에 들어오면 일어나는 애니메이션이 재생
         // 애니메이션 재생이 끝나면 플레이어를 향해 바라본다
         // attack 상태 전환
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.collider.tag == "Sword") 
-        {
-            undeadState = EnemyState.hit;
-        }
     }
 }

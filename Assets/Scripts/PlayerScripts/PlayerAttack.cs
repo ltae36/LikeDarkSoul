@@ -11,12 +11,12 @@ public class PlayerAttack : MonoBehaviour
     float actionTime;
     int comboCount;
 
-    public bool inAction;
+
     public Collider swordCol;
 
     void Start()
-    {        
-        inAction = false;
+    { 
+        
         comboCount = 0;
         attack = GetComponentInChildren<Animator>();
         move = GetComponent<PlayerMove>();
@@ -25,10 +25,6 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetMouseButtonDown(0) || Input.GetMouseButton(1)) 
-        {
-            inAction = true;
-        }
 
         attack.SetBool("Shield", Input.GetMouseButton(1));
 
@@ -46,16 +42,16 @@ public class PlayerAttack : MonoBehaviour
         }
 
 
-        if (inAction)
-        {
-            actionTime += Time.deltaTime;
-            if (actionTime > 1.5)
-            {
-                inAction = false;
-                actionTime = 0;
-                comboCount = 0;
-                swordCol.enabled=false;
-            }
-        }        
+        //if (inAction)
+        //{
+        //    actionTime += Time.deltaTime;
+        //    if (actionTime > 1.5)
+        //    {
+        //        inAction = false;
+        //        actionTime = 0;
+        //        comboCount = 0;
+        //        swordCol.enabled=false;
+        //    }
+        //}        
     }
 }

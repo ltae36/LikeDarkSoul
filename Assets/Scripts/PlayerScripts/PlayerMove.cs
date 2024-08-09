@@ -26,18 +26,27 @@ public class PlayerMove : MonoBehaviour
     Animator animator;
     CharacterController cc;
     PlayerAttack attack;
+    public StatManager stat;
 
     void Start()
     {
         attack = GetComponent<PlayerAttack>();
         animator = GetComponentInChildren<Animator>();
         cc = GetComponent<CharacterController>();        
-        moveSpeed = runSpeed;      
-
+        moveSpeed = runSpeed;
+        stat = GetComponentInChildren<StatManager>();
     }
 
     void Update()
     {
+        if (camDir != Vector3.zero)
+        {
+            print("이동 가능 상태");
+        }
+        else if (camDir == Vector3.zero)
+        {
+            print("공격, 방어 중");
+        }
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
@@ -48,15 +57,18 @@ public class PlayerMove : MonoBehaviour
         // 카메라의 로컬 로테이션y값을 추출한다.
         Quaternion cameraRotationY = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
 
-        if (!attack.inAction)
-        {
-            dir = new Vector3(h, 0, v);
-            camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
-        }
-        else
+        dir = new Vector3(h, 0, v);
+        camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
+
+        //// 액션이 작동 중일 때는 WASD이동이 작동하지 않는다.
+        if (stat.inAction)
         {
             camDir = Vector3.zero;
         }
+
+        //dir = new Vector3(h, 0, v);
+        //camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
+
 
         // CharacterController를 이용한 이동
         cc.Move(camDir * moveSpeed * Time.deltaTime);
