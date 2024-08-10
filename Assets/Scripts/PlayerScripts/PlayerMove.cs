@@ -42,7 +42,7 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        print(camDir);
+        //print(camDir);
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");

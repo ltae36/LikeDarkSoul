@@ -29,6 +29,11 @@ public class BossAnimationManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if(instance == this)
+            instance = null;
+    }
     public Dictionary<string, float> animationTime = new Dictionary<string, float>() {
         {"Base Layer.Awake",0.8f },
         {"Base Layer.Attack.Vertical", 0.85f },

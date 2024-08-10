@@ -64,6 +64,11 @@ public class BossLocomotion : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    private void OnDestroy()
+    {
+        if (instance == this)
+            instance = null;
+    }
     void Start()
     {
         myTransform = transform;

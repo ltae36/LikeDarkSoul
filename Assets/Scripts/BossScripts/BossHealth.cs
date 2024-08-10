@@ -28,7 +28,7 @@ public class BossHealth : MonoBehaviour
         if (health <= 0)
         {
             health = 0;
-            if (BossFSM != null)
+            if (BossFSM != null && BossFSM.enabled == true)
             {
                 BossFSM.Die();
             }

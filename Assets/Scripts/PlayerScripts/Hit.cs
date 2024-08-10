@@ -6,15 +6,7 @@ public class Hit : MonoBehaviour
 {
     public BossHealth health;
 
-    void Start()
-    {
 
-    }
-
-    void Update()
-    {
-        
-    }
     private void OnTriggerEnter(Collider other)
     {
         print(other.name);

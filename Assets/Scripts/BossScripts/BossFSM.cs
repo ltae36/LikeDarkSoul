@@ -308,18 +308,11 @@ public class BossFSM : MonoBehaviour
         //현재 내 hp가 55% 이하라면
         bossState = BossState.Die;
         //변신 애니메이션을 실행한다.
-
         BossAnimationManager.instance.DeathAnimationStart();
-
-        //Death animation 이 끝나면, FSM을 2페이즈 FSM으로 바꾼다.
 
         //이 스크립트를 파괴한다.
         this.enabled = false;
     }
-
-    //애니메이션이 끝났는지 확인하는 함수
-    //나중에 매개변수를 넣을 것이고, 아니면 bossanimationmanager로 차라리 빼버리자
-
 
     //거리를 기준으로 앞으로 움직일지 옆으로 움직일 지 선택하는 함수
     void SelectAttackDelayMovement()
