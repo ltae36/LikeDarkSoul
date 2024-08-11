@@ -36,11 +36,15 @@ public class BossFSM : MonoBehaviour
 
     float currentTime;
     BossHealth hpController;
+    BossLocomotion locomotion;
+    BossAnimationManager animationManager;
 
     // Start is called before the first frame update
     void Start()
     {
         hpController = GetComponent<BossHealth>();
+        locomotion = GetComponent<BossLocomotion>();
+        animationManager = GetComponent<BossAnimationManager>();
     }
 
     // Update is called once per frame
@@ -79,7 +83,7 @@ public class BossFSM : MonoBehaviour
             bossState = BossState.Awake;
 
             //awake 애니메이션을 실행한다.
-            BossAnimationManager.instance.AwakeAnimationStart();
+            animationManager.AwakeAnimationStart();
 
             //boss hp bar를 active 상태로 바꾼다
             UIManager.instance.ShowBossHpBar();
@@ -89,7 +93,7 @@ public class BossFSM : MonoBehaviour
     // 이 함수는 플레이어가 일정 거리안에 들어오면 true를 반환해주는 함수이다.
     bool IsPlayerWakeBossUp(float distance)
     {
-        Collider[] colliders =Physics.OverlapSphere(BossLocomotion.instance.myTransform.position,awakeDistance);
+        Collider[] colliders =Physics.OverlapSphere(locomotion.myTransform.position,awakeDistance);
 
         foreach (Collider collider in colliders)
         {
@@ -110,7 +114,7 @@ public class BossFSM : MonoBehaviour
         //보스 hp바를 활성화시킨다.
         //보스 콜라이더를 활성화시킨다.
         //애니메이션이 끝나면, 공격 딜레이 상태로 전환한다. 
-        if (BossAnimationManager.instance.IsAwakeAnimationEnd())
+        if (animationManager.IsAwakeAnimationEnd())
         {
             
             bossState = BossState.AttackDelay;
@@ -129,12 +133,12 @@ public class BossFSM : MonoBehaviour
         //공격 대기 시간
         currentTime += Time.deltaTime;
         //이동 목표를 향해서 조금씩 이동한다.
-        BossLocomotion.instance.SetMoveDirection(BossLocomotion.MoveType.Linear);
-        BossLocomotion.instance.MoveBoss(BossLocomotion.MoveType.Linear);
+        locomotion.SetMoveDirection(BossLocomotion.MoveType.Linear);
+        locomotion.MoveBoss(BossLocomotion.MoveType.Linear);
 
 
         //내 몸의 방향을 플레이어를 향하도록 잡는다.
-        BossLocomotion.instance.HandleRotation();
+        locomotion.HandleRotation();
 
         //공격 대기 시간이 지나면, 공격을 한다.
         if (currentTime > idleTime)
@@ -150,14 +154,15 @@ public class BossFSM : MonoBehaviour
     // 정해진 콤보를 상태 함수로 만든다.
     private void SelectAttackCombo()
     {
-        BossLocomotion.instance.SetTargetPosition();
-        BossLocomotion.instance.SetTargetDirection();
+        locomotion.SetTargetPosition();
+        locomotion.SetTargetDirection();
         //만약 거리가 가까우면, horizontal 또는 vertical 공격을 한다.
-        print(BossLocomotion.instance.targetDistance);
-        if (BossLocomotion.instance.targetDistance < attackDistance)
+        print(locomotion.targetDistance);
+        if (locomotion.targetDistance < attackDistance)
         {
             int randNum = Random.Range(1, 6);
-            BossAnimationManager.instance.AttackAnimationStart(1, randNum);
+            animationManager.AttackAnimationStart(1, randNum);
+            animationManager.TurnOnRootMotion();
             attackState = (AttackState)randNum;
         }
         //만약 거리가 멀면, jump attack 이나 dash attack을 한다.
@@ -167,14 +172,15 @@ public class BossFSM : MonoBehaviour
             if (randNum == 1)
             {
                 attackState = AttackState.JumpAttack;
-                BossAnimationManager.instance.AttackAnimationStart(2, 1);
-                BossLocomotion.instance.SetMoveDirection(BossLocomotion.MoveType.Jump);
+                animationManager.AttackAnimationStart(2, 1);
+                locomotion.SetMoveDirection(BossLocomotion.MoveType.Jump);
+                
             }
             else
             {
                 attackState = AttackState.DashAttack;
-                BossAnimationManager.instance.AttackAnimationStart(2, 0);
-                BossLocomotion.instance.SetMoveDirection(BossLocomotion.MoveType.Dash);
+                animationManager.AttackAnimationStart(2, 0);
+                locomotion.SetMoveDirection(BossLocomotion.MoveType.Dash);
             }
         }
     }
@@ -214,7 +220,7 @@ public class BossFSM : MonoBehaviour
     {
         //horizontal 공격을 한다.
         //print("Horizontal");
-        if(BossAnimationManager.instance.IsAttackAnimationEnd())
+        if(animationManager.IsAttackAnimationEnd())
         {
             bossState = BossState.AttackDelay;
 
@@ -228,7 +234,7 @@ public class BossFSM : MonoBehaviour
     {
         //Vertical 공격을 한다.
         //print("Vertical");
-        if (BossAnimationManager.instance.IsAttackAnimationEnd())
+        if (animationManager.IsAttackAnimationEnd())
         {
             bossState = BossState.AttackDelay;
 
@@ -241,7 +247,7 @@ public class BossFSM : MonoBehaviour
 
     void _360Low()
     {
-        if (BossAnimationManager.instance.IsAttackAnimationEnd())
+        if (animationManager.IsAttackAnimationEnd())
         {
             bossState = BossState.AttackDelay;
 
@@ -254,7 +260,7 @@ public class BossFSM : MonoBehaviour
 
     void Kick()
     {
-        if (BossAnimationManager.instance.IsAttackAnimationEnd())
+        if (animationManager.IsAttackAnimationEnd())
         {
             bossState = BossState.AttackDelay;
 
@@ -266,7 +272,7 @@ public class BossFSM : MonoBehaviour
     }
     void Upercut()
     {
-        if (BossAnimationManager.instance.IsAttackAnimationEnd())
+        if (animationManager.IsAttackAnimationEnd())
         {
             bossState = BossState.AttackDelay;
 
@@ -280,11 +286,11 @@ public class BossFSM : MonoBehaviour
     {
         //jump attack 공격을 한다.
         //print("JumpAttack");
-        BossLocomotion.instance.MoveBoss(BossLocomotion.MoveType.Jump);
-        if(BossLocomotion.instance.IsJumping() == false)
+        locomotion.MoveBoss(BossLocomotion.MoveType.Jump);
+        if(locomotion.IsJumping() == false)
         {
             bossState = BossState.AttackDelay;
-            BossAnimationManager.instance.SetTrigger("JumpDown");
+            animationManager.SetTrigger("JumpDown");
             print("attack -> linear move");
             SelectAttackDelayMovement();
         }
@@ -294,11 +300,11 @@ public class BossFSM : MonoBehaviour
     {
         //dash attack 공격을 한다.
         //print("DashAttack");
-        BossLocomotion.instance.MoveBoss(BossLocomotion.MoveType.Dash);
-        if (BossLocomotion.instance.IsDashing() == false)
+        locomotion.MoveBoss(BossLocomotion.MoveType.Dash);
+        if (locomotion.IsDashing() == false)
         {
             bossState = BossState.AttackDelay;
-            BossAnimationManager.instance.SetTrigger("RunToWalk");
+            animationManager.SetTrigger("RunToWalk");
             print("attack -> linear move");
             SelectAttackDelayMovement();
         }
@@ -308,7 +314,7 @@ public class BossFSM : MonoBehaviour
         //현재 내 hp가 55% 이하라면
         bossState = BossState.Die;
         //변신 애니메이션을 실행한다.
-        BossAnimationManager.instance.DeathAnimationStart();
+        animationManager.DeathAnimationStart();
 
         //이 스크립트를 파괴한다.
         this.enabled = false;
@@ -321,7 +327,8 @@ public class BossFSM : MonoBehaviour
         //플레이어한테 다가오는 방향으로 온다
         //만약 플레이어랑 거리가 멀지 않다면,
         //플레이어 주위로 원을 하나 그린다음, 그 원의 특이한 지점을 잡는다
-        BossLocomotion.instance.SetMoveDirection(BossLocomotion.MoveType.Linear);
+        animationManager.TurnOffRootMotion();
+        locomotion.SetMoveDirection(BossLocomotion.MoveType.Linear);
     }
 
     
