@@ -44,7 +44,6 @@ public class CameraControll : MonoBehaviour
         rotation.x = mouseX;
         transform.rotation = Quaternion.Euler(rotation);
 
-        print(rotation);
 
     }
 

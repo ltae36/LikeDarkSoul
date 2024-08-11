@@ -58,21 +58,21 @@ public class FollowCamera : MonoBehaviour
         //}
 
 
-        Vector3 distance = cam.transform.position - player.transform.position;
+        //Vector3 distance = cam.transform.position - player.transform.position;
 
-        ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        if (Physics.Raycast(myPos, distance, rayDist))
-        {
+        //ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        //if (Physics.Raycast(myPos, distance, rayDist))
+        //{
 
-            if (hit.collider.tag == "Wall")
-            {
+        //    if (hit.collider.tag == "Wall")
+        //    {
 
-            }
-            else if (hit.collider.tag == "Player")
-            {
-                transform.position = origin.position;
-            }
-        }
+        //    }
+        //    else if (hit.collider.tag == "Player")
+        //    {
+        //        transform.position = origin.position;
+        //    }
+        //}
 
 
     }

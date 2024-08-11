@@ -14,15 +14,24 @@ public class HitCheck : DamageCount
         if (hit.collider.name == "E_col_attack")
         {
             isDamaged = true;
+            DamageTime(1.5f);
         }
         else if (hit.collider.name == "col_sword") 
         {
             enemyDamaged = true;
+            DamageTime(1.5f);
         }
         else 
         {
-            isDamaged= false;
+            isDamaged = false;
             enemyDamaged = false;
         }
+    }
+
+    IEnumerator DamageTime(float sec) 
+    {
+        yield return new WaitForSeconds(sec);
+        isDamaged = false ;
+        enemyDamaged= false ;
     }
 }
