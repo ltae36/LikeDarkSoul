@@ -6,13 +6,12 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     int secondHitAnimation;
-    float moveSpeed;
-    public float stamina;
+    public float moveSpeed;
 
-    public float runSpeed = 8f;
+    public float runSpeed = 6f;
     public float turnSpeed = 8f;
-    public float sprintSpeed = 10f;
-    public float walkSpeed = 10f;
+    public float sprintSpeed = 8f;
+    public float walkSpeed = 4f;
 
     Vector3 dir;
 
@@ -165,31 +164,38 @@ public class PlayerMove : MonoBehaviour
             }
         }
 
-        if (stat.mystate == StatManager.PlayerState.move)
+        if (stat.mystate == StatManager.PlayerState.move && Input.GetKeyUp(KeyCode.Space))
         {
-
-            if (Input.GetKey(KeyCode.W))
-            {
-                animator.SetInteger("Roll", 0);
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                animator.SetInteger("Roll", 1);
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                animator.SetInteger("Roll", 3);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                animator.SetInteger("Roll", 4);
-            }
-
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                animator.SetTrigger("Roll 1");
-            }
+            //HandleMovementInput();
+            animator.SetTrigger("Roll 1");
         }
+
+        #region 구르기 애니메이션
+        //if (stat.mystate == StatManager.PlayerState.move)
+        //{
+
+        //    if (Input.GetKey(KeyCode.W))
+        //    {
+        //        animator.SetFloat("Roll", 0);
+        //    }
+        //    else if (Input.GetKey(KeyCode.A))
+        //    {
+        //        animator.SetFloat("Roll", 1);
+        //    }
+        //    else if (Input.GetKey(KeyCode.S))
+        //    {
+        //        animator.SetFloat("Roll", 3);
+        //    }
+        //    else if (Input.GetKey(KeyCode.D))
+        //    {
+        //        animator.SetFloat("Roll", 4);
+        //    }
+
+        //    if (Input.GetKeyUp(KeyCode.Space))
+        //    {
+        //        animator.SetTrigger("Roll 1");
+        //    }
+        //}
 
 
         //if (Input.GetKeyUp(KeyCode.Space))
@@ -212,5 +218,40 @@ public class PlayerMove : MonoBehaviour
         //}
         #endregion
 
+        #endregion
+
     }
+
+    //void HandleMovementInput() 
+    //{
+    //    // 기본적으로 Roll 값을 -1로 설정하여 입력이 없을 때의 상태를 정의합니다.
+    //    int rollDirection = -1;
+
+    //    if (Input.GetKey(KeyCode.W))
+    //    {
+    //        rollDirection = 0; // 앞방향
+    //    }
+    //    else if (Input.GetKey(KeyCode.A))
+    //    {
+    //        rollDirection = 1; // 왼쪽방향
+    //    }
+    //    else if (Input.GetKey(KeyCode.S))
+    //    {
+    //        rollDirection = 3; // 뒤쪽방향
+    //    }
+    //    else if (Input.GetKey(KeyCode.D))
+    //    {
+    //        rollDirection = 4; // 오른쪽방향
+    //    }
+
+    //    // Roll 애니메이션 값 설정
+    //    animator.SetInteger("Roll", rollDirection);
+
+    //    // 스페이스바를 눌렀다 떼는 경우 롤 애니메이션을 트리거
+    //    if (rollDirection >= 0 && Input.GetKeyUp(KeyCode.Space))
+    //    {
+    //        animator.SetTrigger("Roll 1");
+    //    }
+    //}
+
 }

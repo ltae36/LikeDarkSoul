@@ -1362,10 +1362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5cb28ae169a1a24d955a618e4da2c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 0
-  FP: 0
-  stam: 0
-  inAction: 0
   hpSlider: {fileID: 103771975}
   fpSlider: {fileID: 5617206}
   stamSlider: {fileID: 363748198}
@@ -1479,7 +1475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb4fb90a9bb3dc479f01f86e74f4b4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stamina: 0
+  moveSpeed: 0
   runSpeed: 6
   turnSpeed: 6
   sprintSpeed: 8
@@ -2655,7 +2651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb4fb90a9bb3dc479f01f86e74f4b4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stamina: 0
+  moveSpeed: 0
   runSpeed: 6
   turnSpeed: 6
   sprintSpeed: 8
@@ -3794,7 +3790,7 @@ Transform:
   m_GameObject: {fileID: 1317518018}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -3.622}
+  m_LocalPosition: {x: 0, y: 1, z: -25.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5558,10 +5554,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5cb28ae169a1a24d955a618e4da2c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 0
-  FP: 0
-  stam: 0
-  inAction: 0
   hpSlider: {fileID: 103771975}
   fpSlider: {fileID: 5617206}
   stamSlider: {fileID: 363748198}
@@ -5818,7 +5810,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb4fb90a9bb3dc479f01f86e74f4b4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stamina: 0
+  moveSpeed: 0
   runSpeed: 6
   turnSpeed: 6
   sprintSpeed: 8
