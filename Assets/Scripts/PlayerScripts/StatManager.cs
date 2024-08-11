@@ -1,164 +1,168 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StatManager : DamageCount
+public class StatManager : MonoBehaviour
 {
-    float fullHP = 454;
-    float fullFP = 93;
-    float fullStamina = 95;
+    float fullHP = 454f;
+    float fullFP = 93f;
+    float fullStamina = 95f;
     float playTime;
 
-    public float HP;
-    public float FP;
-    public float stam;
-    public bool inAction;
+    public float HP { get; private set; }
+    public float FP { get; private set; }
+    public float stam { get; private set; }
+    public bool inAction { get; private set; }
 
     public Slider hpSlider;
     public Slider fpSlider;
     public Slider stamSlider;
-
     public GameObject deadScene;
-
+    public HitCheck check;
     public Animator anim;
-
-    PlayerAttack isAttack;
 
     private bool isBeingIdle = false;
 
-    public enum PlayerState 
+    public enum PlayerState
     {
         idleNmove,
         dash,
         attack,
         defense,
         damaged,
-        roll,
         move,
         dead
     }
 
     public PlayerState mystate = PlayerState.idleNmove;
 
-    //private void Awake()
-    //{
-    //    anim = GetComponent<Animator>();
-    //}
-
     void Start()
-    {           
-        deadScene.SetActive(false);
-
-        hpSlider.maxValue = fullHP;
-        hpSlider.minValue = 0;
-        fpSlider.maxValue = fullFP;
-        stamSlider.maxValue = fullStamina;
-
-        HP = fullHP;
-        FP = fullFP;
-        stam = fullStamina;
-
-        inAction = false;
+    {
+        InitializeStats();
+        InitializeUI();
     }
 
     void Update()
     {
-        // 나의 상태에 따라서 스태미너 소모량과 패턴이 달라진다.
-        switch (mystate) 
+        HandleState();
+        UpdateUI();
+    }
+
+    private void InitializeStats()
+    {
+        HP = fullHP;
+        FP = fullFP;
+        stam = fullStamina;
+        inAction = false;
+    }
+
+    private void InitializeUI()
+    {
+        deadScene.SetActive(false);
+        hpSlider.maxValue = fullHP;
+        fpSlider.maxValue = fullFP;
+        stamSlider.maxValue = fullStamina;
+    }
+
+    private void HandleState()
+    {
+        switch (mystate)
         {
             case PlayerState.idleNmove:
                 inAction = false;
-                idleNmove();
+                IdleOrMove();
                 break;
             case PlayerState.dash:
-                dash();
+                Dash();
                 break;
             case PlayerState.attack:
                 inAction = true;
-                attack();
+                Attack();
                 break;
             case PlayerState.defense:
                 inAction = true;
-                defense();
+                Defense();
                 break;
             case PlayerState.damaged:
                 inAction = true;
-                damaged();
-                break;
-            case PlayerState.roll:
-                //roll();
+                Damaged();
                 break;
             case PlayerState.move:
-                move();
+                inAction = false;
+                Move();
                 break;
             case PlayerState.dead:
-                dead();
+                Dead();
                 break;
-        
         }
+    }
 
+    private void UpdateUI()
+    {
         hpSlider.value = HP;
         fpSlider.value = FP;
         stamSlider.value = stam;
-        //if (Input.GetKey(KeyCode.Space))
-        //{
-        //    stam -= Time.deltaTime * usage;
-        //}
-        //else if(stam < fullStamina)
-        //{
-        //    stam += Time.deltaTime * usage;
-        //}
     }
 
-    private void dead()
+    private void IdleOrMove()
     {
-        deadScene.SetActive(true);
-    }
+        if (stam < fullStamina) Recovery(10);
 
-    private void damaged()
-    {
-        if (isDamaged && HP != 0)
+        if (IsPlayingAnimation("WalkSprintTree"))
         {
-            HP -= 90;
+            mystate = PlayerState.move;
         }
-        else if (HP <= 0) 
+        else if (CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) ||
+                 CheckAndSetState("OneHand_Up_Attack_2", PlayerState.attack) ||
+                 CheckAndSetState("Hit_F_1_InPlace", PlayerState.damaged) ||
+                 CheckAndSetState("Hit_F_2_InPlace", PlayerState.damaged) ||
+                 CheckAndSetState("OneHand_Up_Shield_Block_Hit_1", PlayerState.defense) ||
+                 CheckAndSetState("OneHand_Up_Shield_Block_Idle", PlayerState.defense))
         {
-            mystate = PlayerState.dead;
+            return;
         }
-        beingIdle(playTime);
     }
 
-    private void move()
+    private void Move()
     {
-        // 스페이스바를 누를 경우 WASD방향으로 구름
-        // 구를때 마다 스태미너 감소
-    }
-
-
-    private void defense()
-    {
-        if (!Input.GetMouseButton(1)) 
+        if (Input.GetKeyUp(KeyCode.Space))
         {
-            mystate = PlayerState.idleNmove;
+            stam -= 19;
         }
-        // 방패를 든 상태에서 공격을 받았다면 스태미너 감소
-        // 방패를 든 상태에서는 스태미너가 0.5배 느리게 회복
-        Recovery(5);
+        else if (Input.GetKey(KeyCode.Space))
+        {
+            mystate = PlayerState.dash;
+        }
+
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkSprintTree") == true)
+        {
+            // WalkSprintTree가 재생이 끝났다면 idle상태가 됨
+            float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            if (!Input.GetKey(KeyCode.W) || !Input.GetKey(KeyCode.S) ||
+                !Input.GetKey(KeyCode.D) || !Input.GetKey(KeyCode.E))
+            {
+                if (animTime >= 1.0f) //애니메이션 플레이 끝
+                {
+                    mystate = PlayerState.idleNmove;
+                }
+            }
+
+        }
+        else if (CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) ||
+            CheckAndSetState("OneHand_Up_Attack_2", PlayerState.attack) ||
+            CheckAndSetState("Hit_F_1_InPlace", PlayerState.damaged) ||
+            CheckAndSetState("Hit_F_2_InPlace", PlayerState.damaged) ||
+            CheckAndSetState("OneHand_Up_Shield_Block_Hit_1", PlayerState.defense) ||
+            CheckAndSetState("OneHand_Up_Shield_Block_Idle", PlayerState.defense))
+        {
+            return;
+        }
+
+        Recovery(10);
     }
 
-    private void attack()
-    {        
-        // 공격을 할 경우 스태미너 감소
-        StartCoroutine(beingIdle(playTime));
-    }
-
-    private void dash()
+    private void Dash()
     {
-        // dash상태에서는 지속적으로 스태미너 소모
         Consumption(10);
         if (!Input.GetKey(KeyCode.Space))
         {
@@ -166,88 +170,82 @@ public class StatManager : DamageCount
         }
     }
 
-    private void idleNmove()
+    private void Attack()
     {
-        if (stam < fullStamina)
-        {
-            Recovery(10);
-        }
-        // damaged가 체크되었다면 playerState를 damaged로 전환
-        if (isDamaged) 
-        {
-            mystate = PlayerState.damaged;
-        }
-
-        
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkSprintTree") == true)
-        {
-            float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            if (animTime > 0 && animTime < 1.0f) //애니메이션 플레이 중
-            {
-                mystate = PlayerState.move;
-
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    // WalkSprintTree 재생중 스페이스바를 누른 상태라면 playerState를 dash로 전환
-                    print("달리는 중");
-                    mystate = PlayerState.dash;
-                }
-            }
-        }
-        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("OneHand_Up_Attack_1") == true || anim.GetCurrentAnimatorStateInfo(0).IsName("OneHand_Up_Attack_2") == true) 
-        {
-            playTime = anim.GetCurrentAnimatorStateInfo(0).length;
-            float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            if (animTime > 0 && animTime < 1.0f) 
-            {
-                mystate = PlayerState.attack;
-            }
-        }
-        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Hit_F_1_InPlace") == true || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit_F_2_InPlace") == true) 
-        {
-            playTime = anim.GetCurrentAnimatorStateInfo(0).length;
-            float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            if (animTime > 0 && animTime < 1.0f) 
-            {
-                mystate = PlayerState.damaged;
-            }
-        }
-
-        if (Input.GetMouseButton(1)) 
-        {
-            mystate = PlayerState.defense;
-        }
-
+        StartCoroutine(BeingIdle(playTime));
     }
 
-    void Recovery(float wastage) 
+    private void Defense()
     {
-        if (stam != fullStamina)
+        if (!Input.GetMouseButton(1))
         {
-            stam += Time.deltaTime * wastage;
+            mystate = PlayerState.idleNmove;
+        }
+        Recovery(5);
+    }
+
+    private void Damaged()
+    {
+        if (check.isDamaged && HP > 0)
+        {
+            HP -= 90;
+            StartCoroutine(BeingIdle(playTime));
+        }
+        else if (HP <= 0)
+        {
+            mystate = PlayerState.dead;
+        }
+        else
+        {
+            StartCoroutine(BeingIdle(playTime));
         }
     }
 
-    void Consumption(float wastage) 
+    private void Dead()
     {
-        if (stam != 0)
+        deadScene.SetActive(true);
+    }
+
+    private bool IsPlayingAnimation(string animationName)
+    {
+        return anim.GetCurrentAnimatorStateInfo(0).IsName(animationName);
+    }
+
+    private bool CheckAndSetState(string animationName, PlayerState newState)
+    {
+        if (IsPlayingAnimation(animationName))
         {
-            stam -= Time.deltaTime * wastage;
+            playTime = anim.GetCurrentAnimatorStateInfo(0).length;
+            mystate = newState;
+            return true;
         }
-        else 
+        return false;
+    }
+
+    private void Recovery(float amount)
+    {
+        stam = Mathf.Clamp(stam + Time.deltaTime * amount, 0, fullStamina);
+    }
+
+    private void Consumption(float amount)
+    {
+        stam = Mathf.Clamp(stam - Time.deltaTime * amount, 0, fullStamina);
+        if (stam == 0)
         {
             mystate = PlayerState.idleNmove;
         }
     }
 
-    IEnumerator beingIdle(float sec) 
+    private IEnumerator BeingIdle(float sec)
     {
         isBeingIdle = true;
+
         if (Input.GetMouseButtonDown(0))
         {
             stam -= 19;
         }
         yield return new WaitForSeconds(sec);
+
         mystate = PlayerState.idleNmove;
         isBeingIdle = false;
     }

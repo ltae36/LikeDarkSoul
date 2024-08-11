@@ -11,18 +11,28 @@ public class HitCheck : DamageCount
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        print(hit);
         if (hit.collider.name == "E_col_attack")
         {
             isDamaged = true;
+            StartCoroutine(DamageTime(1.5f));
         }
         else if (hit.collider.name == "col_sword") 
         {
             enemyDamaged = true;
+            StartCoroutine(DamageTime(1.5f));
         }
         else 
         {
-            isDamaged= false;
+            isDamaged = false;
             enemyDamaged = false;
         }
+    }
+
+    IEnumerator DamageTime(float sec) 
+    {
+        yield return new WaitForSeconds(sec);
+        isDamaged = false ;
+        enemyDamaged= false ;
     }
 }
