@@ -43,7 +43,7 @@ public class EnemyFSM : MonoBehaviour
         switch (undeadState) 
         {
             case EnemyState.Sleep:
-                Sleep();
+                //Sleep();
                 break;
             case EnemyState.Awake:
                 WakeUp();
@@ -68,25 +68,25 @@ public class EnemyFSM : MonoBehaviour
         }
     }
 
-    private void Sleep()
-    {
-        //자고 있는 상태
-        //만약 플레이어가 박스 오버랩 안으로 들어오면...
-        Collider[] colliders = Physics.OverlapBox(awakeTrigger.transform.position,awakeTrigger.transform.localScale/2) ;
+    //private void Sleep()
+    //{
+    //    //자고 있는 상태
+    //    //만약 플레이어가 박스 오버랩 안으로 들어오면...
+    //    Collider[] colliders = Physics.OverlapBox(awakeTrigger.transform.position,awakeTrigger.transform.localScale/2) ;
 
-        foreach (Collider collider in colliders)
-        {
-            print(collider.gameObject.name);
-            if (collider.gameObject.CompareTag("Player"))
-            {
-                undeadState = EnemyState.Awake;
-                print("sleep -> awake");
-                animationManager.AwakeAnimationStart();
-            }
-        }
-        //상태를 awake로 바꾼다.
-        //애니메이션을 실행한다.
-    }
+    //    foreach (Collider collider in colliders)
+    //    {
+    //        print(collider.gameObject.name);
+    //        if (collider.gameObject.CompareTag("Player"))
+    //        {
+    //            undeadState = EnemyState.Awake;
+    //            print("sleep -> awake");
+    //            animationManager.AwakeAnimationStart();
+    //        }
+    //    }
+    //    //상태를 awake로 바꾼다.
+    //    //애니메이션을 실행한다.
+    //}
 
     private void WakeUp()
     {

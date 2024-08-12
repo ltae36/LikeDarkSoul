@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -169,6 +168,8 @@ public class PlayerMove : MonoBehaviour
             //HandleMovementInput();
             animator.SetTrigger("Roll 1");
         }
+
+
 
         #region 구르기 애니메이션
         //if (stat.mystate == StatManager.PlayerState.move)

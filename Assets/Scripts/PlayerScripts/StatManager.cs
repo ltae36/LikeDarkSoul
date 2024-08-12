@@ -106,6 +106,11 @@ public class StatManager : MonoBehaviour
 
     private void IdleOrMove()
     {
+        if (Input.GetKeyDown(KeyCode.Escape)) 
+        {
+            mystate = PlayerState.dead;
+        }
+
         if (stam < fullStamina) Recovery(10);
 
         if (IsPlayingAnimation("WalkSprintTree"))
@@ -202,11 +207,12 @@ public class StatManager : MonoBehaviour
 
     private void Dead()
     {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) 
-        {
-            deadScene.SetActive(true);
+        //if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) 
+        //{
+        //    deadScene.SetActive(true);
+        //}
 
-        }
+        deadScene.SetActive(true);
     }
 
     private bool IsPlayingAnimation(string animationName)
