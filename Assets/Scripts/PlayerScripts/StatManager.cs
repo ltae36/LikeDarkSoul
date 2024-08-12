@@ -9,10 +9,10 @@ public class StatManager : MonoBehaviour
     float fullStamina = 95f;
     float playTime;
 
-    public float HP { get; private set; }
-    public float FP { get; private set; }
-    public float stam { get; private set; }
-    public bool inAction { get; private set; }
+    public float HP;
+    public float FP;
+    public float stam;
+    public bool inAction;
 
     public Slider hpSlider;
     public Slider fpSlider;
