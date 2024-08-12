@@ -5,11 +5,8 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     public Animator attack;
-    public GameObject ragDoll;
-    public GameObject child;
 
     PlayerMove move;
-    public StatManager hp;
 
     float actionTime;
     int comboCount;
@@ -23,8 +20,7 @@ public class PlayerAttack : MonoBehaviour
         comboCount = 0;
         attack = GetComponentInChildren<Animator>();
         move = GetComponent<PlayerMove>();
-        child = child.gameObject;
-        ragDoll.SetActive(false);
+
     }
 
     void Update()
@@ -44,11 +40,7 @@ public class PlayerAttack : MonoBehaviour
             attack.SetInteger("Combo", comboCount);            
         }
 
-        if (hp.mystate == StatManager.PlayerState.dead) 
-        {
-            child.SetActive(false);
-            ragDoll.SetActive(true);
-        }
+
 
 
 

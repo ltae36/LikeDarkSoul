@@ -11,16 +11,11 @@ public class RevivalTrigger : MonoBehaviour
         
     }
 
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player") 
         {
-            anim.SetBool("inPlayer", true);
+            anim.SetTrigger("IsAwake");
         }
     }
 }

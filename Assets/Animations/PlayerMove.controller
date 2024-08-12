@@ -616,9 +616,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Sword
     m_EventTreshold: 0
-  - m_ConditionMode: 6
-    m_ConditionEvent: Combo
-    m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4010892414896208076}
   m_Solo: 0
@@ -995,7 +992,7 @@ AnimatorStateMachine:
     m_Position: {x: 260, y: 260, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3737656468852947461}
-    m_Position: {x: 250, y: 10, z: 0}
+    m_Position: {x: 220, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4465594081862370609}
     m_Position: {x: 550, y: -10, z: 0}

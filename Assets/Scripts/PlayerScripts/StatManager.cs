@@ -25,7 +25,7 @@ public class StatManager : MonoBehaviour
 
     public enum PlayerState
     {
-        idleNmove,
+        idle,
         dash,
         attack,
         defense,
@@ -34,7 +34,7 @@ public class StatManager : MonoBehaviour
         dead
     }
 
-    public PlayerState mystate = PlayerState.idleNmove;
+    public PlayerState mystate = PlayerState.idle;
 
     void Start()
     {
@@ -46,6 +46,11 @@ public class StatManager : MonoBehaviour
     {
         HandleState();
         UpdateUI();
+
+        if (Input.GetKeyUp(KeyCode.Escape)) 
+        {
+            mystate = PlayerState.dead;
+        }
     }
 
     private void InitializeStats()
@@ -68,9 +73,13 @@ public class StatManager : MonoBehaviour
     {
         switch (mystate)
         {
-            case PlayerState.idleNmove:
+            case PlayerState.idle:
                 inAction = false;
-                IdleOrMove();
+                Idle();
+                break;
+            case PlayerState.move:
+                inAction = false;
+                Move();
                 break;
             case PlayerState.dash:
                 Dash();
@@ -87,10 +96,6 @@ public class StatManager : MonoBehaviour
                 inAction = true;
                 Damaged();
                 break;
-            case PlayerState.move:
-                inAction = false;
-                Move();
-                break;
             case PlayerState.dead:
                 Dead();
                 break;
@@ -104,25 +109,16 @@ public class StatManager : MonoBehaviour
         stamSlider.value = stam;
     }
 
-    private void IdleOrMove()
+    private void Idle()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) 
-        {
-            mystate = PlayerState.dead;
-        }
-
+        // 스태미너가 풀충상태가 아니라면 회복한다.
         if (stam < fullStamina) Recovery(10);
 
-        if (IsPlayingAnimation("WalkSprintTree"))
-        {
-            mystate = PlayerState.move;
-        }
-        else if (CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) ||
-                 CheckAndSetState("OneHand_Up_Attack_2", PlayerState.attack) ||
-                 CheckAndSetState("Hit_F_1_InPlace", PlayerState.damaged) ||
-                 CheckAndSetState("Hit_F_2_InPlace", PlayerState.damaged) ||
-                 CheckAndSetState("OneHand_Up_Shield_Block_Hit_1", PlayerState.defense) ||
-                 CheckAndSetState("OneHand_Up_Shield_Block_Idle", PlayerState.defense))
+        if (CheckAndSetState("WalkSprintTree", PlayerState.move) || 
+            CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) || 
+            CheckAndSetState("Hit_F_1_InPlace", PlayerState.damaged) || 
+            CheckAndSetState("Hit_F_2_InPlace", PlayerState.damaged) || 
+            CheckAndSetState("OneHand_Up_Shield_Block_Hit_1", PlayerState.defense))
         {
             return;
         }
@@ -148,13 +144,12 @@ public class StatManager : MonoBehaviour
             {
                 if (animTime >= 1.0f) //애니메이션 플레이 끝
                 {
-                    mystate = PlayerState.idleNmove;
+                    mystate = PlayerState.idle;
                 }
             }
 
         }
         else if (CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) ||
-                CheckAndSetState("OneHand_Up_Attack_2", PlayerState.attack) ||
                 CheckAndSetState("Hit_F_1_InPlace", PlayerState.damaged) ||
                 CheckAndSetState("Hit_F_2_InPlace", PlayerState.damaged) ||
                 CheckAndSetState("OneHand_Up_Shield_Block_Hit_1", PlayerState.defense))
@@ -170,7 +165,7 @@ public class StatManager : MonoBehaviour
         Consumption(10);
         if (!Input.GetKey(KeyCode.Space))
         {
-            mystate = PlayerState.idleNmove;
+            mystate = PlayerState.idle;
         }
     }
 
@@ -183,7 +178,7 @@ public class StatManager : MonoBehaviour
     {
         if (!Input.GetMouseButton(1))
         {
-            mystate = PlayerState.idleNmove;
+            mystate = PlayerState.idle;
         }
         Recovery(5);
     }
@@ -207,44 +202,44 @@ public class StatManager : MonoBehaviour
 
     private void Dead()
     {
-        //if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) 
-        //{
-        //    deadScene.SetActive(true);
-        //}
-
         deadScene.SetActive(true);
     }
 
+    // 현재의 애니메이션 스테이트를 확인
     private bool IsPlayingAnimation(string animationName)
     {
         return anim.GetCurrentAnimatorStateInfo(0).IsName(animationName);
     }
 
+    // 해당 애니메이션이 재생 중인가를 확인
     private bool CheckAndSetState(string animationName, PlayerState newState)
     {
         if (IsPlayingAnimation(animationName))
         {
-            playTime = anim.GetCurrentAnimatorStateInfo(0).length;
+            playTime = anim.GetCurrentAnimatorStateInfo(0).length; // 애니메이션의 재생 시간이 playTime에 저장된다.
             mystate = newState;
             return true;
         }
         return false;
     }
 
+    // 스태미너가 회복된다.
     private void Recovery(float amount)
     {
         stam = Mathf.Clamp(stam + Time.deltaTime * amount, 0, fullStamina);
     }
 
+    // 스태미너가 지속적으로 소모된다.
     private void Consumption(float amount)
     {
         stam = Mathf.Clamp(stam - Time.deltaTime * amount, 0, fullStamina);
         if (stam == 0)
         {
-            mystate = PlayerState.idleNmove;
+            mystate = PlayerState.idle;
         }
     }
 
+    // 마우스 왼쪽 버튼을 누르면 스태미너가 감소하고 몇 초 뒤 idle상태가 된다.
     private IEnumerator BeingIdle(float sec)
     {
         isBeingIdle = true;
@@ -255,7 +250,7 @@ public class StatManager : MonoBehaviour
         }
         yield return new WaitForSeconds(sec);
 
-        mystate = PlayerState.idleNmove;
+        mystate = PlayerState.idle;
         isBeingIdle = false;
     }
 }
