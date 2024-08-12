@@ -11,7 +11,7 @@ public class BossHpBar : MonoBehaviour
 
     private void Update()
     {
-        bossHelathBar.value = bossHealth.GetHp() / bossHealth.maxHealth;
+        bossHelathBar.value = (float)bossHealth.GetHp() / (float)bossHealth.maxHealth;
     }
 
 

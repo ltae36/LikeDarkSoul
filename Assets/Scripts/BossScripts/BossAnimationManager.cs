@@ -6,9 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(BossLocomotion))]
 public class BossAnimationManager : MonoBehaviour
 {
-    //animation을 관리하는 클래스 singletone으로 구현하자
-    public static BossAnimationManager instance;
-
+    BossLocomotion locomotion;
     [SerializeField] Animator animator;
 
 
@@ -17,34 +15,16 @@ public class BossAnimationManager : MonoBehaviour
     float vertical;
     float horizontal;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
-    private void OnDestroy()
+    private void Start()
     {
-        if(instance == this)
-            instance = null;
+        locomotion = GetComponent<BossLocomotion>();    
     }
-    public Dictionary<string, float> animationTime = new Dictionary<string, float>() {
-        {"Base Layer.Awake",0.8f },
-        {"Base Layer.Attack.Vertical", 0.85f },
-        {"Base Layer.Attack.Horizontal",0.88f }
-    
-    };
 
     void Update()
     {
-        vertical = BossLocomotion.instance.vertical;
-        horizontal = BossLocomotion.instance.horizontal;
+        vertical = locomotion.vertical;
+        horizontal = locomotion.horizontal;
         //animator의 변수를 업데이트 하고 싶다.
         UpdateValuesInAnimator();
 
@@ -74,11 +54,17 @@ public class BossAnimationManager : MonoBehaviour
         animator.SetTrigger("WalkToAttack");
         animator.SetInteger("DistanceType", distanceType);
         animator.SetFloat("AttackType", attackType);
-
-        if(distanceType ==2 && attackType == 1)
-            animator.applyRootMotion = false;
     }
 
+    public void TurnOffRootMotion()
+    {
+        animator.applyRootMotion = false;
+    }
+
+    public void TurnOnRootMotion()
+    {
+        animator.applyRootMotion=true;
+    }
     public bool IsAwakeAnimationEnd()
     {
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);

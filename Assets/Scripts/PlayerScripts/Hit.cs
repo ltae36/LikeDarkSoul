@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Hit : MonoBehaviour
 {
-    public BossHealth health;
+    //public BossHealth health;
 
 
     private void OnTriggerEnter(Collider other)
@@ -13,7 +13,10 @@ public class Hit : MonoBehaviour
         if (other.gameObject.tag == "Boss")
         {
             print("АјАн");
-            health.TakeDamage(400);
+
+            BossHealth health = other.GetComponent<BossHealth>();
+            if(health != null)
+                health.TakeDamage(400);
         }
     }
 

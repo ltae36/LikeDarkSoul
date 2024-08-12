@@ -23,12 +23,14 @@ public class BossPhaseTransition : MonoBehaviour
 
         Vector3 tempPos = boss1.transform.position;
         Quaternion tempRot = boss1.transform.rotation;
-
         Destroy(boss1);
 
         yield return null;
         boss2.SetActive(true);
         boss2.transform.position = tempPos;
         boss2.transform.rotation = tempRot;
+
+        boss2.GetComponent<Animator>().rootPosition = tempPos;
+        boss2.GetComponent<Animator>().rootRotation = tempRot;
     }
 }

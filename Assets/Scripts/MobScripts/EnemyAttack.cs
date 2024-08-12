@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class EnemyAttack : DamageCount
 {
-    void Start()
-    {
-        
-    }
+    public float damage;
 
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,6 +17,10 @@ public class EnemyAttack : DamageCount
         else if (other.gameObject.tag == "Player") 
         {
             // 플레이어에게 맞으면 플레이어에게 대미지를 준다.
+            if (other.gameObject.GetComponentInChildren<StatManager>() != null)
+            {
+                other.gameObject.GetComponentInChildren<StatManager>().HP -= damage;
+            }
         }
     }
 }

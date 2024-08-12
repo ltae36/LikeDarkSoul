@@ -50,25 +50,10 @@ public class BossLocomotion : MonoBehaviour
     [Header("RaySize")]
     [SerializeField] float raySize = 0.6f;
 
-    public static BossLocomotion instance;
+    //public static BossLocomotion instance;
 
     CharacterController cc;
 
-    private void Awake()
-    {
-        if (instance == null) {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-    private void OnDestroy()
-    {
-        if (instance == this)
-            instance = null;
-    }
     void Start()
     {
         myTransform = transform;
@@ -161,10 +146,8 @@ public class BossLocomotion : MonoBehaviour
                         {
                             movePosition.y = 0;
                             transform.position = movePosition;
-
                             //jump를 종료한다
                             isJump = false;
-                            GetComponent<Animator>().applyRootMotion = true;
                             return;
                         }
                     }
@@ -207,5 +190,10 @@ public class BossLocomotion : MonoBehaviour
     public bool IsDashing()
     {
         return isDash;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawCube(movePosition, new Vector3(1, 1, 1));
     }
 }
