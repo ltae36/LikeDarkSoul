@@ -23,8 +23,11 @@ public class EnemyFSM : MonoBehaviour
     public EnemyState undeadState;
     public float attackRange;
     public float idleRange;
+    
     BossLocomotion locomotion;
     EnemyAnimationManager animationManager;
+    HitCheck check;
+
     float currentTime = 0.0f;
     public float attackDelayTime = 1.0f;
 
@@ -32,6 +35,7 @@ public class EnemyFSM : MonoBehaviour
     {
         locomotion = GetComponent<BossLocomotion>();
         animationManager = GetComponent<EnemyAnimationManager>();
+        check = GetComponent<HitCheck>();
     }
 
     void Update()
@@ -117,6 +121,11 @@ public class EnemyFSM : MonoBehaviour
     }
     private void Idle()
     {
+        if (check.enemyDamaged) 
+        {
+            undeadState = EnemyState.Hit;
+        }
+
         //걸어서 player에게 다가오는 상태
 
         //플레이어를 향해서 걸어온다.
@@ -186,13 +195,24 @@ public class EnemyFSM : MonoBehaviour
             animationManager.AttackAnimationStart();
             currentTime = 0;
         }
+
+        if (check.enemyDamaged) 
+        {
+            undeadState = EnemyState.Hit;
+        }
         
         
     }
     private void Hitted()
     {
         // 피격 애니메이션이 재생된다.
+        animationManager.HitAnimationStart();
         // hp가 감소한다.
+
+        if (!check.enemyDamaged) 
+        {
+            undeadState = EnemyState.AttackDelay;
+        }
     }
 
     private void Death()

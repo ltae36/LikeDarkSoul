@@ -47,6 +47,10 @@ public class EnemyAnimationManager : MonoBehaviour
         }
         return false;
     }
+    public void HitAnimationStart() 
+    {
+        animator.SetTrigger("hit");
+    }
 
     public bool IsAwakeAnimationEnd()
     {

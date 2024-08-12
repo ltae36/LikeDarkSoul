@@ -9,10 +9,10 @@ public class StatManager : MonoBehaviour
     float fullStamina = 95f;
     float playTime;
 
-    public float HP { get; private set; }
-    public float FP { get; private set; }
-    public float stam { get; private set; }
-    public bool inAction { get; private set; }
+    public float HP;
+    public float FP;
+    public float stam;
+    public bool inAction;
 
     public Slider hpSlider;
     public Slider fpSlider;
@@ -149,11 +149,10 @@ public class StatManager : MonoBehaviour
 
         }
         else if (CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) ||
-            CheckAndSetState("OneHand_Up_Attack_2", PlayerState.attack) ||
-            CheckAndSetState("Hit_F_1_InPlace", PlayerState.damaged) ||
-            CheckAndSetState("Hit_F_2_InPlace", PlayerState.damaged) ||
-            CheckAndSetState("OneHand_Up_Shield_Block_Hit_1", PlayerState.defense) ||
-            CheckAndSetState("OneHand_Up_Shield_Block_Idle", PlayerState.defense))
+                CheckAndSetState("OneHand_Up_Attack_2", PlayerState.attack) ||
+                CheckAndSetState("Hit_F_1_InPlace", PlayerState.damaged) ||
+                CheckAndSetState("Hit_F_2_InPlace", PlayerState.damaged) ||
+                CheckAndSetState("OneHand_Up_Shield_Block_Hit_1", PlayerState.defense))
         {
             return;
         }
@@ -203,7 +202,11 @@ public class StatManager : MonoBehaviour
 
     private void Dead()
     {
-        deadScene.SetActive(true);
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) 
+        {
+            deadScene.SetActive(true);
+
+        }
     }
 
     private bool IsPlayingAnimation(string animationName)
