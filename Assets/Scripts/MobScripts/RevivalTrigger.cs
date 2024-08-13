@@ -6,11 +6,6 @@ public class RevivalTrigger : MonoBehaviour
 {
     public Animator anim;
 
-    void Start()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player") 

@@ -45,7 +45,6 @@ public class PlayerMove : MonoBehaviour
         if (stat.inAction) 
         {
             print(stat.inAction);
-
         }
 
         float h = Input.GetAxis("Horizontal");
@@ -61,13 +60,13 @@ public class PlayerMove : MonoBehaviour
         // 액션이 작동 중일 때는 WASD이동이 작동하지 않는다.
         if (!stat.inAction)
         {
-            moveSpeed = runSpeed;
+            dir = new Vector3(h, 0, v);
         }
         else
         {
-            moveSpeed = 0;
+            dir = Vector3.zero;
         }
-        dir = new Vector3(h, 0, v);
+        //dir = new Vector3(h, 0, v);
 
 
         camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
@@ -75,13 +74,44 @@ public class PlayerMove : MonoBehaviour
         // CharacterController를 이용한 이동
         cc.Move(camDir * moveSpeed * Time.deltaTime);
 
-        // 방향전환
+        // 이동 상태가 아닐 경우(키 WASD 키입력이 없을 경우)
         if (dir != Vector3.zero)
         {
+            // 방향전환
             Quaternion rot = Quaternion.LookRotation(camDir, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, rot, turnSpeed * Time.deltaTime);
+
+            // dir이 zero가 아닌 상태(이동 상태)에서 LeftAlt를 누르면 걷고, SpaceBar를 누르면 달린다.        
+            // WASD를 누른 채로 LeftAlt를 누르면 속도가 느려지고, walk애니메이션이 재생된다.
+            if (Input.GetKey(KeyCode.LeftAlt))
+            {
+                Walk(10f);
+            }
+            else if (Input.GetKey(KeyCode.Space))
+            {
+                Dash(10f);
+            }
+            else if (Input.GetKeyUp(KeyCode.Space) && stat.mystate == StatManager.PlayerState.dash) 
+            {
+                animator.SetBool("Roll 0", true);
+            }
+            else 
+            {
+                Run();
+            }
+
+        }
+        else 
+        {
+            // 제자리라면 스페이스바를 눌렀을 때 뒤로 물러난다.
+            if (Input.GetKeyDown(KeyCode.Space)) 
+            {
+                animator.SetTrigger("Jump_Back");
+            }
         }
 
+        // WASD를 누르면 해당 방향으로 달리는 애니메이션이 재생된다.
+        animator.SetBool("Run", dir != Vector3.zero);
 
         #region 애니메이션 재생
 
@@ -94,23 +124,12 @@ public class PlayerMove : MonoBehaviour
                 animator.SetFloat("DamageCount", secondHitAnimation);
                 secondHitAnimation = 0;
             }
-        }
-
-
-        // WASD를 누르면 해당 방향으로 달리는 애니메이션이 재생된다.
-        animator.SetBool("Run", dir != Vector3.zero);
-
-        // WASD를 누른 채로 LeftAlt를 누르면 속도가 느려지고, walk애니메이션이 재생된다.
-        if (Input.GetKey(KeyCode.LeftAlt))
-        {
-            isWalking = true;
-            isrun = false;
-        }
-        else
-        {
-            isWalking = false;
-            isrun = true;
-        }
+        }        
+        //else
+        //{
+        //    isWalking = false;
+        //    isrun = true;
+        //}
 
         // WASD를 누른 채로 스페이스바를 누르면 속도가 빨라지고, sprint애니메이션이 재생된다.
         //if (Input.GetKey(KeyCode.Space) && ( Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S) ))
@@ -123,51 +142,45 @@ public class PlayerMove : MonoBehaviour
         //    }
         //}
 
-        if (Input.GetKey(KeyCode.Space))
-        {
-            isSprint = true;
-            isrun = false;
-        }
-        else
-        {
-            isSprint = false;
-            isrun = true;
-            //if (onSpace > 0)
-            //{
-            //    onSpace -= Time.deltaTime * onSpace;
-            //}
-        }
+        // 스페이스바를 누른 상태라면 대쉬모드가 활성화됨
 
-        if (isSprint)
-        {
-            animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
-            moveSpeed += Time.deltaTime * 5f;
+        //else if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    if (dir == Vector3.zero)
+        //    {
+        //        animator.SetTrigger("Jump_Back");
+        //    }
+        //    else if (stat.mystate == StatManager.PlayerState.move) 
+        //    {
+        //        animator.SetTrigger("Roll 1");
+        //    }
+        //}
+        //else
+        //{
+        //    isSprint = false;
+        //    isrun = true;
+        //    //if (onSpace > 0)
+        //    //{
+        //    //    onSpace -= Time.deltaTime * onSpace;
+        //    //}
+        //}
 
-        }
-        else if (isWalking)
-        {
-            animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
-            moveSpeed -= Time.deltaTime * 5f;
-        }
-        else
-        {
-            animator.SetFloat("MoveSpeed", runSpeed);
-            moveSpeed = runSpeed;
-        }
+        //if (isSprint)
+        //{
+        //    animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
+        //    moveSpeed += Time.deltaTime * 5f;
 
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            if (dir == Vector3.zero)
-            {
-                animator.SetTrigger("Jump_Back");
-            }
-        }
-
-        if (stat.mystate == StatManager.PlayerState.move && Input.GetKeyUp(KeyCode.Space))
-        {
-            //HandleMovementInput();
-            animator.SetTrigger("Roll 1");
-        }
+        //}
+        //else if (isWalking)
+        //{
+        //    animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
+        //    moveSpeed -= Time.deltaTime * 5f;
+        //}
+        //else
+        //{
+        //    animator.SetFloat("MoveSpeed", runSpeed);
+        //    moveSpeed = runSpeed;
+        //}
 
 
 
@@ -221,6 +234,41 @@ public class PlayerMove : MonoBehaviour
 
         #endregion
 
+    }
+
+    void Walk(float sec) 
+    {
+        isWalking = true;
+        moveSpeed -= sec * Time.deltaTime;
+        moveSpeed = Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed);
+        animator.SetFloat("MoveSpeed", moveSpeed);
+    }
+
+    void Dash(float sec) 
+    {
+        isSprint = true;
+        moveSpeed += sec * Time.deltaTime;
+        moveSpeed = Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed);
+        animator.SetFloat("MoveSpeed", moveSpeed);
+    }
+
+    void Run() 
+    {
+        isWalking = false;
+        isSprint = false;
+
+        //if (isWalking) 
+        //{
+        //    moveSpeed += runSpeed * Time.deltaTime;
+        //    moveSpeed = Mathf.Clamp(moveSpeed, 0, runSpeed);
+        //}
+        //else if (isSprint) 
+        //{
+        //    moveSpeed -= runSpeed * Time.deltaTime;
+        //    moveSpeed = Mathf.Clamp(moveSpeed, runSpeed, 20);
+        //}
+        moveSpeed = runSpeed;
+        animator.SetFloat("MoveSpeed", moveSpeed);
     }
 
     //void HandleMovementInput() 

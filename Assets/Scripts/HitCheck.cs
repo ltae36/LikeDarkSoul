@@ -11,7 +11,6 @@ public class HitCheck : DamageCount
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        print(hit);
         if (hit.collider.name == "E_col_attack")
         {
             isDamaged = true;

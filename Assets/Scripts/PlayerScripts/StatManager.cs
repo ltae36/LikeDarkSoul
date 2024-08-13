@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,7 @@ public class StatManager : MonoBehaviour
     public GameObject deadScene;
     public HitCheck check;
     public Animator anim;
+    public PlayerMove playerMove;
 
     private bool isBeingIdle = false;
 
@@ -38,6 +40,7 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
+
         InitializeStats();
         InitializeUI();
     }
@@ -46,29 +49,30 @@ public class StatManager : MonoBehaviour
     {
         HandleState();
         UpdateUI();
-
-        if (Input.GetKeyUp(KeyCode.Escape)) 
-        {
-            mystate = PlayerState.dead;
-        }
     }
 
+    // 스탯 수치 설정, 액션 상태 설정
     private void InitializeStats()
     {
+        // 기본 스탯 수치를 최대치로 설정한다.
         HP = fullHP;
         FP = fullFP;
         stam = fullStamina;
+
+        // 액션을 하지않는 상태로 체크한다.
         inAction = false;
     }
 
+    // UI에 스탯 수치 적용
     private void InitializeUI()
     {
-        deadScene.SetActive(false);
+        // UI스탯의 최대치를 설정한다.
         hpSlider.maxValue = fullHP;
         fpSlider.maxValue = fullFP;
         stamSlider.maxValue = fullStamina;
     }
 
+    // state설정 함수
     private void HandleState()
     {
         switch (mystate)
@@ -102,6 +106,7 @@ public class StatManager : MonoBehaviour
         }
     }
 
+    // 스탯 수치를 실시간으로 UI에 반영한다.
     private void UpdateUI()
     {
         hpSlider.value = HP;
@@ -114,10 +119,10 @@ public class StatManager : MonoBehaviour
         // 스태미너가 풀충상태가 아니라면 회복한다.
         if (stam < fullStamina) Recovery(10);
 
+        // 애니메이션이 재생중이라면 해당 state상태가 된다.
         if (CheckAndSetState("WalkSprintTree", PlayerState.move) || 
             CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) || 
-            CheckAndSetState("Hit_F_1_InPlace", PlayerState.damaged) || 
-            CheckAndSetState("Hit_F_2_InPlace", PlayerState.damaged) || 
+            CheckAndSetState("Hit_F_1", PlayerState.damaged) || 
             CheckAndSetState("OneHand_Up_Shield_Block_Hit_1", PlayerState.defense))
         {
             return;
@@ -125,53 +130,77 @@ public class StatManager : MonoBehaviour
     }
 
     private void Move()
-    {
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            stam -= 19;
-        }
-        else if (Input.GetKey(KeyCode.Space))
-        {
-            mystate = PlayerState.dash;
-        }
+    {       
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkSprintTree") == true)
-        {
-            // WalkSprintTree가 재생이 끝났다면 idle상태가 됨
-            float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            if (!Input.GetKey(KeyCode.W) || !Input.GetKey(KeyCode.S) ||
-                !Input.GetKey(KeyCode.D) || !Input.GetKey(KeyCode.E))
-            {
-                if (animTime >= 1.0f) //애니메이션 플레이 끝
-                {
-                    mystate = PlayerState.idle;
-                }
-            }
+        #region 스페이스바 입력에 따라 스태미너 조절
 
+        //if (Input.GetKeyUp(KeyCode.Space))
+        //{
+        //    stam -= 19;
+        //}
+        //else if (Input.GetKey(KeyCode.Space))
+        //{
+        //    mystate = PlayerState.dash;
+        //}
+
+
+        //if (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkSprintTree") == true)
+        //{
+        //    // WalkSprintTree가 재생이 끝났다면 idle상태가 됨
+        //    float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        //    if (!Input.GetKey(KeyCode.W) || !Input.GetKey(KeyCode.S) ||
+        //        !Input.GetKey(KeyCode.D) || !Input.GetKey(KeyCode.E))
+        //    {
+        //        if (animTime >= 1.0f) //애니메이션 플레이 끝
+        //        {
+        //            mystate = PlayerState.idle;
+        //        }
+        //    }
+
+        //}
+        #endregion
+        // 현재 moveSpeed가 sprintSpeed만큼 빠르다면 dash상태가 됨
+        if (playerMove.moveSpeed > playerMove.runSpeed) 
+        {
+            StartCoroutine(BeingIdle(PlayerState.dash, 1.0f));
         }
-        else if (CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) ||
-                CheckAndSetState("Hit_F_1_InPlace", PlayerState.damaged) ||
-                CheckAndSetState("Hit_F_2_InPlace", PlayerState.damaged) ||
+        else if (CheckAndSetState("OneHand_Up_Idle", PlayerState.idle) ||
+                CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) ||
+                CheckAndSetState("Hit_F_1", PlayerState.damaged) ||
                 CheckAndSetState("OneHand_Up_Shield_Block_Hit_1", PlayerState.defense))
         {
             return;
         }
 
-        Recovery(10);
+        // 스태미너가 풀충상태가 아니라면 지속적으로 회복
+        if (HP < fullHP)
+        {
+            Recovery(10);
+        }
     }
 
     private void Dash()
     {
+        // 지속적으로 스태미너 소모
         Consumption(10);
-        if (!Input.GetKey(KeyCode.Space))
+        // 현재 moveSpeed가 sprintSpeed보다 느리다면 move상태가 됨
+        if (playerMove.moveSpeed < playerMove.sprintSpeed)
         {
-            mystate = PlayerState.idle;
+            mystate = PlayerState.move;
         }
+        //if (!Input.GetKey(KeyCode.Space))
+        //{
+        //    mystate = PlayerState.idle;
+        //}
     }
 
     private void Attack()
     {
-        StartCoroutine(BeingIdle(playTime));
+        // attack 상태가 되면 공격 애니메이션 시간 만큼 기다린 뒤 idle 상태가 된다.
+        if (CheckAndSetState("OneHand_Up_Idle", PlayerState.idle)) 
+        {
+            return;
+        }
     }
 
     private void Defense()
@@ -188,7 +217,7 @@ public class StatManager : MonoBehaviour
         if (check.isDamaged && HP > 0)
         {
             HP -= 90;
-            StartCoroutine(BeingIdle(playTime));
+            StartCoroutine(BeingIdle(PlayerState.idle, playTime));
         }
         else if (HP <= 0)
         {
@@ -196,7 +225,7 @@ public class StatManager : MonoBehaviour
         }
         else
         {
-            StartCoroutine(BeingIdle(playTime));
+            StartCoroutine(BeingIdle(PlayerState.idle, playTime));
         }
     }
 
@@ -233,24 +262,17 @@ public class StatManager : MonoBehaviour
     private void Consumption(float amount)
     {
         stam = Mathf.Clamp(stam - Time.deltaTime * amount, 0, fullStamina);
-        if (stam == 0)
-        {
-            mystate = PlayerState.idle;
-        }
+        //if (stam == 0)
+        //{
+        //    mystate = PlayerState.idle;
+        //}
     }
 
-    // 마우스 왼쪽 버튼을 누르면 스태미너가 감소하고 몇 초 뒤 idle상태가 된다.
-    private IEnumerator BeingIdle(float sec)
+    private IEnumerator BeingIdle(PlayerState state, float sec)
     {
         isBeingIdle = true;
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            stam -= 19;
-        }
         yield return new WaitForSeconds(sec);
-
-        mystate = PlayerState.idle;
+        mystate = state;
         isBeingIdle = false;
-    }
+    }    
 }

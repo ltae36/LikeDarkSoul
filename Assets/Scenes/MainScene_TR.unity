@@ -2026,9 +2026,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4563ef1283c95494fb2ef026e586cf0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  overTime: 0
-  currentTime: 0
 --- !u!95 &676835291
 Animator:
   serializedVersion: 5
@@ -2990,6 +2987,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 257319273867295391}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &991740881 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 483312264313531810, guid: e87330d35e671334589c46782990b33a,
+    type: 3}
+  m_PrefabInstance: {fileID: 257319273867295391}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991740876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cb4fb90a9bb3dc479f01f86e74f4b4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1023809526
 GameObject:
   m_ObjectHideFlags: 0
@@ -5612,6 +5621,7 @@ MonoBehaviour:
   deadScene: {fileID: 676835286}
   check: {fileID: 0}
   anim: {fileID: 436189497}
+  playerMove: {fileID: 0}
   mystate: 0
 --- !u!1 &2039478270
 GameObject:
@@ -6223,6 +6233,11 @@ PrefabInstance:
       propertyPath: deadScene
       value: 
       objectReference: {fileID: 968097259}
+    - target: {fileID: 2541244304894342682, guid: e87330d35e671334589c46782990b33a,
+        type: 3}
+      propertyPath: playerMove
+      value: 
+      objectReference: {fileID: 991740881}
     - target: {fileID: 2541244304894342682, guid: e87330d35e671334589c46782990b33a,
         type: 3}
       propertyPath: stamSlider
