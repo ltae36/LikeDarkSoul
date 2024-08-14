@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class BossLocomotion : MonoBehaviour
@@ -52,15 +54,18 @@ public class BossLocomotion : MonoBehaviour
     //public static BossLocomotion instance;
 
     CharacterController cc;
+    BossStatus status;
+    bool drawRay = false;
 
     void Start()
     {
         myTransform = transform;
-        target = GameObject.Find("Player");
+        target = GameObject.FindGameObjectWithTag("Player");
         if (target == null)
             Destroy(this);
 
         cc = GetComponent<CharacterController>();
+        status = GetComponent<BossStatus>();
     }
 
 
@@ -86,6 +91,7 @@ public class BossLocomotion : MonoBehaviour
         switch (moveType) {
             case MoveType.Linear:
                 moveDirection = targetDirection.normalized;
+                moveDirection.y = 0;
                 movePosition = targetPosition;
                 vertical = moveDirection.x;
                 horizontal = moveDirection.z;
@@ -121,7 +127,7 @@ public class BossLocomotion : MonoBehaviour
         {
             //직선 움직임
             case MoveType.Linear:
-                cc.Move(moveDirection * BossStatus.moveSpeed * Time.deltaTime); 
+                cc.Move(moveDirection * status.moveSpeed * Time.deltaTime); 
                 break;
             case MoveType.Jump:
                 if (!isJump)
@@ -130,23 +136,24 @@ public class BossLocomotion : MonoBehaviour
                 }
                 currentTime += Time.deltaTime;
                 //각 순간마다 jump 속도는 다음의 식을 이용해서 구할 수 있다.
-                jumpDirection = targetDirection.normalized * BossStatus.jumpSpeed + Vector3.up * BossStatus.jumpSpeed + Physics.gravity * Mathf.Pow(currentTime, 2.0f) / 2;
-                print("위치:" +transform.position);
-                print("점프 방향: "+jumpDirection);
+                jumpDirection = targetDirection.normalized * status.jumpSpeed + Vector3.up * status.jumpSpeed + Physics.gravity * currentTime;
                 if (jumpDirection.y < 0)
                 {
                     Ray ray = new Ray(transform.position, Vector3.down);
                     RaycastHit hit;
+                    drawRay = true;
                     //Layer 7이 ground임 0.6f 로 쏘는 이유 내 현재 크기도 고려해야 된다!
                     if (Physics.Raycast(ray, out hit, raySize))
                     {
                         print(hit.collider.name);
-                        if (hit.collider.name.Equals("Ground"))
+                        if (hit.collider.CompareTag("Ground"))
                         {
                             movePosition.y = 0;
                             transform.position = movePosition;
                             //jump를 종료한다
                             isJump = false;
+                            currentTime = 0;
+                            drawRay = false;
                             return;
                         }
                     }
@@ -158,7 +165,7 @@ public class BossLocomotion : MonoBehaviour
                 {
                     return;
                 }
-                cc.Move(moveDirection * BossStatus.dashSpeed * Time.deltaTime);
+                cc.Move(moveDirection * status.dashSpeed * Time.deltaTime);
 
                 //만약 targetPosition과 거리 차이가 1f미만이라면
                 if(Vector3.Distance(transform.position, movePosition) < 1f)
@@ -175,9 +182,13 @@ public class BossLocomotion : MonoBehaviour
     private void SetJumpDirection()
     {
         movePosition = targetPosition;
+        moveDirection = targetDirection;
+        moveDirection.y = 0;
         //v0을 구한다.
-        float jumpVelocity = Mathf.Sqrt(targetDirection.magnitude * Physics.gravity.magnitude / 2);
-        BossStatus.SetJumpSpeed(jumpVelocity);
+        float jumpVelocity = Mathf.Sqrt(moveDirection.magnitude * Physics.gravity.magnitude / 2);
+        status.SetJumpSpeed(jumpVelocity);
+        print("jump Velocity : "+ jumpVelocity);
+        print("jump speed: "+ status.jumpSpeed);
         currentTime = 0;
     }
 
@@ -194,5 +205,14 @@ public class BossLocomotion : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawCube(movePosition, new Vector3(1, 1, 1));
+
+        if (drawRay)
+            Gizmos.DrawLine(transform.position, transform.position - new Vector3(0, raySize, 0));
+
+
+        Gizmos.DrawIcon(transform.position, "boss.png");
+
     }
+
+
 }
