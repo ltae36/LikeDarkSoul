@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     int secondHitAnimation;
+
     public float moveSpeed;
 
     public float runSpeed = 6f;
@@ -17,8 +18,9 @@ public class PlayerMove : MonoBehaviour
     public bool isSprint = false;
     public bool isWalking = false;
     public bool isrun;
+    public bool fallDeath = false;
 
-    //float onSpace;
+    float onSpace;
 
 
     public Vector3 camDir;
@@ -42,11 +44,6 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        if (stat.inAction) 
-        {
-            print(stat.inAction);
-        }
-
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
@@ -67,6 +64,12 @@ public class PlayerMove : MonoBehaviour
             dir = Vector3.zero;
         }
         //dir = new Vector3(h, 0, v);
+
+        // 지면에서 떨어져 y값이 줄어들면 추락한 것으로 판단하고 사망한다.
+        if(transform.position.y < -8) 
+        {
+            fallDeath = true;
+        }
 
 
         camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
@@ -89,15 +92,20 @@ public class PlayerMove : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.Space))
             {
-                Dash(10f);
+                onSpace += Time.deltaTime;
+                if (onSpace > 1.5f)
+                {
+                    Dash(10f);
+                }
             }
-            else if (Input.GetKeyUp(KeyCode.Space) && stat.mystate == StatManager.PlayerState.dash) 
+            else if (Input.GetKeyUp(KeyCode.Space) && stat.mystate == StatManager.PlayerState.move) 
             {
-                animator.SetBool("Roll 0", true);
+                animator.SetTrigger("Roll 1");
             }
             else 
             {
-                Run();
+                Run(3.0f);
+                Run(3.0f);
             }
 
         }
@@ -106,6 +114,7 @@ public class PlayerMove : MonoBehaviour
             // 제자리라면 스페이스바를 눌렀을 때 뒤로 물러난다.
             if (Input.GetKeyDown(KeyCode.Space)) 
             {
+                stat.stam -= stat.useStam;
                 animator.SetTrigger("Jump_Back");
             }
         }
@@ -115,16 +124,29 @@ public class PlayerMove : MonoBehaviour
 
         #region 애니메이션 재생
 
+        // 데미지가 들어오면 피격 애니메이션 재생
         if (hit.isDamaged)
-        {
+        {            
             animator.SetTrigger("Hit");
-            secondHitAnimation = 1;
-            if (secondHitAnimation == 1)
-            {
-                animator.SetFloat("DamageCount", secondHitAnimation);
-                secondHitAnimation = 0;
-            }
-        }        
+            StartCoroutine(waitFrame());
+
+            //float damagerCount = 0;
+            //print(damagerCount);
+            //damagerCount += 1;
+            //if (damagerCount == 1)
+            //{
+            //    stat.HP -= stat.damage;
+            //    animator.SetTrigger("Hit");
+            //    damagerCount = 0;
+
+            //}
+            //secondHitAnimation = 1;
+            //if (secondHitAnimation == 1)
+            //{
+            //    animator.SetFloat("DamageCount", secondHitAnimation);
+            //    secondHitAnimation = 0;
+            //}
+        }
         //else
         //{
         //    isWalking = false;
@@ -252,7 +274,7 @@ public class PlayerMove : MonoBehaviour
         animator.SetFloat("MoveSpeed", moveSpeed);
     }
 
-    void Run() 
+    void Run(float sec) 
     {
         isWalking = false;
         isSprint = false;
@@ -267,8 +289,14 @@ public class PlayerMove : MonoBehaviour
         //    moveSpeed -= runSpeed * Time.deltaTime;
         //    moveSpeed = Mathf.Clamp(moveSpeed, runSpeed, 20);
         //}
-        moveSpeed = runSpeed;
+        moveSpeed = Mathf.Lerp(moveSpeed, runSpeed, sec);
         animator.SetFloat("MoveSpeed", moveSpeed);
+    }
+
+    IEnumerator waitFrame() 
+    {
+        stat.HP -= stat.damage;
+        yield return null;
     }
 
     //void HandleMovementInput() 

@@ -13,6 +13,9 @@ public class StatManager : MonoBehaviour
     public float HP;
     public float FP;
     public float stam;
+    public float useStam = 15f;
+    public float damage = 90f;
+
     public bool inAction;
 
     public Slider hpSlider;
@@ -101,7 +104,8 @@ public class StatManager : MonoBehaviour
                 Damaged();
                 break;
             case PlayerState.dead:
-                Dead();
+                Invoke("Dead", 5f);
+                //Dead();
                 break;
         }
     }
@@ -162,7 +166,7 @@ public class StatManager : MonoBehaviour
         // 현재 moveSpeed가 sprintSpeed만큼 빠르다면 dash상태가 됨
         if (playerMove.moveSpeed > playerMove.runSpeed) 
         {
-            StartCoroutine(BeingIdle(PlayerState.dash, 1.0f));
+            StartCoroutine(BeingIdle(PlayerState.dash, 2.0f));
         }
         else if (CheckAndSetState("OneHand_Up_Idle", PlayerState.idle) ||
                 CheckAndSetState("OneHand_Up_Attack_1", PlayerState.attack) ||
@@ -172,10 +176,22 @@ public class StatManager : MonoBehaviour
             return;
         }
 
+        // 구르기 애니메이션이 재생중일 때도 inAction이 작동
+        if (IsPlayingAnimation("RollFront")) 
+        {
+            inAction = true;
+        }
+
         // 스태미너가 풀충상태가 아니라면 지속적으로 회복
         if (HP < fullHP)
         {
             Recovery(10);
+        }
+
+        // 추락사가 체크되면 Dead상태가 된다.
+        if (playerMove.fallDeath) 
+        {
+            mystate = PlayerState.dead;
         }
     }
 
@@ -214,12 +230,7 @@ public class StatManager : MonoBehaviour
 
     private void Damaged()
     {
-        if (check.isDamaged && HP > 0)
-        {
-            HP -= 90;
-            StartCoroutine(BeingIdle(PlayerState.idle, playTime));
-        }
-        else if (HP <= 0)
+        if (HP <= 0)
         {
             mystate = PlayerState.dead;
         }
@@ -231,7 +242,8 @@ public class StatManager : MonoBehaviour
 
     private void Dead()
     {
-        deadScene.SetActive(true);
+        HP = 0;
+        fullHP = 0;
     }
 
     // 현재의 애니메이션 스테이트를 확인
@@ -268,11 +280,19 @@ public class StatManager : MonoBehaviour
         //}
     }
 
+    public void UsingStat(float stat, float amount) 
+    {
+        print(stat + amount);
+        stat -= amount;
+    }
+
     private IEnumerator BeingIdle(PlayerState state, float sec)
     {
+        // sec만큼 기다린 뒤 다음 state상태가 된다.
         isBeingIdle = true;
         yield return new WaitForSeconds(sec);
         mystate = state;
         isBeingIdle = false;
-    }    
+    }
+
 }

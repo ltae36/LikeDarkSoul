@@ -14,23 +14,23 @@ public class HitCheck : DamageCount
         if (hit.collider.name == "E_col_attack")
         {
             isDamaged = true;
-            StartCoroutine(DamageTime(1.5f));
+            StartCoroutine(DamageTime());
         }
         else if (hit.collider.name == "col_sword") 
         {
             enemyDamaged = true;
-            StartCoroutine(DamageTime(1.5f));
+            StartCoroutine(DamageTime());
         }
-        else 
+        else if (hit == null)
         {
             isDamaged = false;
             enemyDamaged = false;
         }
     }
 
-    IEnumerator DamageTime(float sec) 
+    IEnumerator DamageTime() 
     {
-        yield return new WaitForSeconds(sec);
+        yield return null;
         isDamaged = false ;
         enemyDamaged= false ;
     }

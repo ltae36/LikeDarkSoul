@@ -7,6 +7,7 @@ public class PlayerAttack : MonoBehaviour
     public Animator attack;
 
     PlayerMove move;
+    StatManager stat;
 
     float actionTime;
     int comboCount;
@@ -20,6 +21,7 @@ public class PlayerAttack : MonoBehaviour
         comboCount = 0;
         attack = GetComponentInChildren<Animator>();
         move = GetComponent<PlayerMove>();
+        stat = GetComponentInChildren<StatManager>();
 
     }
 
@@ -28,32 +30,18 @@ public class PlayerAttack : MonoBehaviour
 
         attack.SetBool("Shield", Input.GetMouseButton(1));
 
-        // ��Ŭ���� ����, ��Ŭ���� ���
+        // 마우스 왼클릭을 하면 공격을 한다.
         if (Input.GetMouseButtonDown(0))
         {
             // swordCol를 활성화한다.
             swordCol.enabled = true;
-            // ���� �ִϸ��̼��� ����Ǵ� ������ WASD�� ������ �ȿ�����.
-            //actionTime = attack.GetCurrentAnimatorClipInfo(0).Length;
+            // 연속해서 한번 더 클릭하면 콤보 모션이 재생된다.
             comboCount++;
             attack.SetTrigger("Sword");
-            attack.SetInteger("Combo", comboCount);            
-        }
+            attack.SetInteger("Combo", comboCount);
 
-
-
-
-
-        //if (inAction)
-        //{
-        //    actionTime += Time.deltaTime;
-        //    if (actionTime > 1.5)
-        //    {
-        //        inAction = false;
-        //        actionTime = 0;
-        //        comboCount = 0;
-        //        swordCol.enabled=false;
-        //    }
-        //}        
+            // 스태미너가 감소한다.
+            stat.stam -= stat.useStam;
+        }      
     }
 }
