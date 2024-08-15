@@ -1,0 +1,105 @@
+# Blender MTL File: 'None'
+# Material Count: 8
+
+newmtl m0010B0A18_0
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_01.png
+map_Bump m12_dlc_wall_01_n.png
+map_Ks m12_dlc_wall_01_s.png
+
+newmtl m0010B0A18_1
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_ground_02.png
+map_Bump m12_dlc_ground_02_n.png
+map_Ks m12_dlc_ground_02_s.png
+
+newmtl m0010B0A18_2
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_ground_01.png
+map_Bump m12_dlc_ground_01_n.png
+map_Ks m12_dlc_ground_01_s.png
+
+newmtl m0010B0A18_3
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_ground_01.png
+map_Bump m12_dlc_ground_01_n.png
+map_Ks m12_dlc_ground_01_s.png
+
+newmtl m0010B0A18_4
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_01.png
+map_Bump m12_dlc_wall_01_n.png
+map_Ks m12_dlc_wall_01_s.png
+
+newmtl m0010B0A18_5
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_00_ground_01.png
+map_Bump m12_00_ground_01_n.png
+map_Ks m12_00_ground_01_s.png
+
+newmtl m0010B0A18_6
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd m12_dlc_decal_dark_01.png
+map_Bump m12_dlc_decal_dark_01_n.png
+map_Ks m12_dlc_dark.png
+map_d m12_dlc_decal_dark_01.png
+
+newmtl m0010B0A18_7
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_01.png

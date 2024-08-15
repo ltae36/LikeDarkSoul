@@ -1,0 +1,114 @@
+# Blender MTL File: 'None'
+# Material Count: 9
+
+newmtl m0010B0A18_0
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_arena_01.png
+map_Bump m12_dlc_wall_arena_01_n.png
+map_Ks m12_dlc_wall_arena_01_s.png
+
+newmtl m0010B0A18_1
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_arena_03.png
+map_Bump m12_dlc_wall_arena_03_n.png
+
+newmtl m0010B0A18_2
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_arena_04.png
+map_Bump m12_dlc_wall_arena_04_n.png
+
+newmtl m0010B0A18_3
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_arena_05.png
+map_Bump m12_dlc_wall_arena_05_n.png
+map_Ks m12_dlc_wall_arena_05_s.png
+
+newmtl m0010B0A18_4
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_arena_07.png
+map_Bump m12_dlc_wall_arena_07_n.png
+
+newmtl m0010B0A18_5
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_arena_09.png
+map_Bump m12_dlc_wall_arena_09_n.png
+
+newmtl m0010B0A18_6
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_arena_10.png
+map_Bump m12_dlc_wall_arena_10_n.png
+
+newmtl m0010B0A18_7
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd m12_dlc_wall_arena_11.png
+map_Bump m12_dlc_wall_arena_11_n.png
+
+newmtl m0010B0A18_8
+Ns 31.372549
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd m12_dlc_decal_dark_01.png
+map_Bump m12_dlc_decal_dark_01_n.png
+map_Ks m12_dlc_dark.png
+map_d m12_dlc_decal_dark_01.png
