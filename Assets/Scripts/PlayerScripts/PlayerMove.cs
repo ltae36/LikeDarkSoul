@@ -128,82 +128,8 @@ public class PlayerMove : MonoBehaviour
         if (hit.isDamaged)
         {            
             animator.SetTrigger("Hit");
-            StartCoroutine(waitFrame());
-
-            //float damagerCount = 0;
-            //print(damagerCount);
-            //damagerCount += 1;
-            //if (damagerCount == 1)
-            //{
-            //    stat.HP -= stat.damage;
-            //    animator.SetTrigger("Hit");
-            //    damagerCount = 0;
-
-            //}
-            //secondHitAnimation = 1;
-            //if (secondHitAnimation == 1)
-            //{
-            //    animator.SetFloat("DamageCount", secondHitAnimation);
-            //    secondHitAnimation = 0;
-            //}
+            //StartCoroutine(waitFrame());
         }
-        //else
-        //{
-        //    isWalking = false;
-        //    isrun = true;
-        //}
-
-        // WASD를 누른 채로 스페이스바를 누르면 속도가 빨라지고, sprint애니메이션이 재생된다.
-        //if (Input.GetKey(KeyCode.Space) && ( Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S) ))
-        //{
-        //    onSpace += Input.GetAxis("Jump");
-        //    if (onSpace > 60)
-        //    {
-        //        isSprint = true;
-        //        isrun = false;
-        //    }
-        //}
-
-        // 스페이스바를 누른 상태라면 대쉬모드가 활성화됨
-
-        //else if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    if (dir == Vector3.zero)
-        //    {
-        //        animator.SetTrigger("Jump_Back");
-        //    }
-        //    else if (stat.mystate == StatManager.PlayerState.move) 
-        //    {
-        //        animator.SetTrigger("Roll 1");
-        //    }
-        //}
-        //else
-        //{
-        //    isSprint = false;
-        //    isrun = true;
-        //    //if (onSpace > 0)
-        //    //{
-        //    //    onSpace -= Time.deltaTime * onSpace;
-        //    //}
-        //}
-
-        //if (isSprint)
-        //{
-        //    animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
-        //    moveSpeed += Time.deltaTime * 5f;
-
-        //}
-        //else if (isWalking)
-        //{
-        //    animator.SetFloat("MoveSpeed", Mathf.Clamp(moveSpeed, walkSpeed, sprintSpeed));
-        //    moveSpeed -= Time.deltaTime * 5f;
-        //}
-        //else
-        //{
-        //    animator.SetFloat("MoveSpeed", runSpeed);
-        //    moveSpeed = runSpeed;
-        //}
-
 
 
         #region 구르기 애니메이션
@@ -295,6 +221,7 @@ public class PlayerMove : MonoBehaviour
 
     IEnumerator waitFrame() 
     {
+        yield return null;
         stat.HP -= stat.damage;
         yield return null;
     }

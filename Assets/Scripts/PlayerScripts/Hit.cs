@@ -9,7 +9,6 @@ public class Hit : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print(other.name);
         if (other.gameObject.tag == "Boss")
         {
             print("АјАн");

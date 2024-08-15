@@ -15,6 +15,7 @@ public class HitCheck : DamageCount
         {
             isDamaged = true;
             StartCoroutine(DamageTime());
+            return;
         }
         else if (hit.collider.name == "col_sword") 
         {

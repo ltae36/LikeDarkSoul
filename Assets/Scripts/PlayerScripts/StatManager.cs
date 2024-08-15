@@ -10,6 +10,9 @@ public class StatManager : MonoBehaviour
     float fullStamina = 95f;
     float playTime;
 
+    float damageCoolDown = 1f;
+    float lastDamageTime;
+
     public float HP;
     public float FP;
     public float stam;
@@ -43,9 +46,10 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
-
         InitializeStats();
         InitializeUI();
+
+        lastDamageTime = -damageCoolDown;
     }
 
     void Update()
