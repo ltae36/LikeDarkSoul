@@ -157,7 +157,7 @@ public class BossFSM : MonoBehaviour
         locomotion.SetTargetPosition();
         locomotion.SetTargetDirection();
         //만약 거리가 가까우면, horizontal 또는 vertical 공격을 한다.
-        print(locomotion.targetDistance);
+        //print(locomotion.targetDistance);
         if (locomotion.targetDistance < attackDistance)
         {
             int randNum = Random.Range(1, 6);
@@ -209,7 +209,7 @@ public class BossFSM : MonoBehaviour
                 JumpAttack();
                 break;
             case AttackState.DashAttack:
-                DashAttack();
+                JumpAttack();
                 break;
         }
         //공격 애니메이션이 끝나면, 공격대기시간으로 전환한다.
@@ -287,10 +287,12 @@ public class BossFSM : MonoBehaviour
         //jump attack 공격을 한다.
         //print("JumpAttack");
         locomotion.MoveBoss(BossLocomotion.MoveType.Jump);
+       
         if(locomotion.IsJumping() == false)
         {
             bossState = BossState.AttackDelay;
             animationManager.SetTrigger("JumpDown");
+            transform.position = locomotion.targetPosition;
             print("attack -> linear move");
             SelectAttackDelayMovement();
         }
@@ -327,9 +329,9 @@ public class BossFSM : MonoBehaviour
         //플레이어한테 다가오는 방향으로 온다
         //만약 플레이어랑 거리가 멀지 않다면,
         //플레이어 주위로 원을 하나 그린다음, 그 원의 특이한 지점을 잡는다
-        animationManager.TurnOffRootMotion();
+
+//        animationManager.TurnOffRootMotion();
         locomotion.SetMoveDirection(BossLocomotion.MoveType.Linear);
     }
-
-    
+ 
 }

@@ -5,13 +5,13 @@ using UnityEngine;
 public class BossStatus : MonoBehaviour
 {
     [Header("status")]
-    public static float moveSpeed = 2;
-    public static float dashSpeed = 20;
-    public static float rotationSpeed = 3;
-    public static float jumpSpeed;
+    public float moveSpeed = 2;
+    public float dashSpeed = 20;
+    public float rotationSpeed = 3;
+    public float jumpSpeed;
 
-    public static void SetJumpSpeed(float value)
+    public  void SetJumpSpeed(float time)
     {
-        jumpSpeed = value;
+        jumpSpeed = Physics.gravity.y * time / 2 * -1;
     }
 }
