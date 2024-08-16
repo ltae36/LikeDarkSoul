@@ -22,7 +22,7 @@ public class PlayerMove : MonoBehaviour
 
     float onSpace;
 
-
+    public GameObject blood;
     public Vector3 camDir;
     public Camera cam;
     public StatManager stat;
@@ -124,13 +124,6 @@ public class PlayerMove : MonoBehaviour
 
         #region 애니메이션 재생
 
-        // 데미지가 들어오면 피격 애니메이션 재생
-        if (hit.isDamaged)
-        {            
-            animator.SetTrigger("Hit");
-            StartCoroutine(waitFrame());
-            return;
-        }
 
 
         #region 구르기 애니메이션
@@ -220,10 +213,21 @@ public class PlayerMove : MonoBehaviour
         animator.SetFloat("MoveSpeed", moveSpeed);
     }
 
+    public void PlayerHit(float damage) 
+    {
+        // 데미지가 들어오면 피격 애니메이션 재생
+        animator.SetTrigger("Hit");
+        stat.HP -= damage;
+        Instantiate(blood); // 피 이펙트 생성
+        blood.transform.position = transform.position;
+        StartCoroutine(waitFrame()); // 이펙트 제거
+        return;
+    }
+
     IEnumerator waitFrame() 
     {
         yield return null;
-        stat.HP -= stat.damage;
+        Destroy(blood);
         print("공격!!");
         yield return null;
     }
