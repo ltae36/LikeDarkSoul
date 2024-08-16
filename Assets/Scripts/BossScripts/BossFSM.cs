@@ -59,6 +59,7 @@ public class BossFSM : FSM
     BossLocomotion locomotion;
     BossAnimationManager animationManager;
     BossStatus status;
+    BossHealthBarController healthBar;
 
     AttackCombo attackCombo1 = new AttackCombo(new List<AttackState>() { AttackState.Vertical, AttackState.Vertical });
     AttackCombo attackCombo2 = new AttackCombo(new List<AttackState>() { AttackState.Horizontal });
@@ -88,6 +89,8 @@ public class BossFSM : FSM
         locomotion = GetComponent<BossLocomotion>();
         animationManager = GetComponent<BossAnimationManager>();
         status = GetComponent<BossStatus>();
+        healthBar = GetComponent<BossHealthBarController>();
+
         enemyType = EnemyType.Boss;
 
         combos = new AttackCombo[] { attackCombo1, attackCombo2, attackCombo3, attackCombo4, attackCombo5, attackCombo6, attackCombo7 };
@@ -133,7 +136,7 @@ public class BossFSM : FSM
             animationManager.AwakeAnimationStart();
 
             //boss hp bar를 active 상태로 바꾼다
-            UIManager.instance.ShowBossHpBar();
+            healthBar.ShowBossHpBar();
         }
     }
 
@@ -336,6 +339,9 @@ public class BossFSM : FSM
         bossState = BossState.Die;
         //변신 애니메이션을 실행한다.
         animationManager.DeathAnimationStart();
+        
+        //hp bar를 숨긴다.
+        healthBar.HideBossHpBar();
 
         //이 스크립트를 파괴한다.
         this.enabled = false;
@@ -352,5 +358,6 @@ public class BossFSM : FSM
 //        animationManager.TurnOffRootMotion();
         locomotion.SetMoveDirection(BossLocomotion.MoveType.Linear);
     }
- 
+
+
 }

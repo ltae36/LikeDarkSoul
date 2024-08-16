@@ -128,13 +128,12 @@ public class BossLocomotion : MonoBehaviour
             case MoveType.Jump:
                 if (!isJump)
                 {
-
                     return;
                 }
                 currentTime += Time.deltaTime;
                 //각 순간마다 jump 속도는 다음의 식을 이용해서 구할 수 있다.
                 jumpDirection = targetDirection.normalized * status.jump_x_velocity + Vector3.up * status.jump_y_velocity + Physics.gravity * currentTime;
-                print(jumpDirection);
+
                 if (jumpDirection.y < 0)
                 {
                     Ray ray = new Ray(transform.position, Vector3.down);

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class SceneManagerRestart : MonoBehaviour
 {
     StatManager stat;
-    float currentTime = 3.0f;
+    public float sceneReloadingTime = 6.0f;
 
     void Start()
     {
@@ -19,7 +19,7 @@ public class SceneManagerRestart : MonoBehaviour
         // dead상태가 됐다면 자동으로 재시작하는 GameOver코루틴을 실행한다.
         if (stat.mystate == StatManager.PlayerState.dead)
         {
-            StartCoroutine(GameOver(12.0f));
+            StartCoroutine(GameOver(sceneReloadingTime));
         }
     }
 

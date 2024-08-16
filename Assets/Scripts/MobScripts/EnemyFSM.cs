@@ -7,7 +7,6 @@ public class EnemyFSM : FSM
 {
     public GameObject awakeTrigger;
 
-    EnemyHealth health;
 
     public enum EnemyState 
     {
@@ -29,6 +28,7 @@ public class EnemyFSM : FSM
     EnemyAnimationManager animationManager;
     HitCheck check;
     EnemyStatus status;
+    CharacterController cc;
 
     float currentTime = 0.0f;
     public float attackDelayTime = 1.0f;
@@ -39,6 +39,7 @@ public class EnemyFSM : FSM
         animationManager = GetComponent<EnemyAnimationManager>();
         check = GetComponent<HitCheck>();
         status = GetComponent<EnemyStatus>();
+        cc= GetComponent<CharacterController>();
         enemyType = EnemyType.Enemy;
     }
 
@@ -100,6 +101,8 @@ public class EnemyFSM : FSM
         //만약 awake 애니메이션이 끝나면...
         if (animationManager.IsAwakeAnimationEnd())
         {
+            cc.enabled = true;
+            
             locomotion.SetTargetPosition();
             locomotion.SetTargetDirection();
 

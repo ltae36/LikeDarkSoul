@@ -23,6 +23,7 @@ public class PlayerMove : MonoBehaviour
     float onSpace;
 
     public GameObject blood;
+    
     public Vector3 camDir;
     public Camera cam;
     public StatManager stat;
@@ -218,18 +219,16 @@ public class PlayerMove : MonoBehaviour
         // 데미지가 들어오면 피격 애니메이션 재생
         animator.SetTrigger("Hit");
         stat.HP -= damage;
-        Instantiate(blood); // 피 이펙트 생성
-        blood.transform.position = transform.position;
-        StartCoroutine(waitFrame()); // 이펙트 제거
+        GameObject bloodEffect = Instantiate(blood); // 피 이펙트 생성
+        bloodEffect.transform.position = transform.position;
+        StartCoroutine(BloodEffectRemoveProcess(bloodEffect)); // 이펙트 제거
         return;
     }
 
-    IEnumerator waitFrame() 
+    IEnumerator BloodEffectRemoveProcess(GameObject bloodEffect) 
     {
-        yield return null;
-        Destroy(blood);
-        print("공격!!");
-        yield return null;
+        yield return new WaitForSeconds(3.0f);
+        Destroy(bloodEffect);
     }
 
     //void HandleMovementInput() 

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class AnimationEventScript : MonoBehaviour
 {
-    public UIManager manager;
 
     BossPhaseTransition phaseTransition;
     BossAnimationManager animationManager;
@@ -14,10 +13,7 @@ public class AnimationEventScript : MonoBehaviour
         phaseTransition = GetComponentInParent<BossPhaseTransition>();
         animationManager = GetComponent<BossAnimationManager>();
     }
-    public void HideBossHpBar()
-    {
-        manager.HideBossHpBar();
-    }
+
 
     public void BossPhase2()
     {
