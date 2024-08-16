@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class HitCheck : DamageCount
 {
+    CharacterController cc;
+
     void Start()
     {
-        
+        cc = GetComponent<CharacterController>();  
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -14,25 +16,27 @@ public class HitCheck : DamageCount
         if (hit.collider.name == "E_col_attack")
         {
             isDamaged = true;
-            StartCoroutine(DamageTime());
-            return;
+            cc.enabled = false;
         }
         else if (hit.collider.name == "col_sword") 
         {
             enemyDamaged = true;
-            StartCoroutine(DamageTime());
+            cc.enabled = false;
         }
         else if (hit == null)
         {
             isDamaged = false;
             enemyDamaged = false;
         }
+        StartCoroutine(DamageTime());
     }
 
     IEnumerator DamageTime() 
     {
         yield return null;
-        isDamaged = false ;
+        isDamaged = false;
         enemyDamaged= false ;
+        cc.enabled = true;
+
     }
 }

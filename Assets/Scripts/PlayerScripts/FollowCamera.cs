@@ -22,7 +22,7 @@ public class FollowCamera : MonoBehaviour
 
     void Start()
     {
-        cam = GetComponent<Camera>();
+        cam = GetComponentInChildren<Camera>();
         camCon = GetComponentInParent<CameraControll>();
     }
 
@@ -33,14 +33,14 @@ public class FollowCamera : MonoBehaviour
 
         //myPos = cam.transform.position;
 
-        //if (camCon.mouseX < -25)
-        //{
-        //    cam.fieldOfView = fov;
-        //}
-        //else
-        //{
-        //    cam.fieldOfView = 60;
-        //}
+        if (camCon.mouseX < -25)
+        {
+            cam.fieldOfView = fov;
+        }
+        else
+        {
+            cam.fieldOfView = 60;
+        }
 
         //// 나의 방향에서 플레이어 방향으로 ray를 발사한다.
         //Ray ray = new Ray(player.transform.position, dir.normalized);

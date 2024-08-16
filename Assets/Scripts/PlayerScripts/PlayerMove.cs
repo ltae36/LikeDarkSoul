@@ -128,7 +128,8 @@ public class PlayerMove : MonoBehaviour
         if (hit.isDamaged)
         {            
             animator.SetTrigger("Hit");
-            //StartCoroutine(waitFrame());
+            StartCoroutine(waitFrame());
+            return;
         }
 
 
@@ -223,6 +224,7 @@ public class PlayerMove : MonoBehaviour
     {
         yield return null;
         stat.HP -= stat.damage;
+        print("공격!!");
         yield return null;
     }
 
