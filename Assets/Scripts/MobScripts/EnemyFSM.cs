@@ -25,18 +25,20 @@ public class EnemyFSM : FSM
     public float attackRange;
     public float idleRange;
     
-    BossLocomotion locomotion;
+    EnemyLocomotion locomotion;
     EnemyAnimationManager animationManager;
     HitCheck check;
+    EnemyStatus status;
 
     float currentTime = 0.0f;
     public float attackDelayTime = 1.0f;
 
     void Start()
     {
-        locomotion = GetComponent<BossLocomotion>();
+        locomotion = GetComponent<EnemyLocomotion>();
         animationManager = GetComponent<EnemyAnimationManager>();
         check = GetComponent<HitCheck>();
+        status = GetComponent<EnemyStatus>();
         enemyType = EnemyType.Enemy;
     }
 
@@ -125,16 +127,12 @@ public class EnemyFSM : FSM
     }
     private void Idle()
     {
-        if (health.isDamaged) 
-        {
-            undeadState = EnemyState.Hit;
-        }
 
         //걸어서 player에게 다가오는 상태
 
         //플레이어를 향해서 걸어온다.
         locomotion.SetMoveDirection(BossLocomotion.MoveType.Linear);
-        locomotion.MoveBoss(BossLocomotion.MoveType.Linear);
+        locomotion.MoveEnemy(BossLocomotion.MoveType.Linear);
 
         locomotion.HandleRotation();
         //만약 거리가 일정 거리보다 작아지면
@@ -152,22 +150,24 @@ public class EnemyFSM : FSM
             locomotion.SetMoveDirection(BossLocomotion.MoveType.Dash);
             animationManager.RunAnimationStart();
         }
-        //달린다.
     }
+
+    //달린다.
     private void Chase()
     {
         // 뒤어서 player에게 다가오는 상태
 
+        locomotion.SetMoveDirection(BossLocomotion.MoveType.Dash);
         //플레이어를 향해서 뛰어온다.
-        locomotion.MoveBoss(BossLocomotion.MoveType.Dash);
+        locomotion.MoveEnemy(BossLocomotion.MoveType.Dash);
 
         locomotion.HandleRotation();
         //만약 거리가 일정 거리보다 작아지면
 
         if(locomotion.targetDistance < attackRange)
         {
-            undeadState = EnemyState.AttackDelay;
-            animationManager.AttackDelayAnimationStart();
+            undeadState = EnemyState.Attack;
+            animationManager.AttackAnimationStart();
         }
         //공격한다.
     }
@@ -176,51 +176,70 @@ public class EnemyFSM : FSM
         // 공격하는 상태
         if (animationManager.IsAttackAnimationEnd())
         {
-            undeadState = EnemyState.AttackDelay;
+            if (locomotion.targetDistance > idleRange)
+            {
+                undeadState = EnemyState.Run;
+                locomotion.SetMoveDirection(BossLocomotion.MoveType.Dash);
+                animationManager.RunAnimationStart();
+            }
+            else if (locomotion.targetDistance > attackRange)
+            {
+                undeadState = EnemyState.Idle;
+                locomotion.SetMoveDirection(BossLocomotion.MoveType.Linear);
+                animationManager.IdleAnimationStart();
+            }
+            else
+            {
+                undeadState = EnemyState.AttackDelay;
+                animationManager.AttackDelayAnimationStart();
+            }
         }
         //공격애니메이션이 끝나면, 공격 대기 상태로 넘어간다.
     }
 
     private void AttackDelay()
     {
+        locomotion.HandleRotation();
         currentTime += Time.deltaTime;
 
         locomotion.SetTargetPosition();
         locomotion.SetTargetDirection();
-        if(locomotion.targetDistance > attackRange)
-        {
-            undeadState = EnemyState.Idle;
-            animationManager.IdleAnimationStart();
-            currentTime = 0;
-        }
-        else if (currentTime>attackDelayTime)
+
+        if (currentTime>attackDelayTime)
         {
             undeadState = EnemyState.Attack;
             animationManager.AttackAnimationStart();
             currentTime = 0;
-        }
-
-        if (health.isDamaged) 
-        {
-            undeadState = EnemyState.Hit;
-        }
-        
-        
+        }       
     }
     private void Hitted()
     {
         // 피격 애니메이션이 재생된다.
         animationManager.HitAnimationStart();
-        // hp가 감소한다.
-        if (!health.isDamaged) 
-        {
-            undeadState = EnemyState.AttackDelay;
-        }
+
     }
 
     public void Death()
     {
         // hp가 0이 되면 사망 애니메이션이 재생되고 래그돌 상태가 된다.
         // 컴포넌트는 비활성화 된다.
+    }
+
+    public void TakeDamage(int damage)
+    {
+
+        //만약 지금 공격 받은 상황이 아니라면...
+        if(undeadState != EnemyState.Hit && undeadState != EnemyState.Die)
+        {
+            status.health -= damage;
+
+            undeadState = EnemyState.Hit;
+
+            if(status.health <= 0)
+            {
+                undeadState = EnemyState.Die;
+            }
+        }
+
     }
 }

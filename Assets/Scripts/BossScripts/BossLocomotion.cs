@@ -177,18 +177,6 @@ public class BossLocomotion : MonoBehaviour
         }
     }
 
-    //private void SetJumpDirection()
-    //{
-    //    movePosition = targetPosition;
-    //    moveDirection = targetDirection;
-    //    moveDirection.y = 0;
-    //    //v0을 구한다.
-    //    float jumpVelocity = Mathf.Sqrt(moveDirection.magnitude * Physics.gravity.magnitude / 2);
-    //    status.SetJumpSpeed(jumpVelocity);
-    //    print("jump Velocity : "+ jumpVelocity);
-    //    print("jump speed: "+ status.jumpSpeed);
-    //    currentTime = 0;
-    //}
 
     private void SetJumpDirection()
     {

@@ -15,12 +15,6 @@ public class BossHealth : MonoBehaviour
         BossFSM = GetComponent<BossFSM>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void TakeDamage(int damage)
     {
         health -= damage;

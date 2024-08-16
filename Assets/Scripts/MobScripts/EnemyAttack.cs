@@ -44,15 +44,12 @@ public class EnemyAttack : DamageCount
 
             if (player != null )
             {
-                print(fsm is EnemyFSM);
                 if (fsm is EnemyFSM && enemyFSM.undeadState == EnemyState.Attack )
                 {
-                    print("enemy 공격!");
                     player.PlayerHit(damage);
                 }
                 else if(fsm is BossFSM && bossFSM.bossState == BossFSM.BossState.Attack)
                 {
-                    print("enemy 공격!");
                     player.PlayerHit(damage);
                 }
             }
