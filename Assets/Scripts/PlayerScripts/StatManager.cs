@@ -138,7 +138,7 @@ public class StatManager : MonoBehaviour
     }
 
     private void Move()
-    {       
+    {
 
         #region 스페이스바 입력에 따라 스태미너 조절
 
@@ -167,6 +167,10 @@ public class StatManager : MonoBehaviour
 
         //}
         #endregion
+
+        // 스태미너가 풀충상태가 아니라면 회복한다.
+        if (stam < fullStamina) Recovery(10);
+
         // 현재 moveSpeed가 sprintSpeed만큼 빠르다면 dash상태가 됨
         if (playerMove.moveSpeed > playerMove.runSpeed) 
         {
@@ -184,12 +188,6 @@ public class StatManager : MonoBehaviour
         if (IsPlayingAnimation("RollFront")) 
         {
             inAction = true;
-        }
-
-        // 스태미너가 풀충상태가 아니라면 지속적으로 회복
-        if (HP < fullHP)
-        {
-            Recovery(10);
         }
 
         // 추락사가 체크되면 Dead상태가 된다.
