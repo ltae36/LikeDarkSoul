@@ -42,10 +42,6 @@ public class BossLocomotion : MonoBehaviour
     [Header("attack target")]
     public GameObject target;
 
-    [Header("status")]
-    [SerializeField] float moveSpeed;
-    [SerializeField] float dashSpeed;
-    [SerializeField] float rotationSpeed;
     float currentTime;
 
     [Header("RaySize")]
@@ -117,7 +113,7 @@ public class BossLocomotion : MonoBehaviour
     public void HandleRotation()
     {
         Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-        myTransform.rotation = Quaternion.Slerp(myTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        myTransform.rotation = Quaternion.Slerp(myTransform.rotation, targetRotation, status.rotationSpeed * Time.deltaTime);
     }
 
     //움직이는 함수 움직이기 전에 set target direction 한 번 해준 다음 움직인다.
@@ -136,7 +132,8 @@ public class BossLocomotion : MonoBehaviour
                 }
                 currentTime += Time.deltaTime;
                 //각 순간마다 jump 속도는 다음의 식을 이용해서 구할 수 있다.
-                jumpDirection = targetDirection.normalized * status.jumpSpeed + Vector3.up * status.jumpSpeed + Physics.gravity * currentTime;
+                jumpDirection = targetDirection.normalized * status.jump_x_velocity + Vector3.up * status.jump_y_velocity + Physics.gravity * currentTime;
+                print(jumpDirection);
                 if (jumpDirection.y < 0)
                 {
                     Ray ray = new Ray(transform.position, Vector3.down);
@@ -168,7 +165,7 @@ public class BossLocomotion : MonoBehaviour
                 cc.Move(moveDirection * status.dashSpeed * Time.deltaTime);
 
                 //만약 targetPosition과 거리 차이가 1f미만이라면
-                if(Vector3.Distance(transform.position, movePosition) < 1f)
+                if(Vector3.Distance(transform.position, movePosition) < status.attackDistance)
                 {
                     
                     //targetPosition.y = 0;
@@ -179,17 +176,37 @@ public class BossLocomotion : MonoBehaviour
         }
     }
 
+    //private void SetJumpDirection()
+    //{
+    //    movePosition = targetPosition;
+    //    moveDirection = targetDirection;
+    //    moveDirection.y = 0;
+    //    //v0을 구한다.
+    //    float jumpVelocity = Mathf.Sqrt(moveDirection.magnitude * Physics.gravity.magnitude / 2);
+    //    status.SetJumpSpeed(jumpVelocity);
+    //    print("jump Velocity : "+ jumpVelocity);
+    //    print("jump speed: "+ status.jumpSpeed);
+    //    currentTime = 0;
+    //}
+
     private void SetJumpDirection()
     {
+        //x의 jump 속도를 구하고 싶다.
         movePosition = targetPosition;
         moveDirection = targetDirection;
-        moveDirection.y = 0;
-        //v0을 구한다.
-        float jumpVelocity = Mathf.Sqrt(moveDirection.magnitude * Physics.gravity.magnitude / 2);
-        status.SetJumpSpeed(jumpVelocity);
-        print("jump Velocity : "+ jumpVelocity);
-        print("jump speed: "+ status.jumpSpeed);
+
+        float distance = moveDirection.magnitude;
+        //s = vt, v = s/t
+        status.jump_x_velocity = distance / status.jumpTime;
+
+        //y의 jump 초기 속도를 구하고 싶다.
+        //v = gt/2
+        status.jump_y_velocity = Physics.gravity.magnitude * status.jumpTime;
+
+        //타이머를 리셋한다.
         currentTime = 0;
+
+
     }
 
     public bool IsJumping()
@@ -208,7 +225,7 @@ public class BossLocomotion : MonoBehaviour
 
         if (drawRay)
             Gizmos.DrawLine(transform.position, transform.position - new Vector3(0, raySize, 0));
-
+        
 
         Gizmos.DrawIcon(transform.position, "boss.png");
 

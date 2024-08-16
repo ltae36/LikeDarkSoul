@@ -2,6 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+struct AttackUnit
+{
+    BossFSM.AttackState attack;
+    float delayTime;
+
+    public AttackUnit( BossFSM.AttackState attack , float delayTime)
+    {
+        this.attack = attack;
+        this.delayTime = delayTime;
+    }
+}
+
+struct AttackCombo
+{
+    List<AttackUnit> attackCombo;
+    int index;
+
+    float coolTime;
+    public AttackCombo(float coolTime)
+    {
+        index = 0;
+        attackCombo = new List<AttackUnit>();
+        this.coolTime = coolTime;
+    }
+}
+
 public class BossFSM : FSM
 { 
     public enum BossState
@@ -23,21 +49,17 @@ public class BossFSM : FSM
         JumpAttack,
         DashAttack
     }
-    [Header("Distance")]
-    [SerializeField] float awakeDistance =20;
-    [SerializeField] float attackDistance = 6;
-
-    [Header("Time")]
-    [SerializeField] float idleTime =3;
 
     [Header("State")]
     public BossState bossState;
     [SerializeField] AttackState attackState;
 
     float currentTime;
+
     BossHealth hpController;
     BossLocomotion locomotion;
     BossAnimationManager animationManager;
+    BossStatus status;
 
     // Start is called before the first frame update
     void Start()
@@ -45,7 +67,12 @@ public class BossFSM : FSM
         hpController = GetComponent<BossHealth>();
         locomotion = GetComponent<BossLocomotion>();
         animationManager = GetComponent<BossAnimationManager>();
+        status = GetComponent<BossStatus>();
         enemyType = EnemyType.Boss;
+
+        #region AttackCombo를 만들자
+        AttackUnit verticalUnit = new AttackUnit(AttackState.Vertical, 0.3f);
+        #endregion
     }
 
     // Update is called once per frame
@@ -77,7 +104,7 @@ public class BossFSM : FSM
         //만약 플레이어가 칼을 뽑거나
 
         //만일 플러이어가 칼을 뽑았는 경우, 일정 거리 내로 들어오면,
-        if (IsPlayerWakeBossUp(awakeDistance))
+        if (IsPlayerWakeBossUp(status.awakeDistance))
         {
             //상태를 일어난 상태로 바꾼다.
             print("sleep -> awake");
@@ -94,7 +121,7 @@ public class BossFSM : FSM
     // 이 함수는 플레이어가 일정 거리안에 들어오면 true를 반환해주는 함수이다.
     bool IsPlayerWakeBossUp(float distance)
     {
-        Collider[] colliders =Physics.OverlapSphere(locomotion.myTransform.position,awakeDistance);
+        Collider[] colliders =Physics.OverlapSphere(locomotion.myTransform.position,status.awakeDistance);
 
         foreach (Collider collider in colliders)
         {
@@ -142,7 +169,7 @@ public class BossFSM : FSM
         locomotion.HandleRotation();
 
         //공격 대기 시간이 지나면, 공격을 한다.
-        if (currentTime > idleTime)
+        if (currentTime > status.idleTime)
         {
             currentTime = 0;
             SelectAttackCombo();
@@ -159,7 +186,7 @@ public class BossFSM : FSM
         locomotion.SetTargetDirection();
         //만약 거리가 가까우면, horizontal 또는 vertical 공격을 한다.
         //print(locomotion.targetDistance);
-        if (locomotion.targetDistance < attackDistance)
+        if (locomotion.targetDistance < status.attackDistance)
         {
             int randNum = Random.Range(1, 6);
             animationManager.AttackAnimationStart(1, randNum);
@@ -184,6 +211,13 @@ public class BossFSM : FSM
                 locomotion.SetMoveDirection(BossLocomotion.MoveType.Dash);
             }
         }
+
+
+
+        // 수정
+        // attack combo 중에서 한 개를 고를 것임
+        // attack combo 중에서 쿨타임이 없는 거 중에서 고를 것임
+        // 골라지면 현재 
     }
 
     void Attack()
@@ -210,7 +244,7 @@ public class BossFSM : FSM
                 JumpAttack();
                 break;
             case AttackState.DashAttack:
-                JumpAttack();
+                DashAttack();
                 break;
         }
         //공격 애니메이션이 끝나면, 공격대기시간으로 전환한다.
