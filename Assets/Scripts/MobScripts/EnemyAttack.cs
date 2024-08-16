@@ -30,6 +30,7 @@ public class EnemyAttack : DamageCount
 
     private void OnTriggerEnter(Collider other)
     {
+        print(other.gameObject.name);
         if(other.gameObject.tag == "Shield") 
         {
             // 방패에 맞으면 공격 실패 애니메이션이 재생된다.
@@ -38,16 +39,27 @@ public class EnemyAttack : DamageCount
         else if (other.gameObject.tag == "Player") 
         {
             // 플레이어에게 맞으면 플레이어에게 대미지를 준다.
-            if (other.gameObject.GetComponentInChildren<StatManager>() != null )
+
+            PlayerMove player = other.gameObject.GetComponent<PlayerMove>();
+
+            if (player != null )
             {
+                print(fsm is EnemyFSM);
                 if (fsm is EnemyFSM && enemyFSM.undeadState == EnemyState.Attack )
                 {
-                    other.gameObject.GetComponentInChildren<StatManager>().HP -= damage;
+                    print("enemy 공격!");
+                    player.PlayerHit(damage);
                 }
                 else if(fsm is BossFSM && bossFSM.bossState == BossFSM.BossState.Attack)
                 {
-                    other.gameObject.GetComponentInChildren<StatManager>().HP -= damage;
+                    print("enemy 공격!");
+                    player.PlayerHit(damage);
                 }
+            }
+
+            else
+            {
+                Debug.LogError("player 의 PlayerMove를 찾을 수 없습니다");
             }
         }
     }

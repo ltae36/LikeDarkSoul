@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class EnemyFSM : FSM
 {
-
     public GameObject awakeTrigger;
+
+    EnemyHealth health;
 
     public enum EnemyState 
     {
@@ -44,7 +45,7 @@ public class EnemyFSM : FSM
         switch (undeadState) 
         {
             case EnemyState.Sleep:
-                //Sleep();
+                Sleep();
                 break;
             case EnemyState.Awake:
                 WakeUp();
@@ -62,32 +63,34 @@ public class EnemyFSM : FSM
                 AttackDelay();
                 break;
             case EnemyState.Hit:
+                Hitted();
                 break;
             case EnemyState.Die:
+                Death();
                 break;
 
         }
     }
 
-    //private void Sleep()
-    //{
-    //    //자고 있는 상태
-    //    //만약 플레이어가 박스 오버랩 안으로 들어오면...
-    //    Collider[] colliders = Physics.OverlapBox(awakeTrigger.transform.position,awakeTrigger.transform.localScale/2) ;
+    private void Sleep()
+    {
+        //자고 있는 상태
+        //만약 플레이어가 박스 오버랩 안으로 들어오면...
+        Collider[] colliders = Physics.OverlapBox(awakeTrigger.transform.position, awakeTrigger.transform.localScale / 2);
 
-    //    foreach (Collider collider in colliders)
-    //    {
-    //        print(collider.gameObject.name);
-    //        if (collider.gameObject.CompareTag("Player"))
-    //        {
-    //            undeadState = EnemyState.Awake;
-    //            print("sleep -> awake");
-    //            animationManager.AwakeAnimationStart();
-    //        }
-    //    }
-    //    //상태를 awake로 바꾼다.
-    //    //애니메이션을 실행한다.
-    //}
+        foreach (Collider collider in colliders)
+        {
+            print(collider.gameObject.name);
+            if (collider.gameObject.CompareTag("Player"))
+            {
+                undeadState = EnemyState.Awake;
+                print("sleep -> awake");
+                animationManager.AwakeAnimationStart();
+            }
+        }
+        //상태를 awake로 바꾼다.
+        //애니메이션을 실행한다.
+    }
 
     private void WakeUp()
     {
@@ -122,7 +125,7 @@ public class EnemyFSM : FSM
     }
     private void Idle()
     {
-        if (check.enemyDamaged) 
+        if (health.isDamaged) 
         {
             undeadState = EnemyState.Hit;
         }
@@ -197,7 +200,7 @@ public class EnemyFSM : FSM
             currentTime = 0;
         }
 
-        if (check.enemyDamaged) 
+        if (health.isDamaged) 
         {
             undeadState = EnemyState.Hit;
         }
@@ -209,14 +212,13 @@ public class EnemyFSM : FSM
         // 피격 애니메이션이 재생된다.
         animationManager.HitAnimationStart();
         // hp가 감소한다.
-
-        if (!check.enemyDamaged) 
+        if (!health.isDamaged) 
         {
             undeadState = EnemyState.AttackDelay;
         }
     }
 
-    private void Death()
+    public void Death()
     {
         // hp가 0이 되면 사망 애니메이션이 재생되고 래그돌 상태가 된다.
         // 컴포넌트는 비활성화 된다.
