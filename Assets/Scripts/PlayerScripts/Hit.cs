@@ -5,39 +5,33 @@ using UnityEngine;
 public class Hit : MonoBehaviour
 {
     //public BossHealth health;
-
+    public GameObject effect;
+    public int damage;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Boss")
+        if (other.gameObject.tag == "Boss" || other.gameObject.tag == "Enemy")
         {
             print("공격");
+            Instantiate(effect);
+            effect.transform.position = other.transform.position;
 
             BossHealth health = other.GetComponent<BossHealth>();
             if(health != null)
-                health.TakeDamage(400);
+                health.TakeDamage(damage);
+
+            EnemyHealth enemyHp = other.GetComponent<EnemyHealth>();
+            if (enemyHp != null) 
+            {
+                enemyHp.TakeDamage(damage);
+            }
         }
     }
 
+    IEnumerator effectDestroy() 
+    {
+        yield return new WaitForSeconds(3.0f);
+        Destroy(effect);
+    }
 
-    //private void OnCollisionEnter(Collision other)
-    //{
-    //    print(other.gameObject.name);
-    //    if (other.gameObject.tag == "Boss")
-    //    {
-    //        print("공격");
-    //        health.TakeDamage(40);
-    //    }
-    //}
-
-    //private void OnControllerColliderHit(ControllerColliderHit hit)
-    //{
-
-    //    print(hit.collider.tag);
-    //    if (hit.gameObject.tag == "Boss")
-    //    {
-    //        print("공격");
-    //        health.TakeDamage(40);
-    //    }
-    //}
 }

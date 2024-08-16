@@ -33,7 +33,7 @@ public class HitCheck : DamageCount
 
     IEnumerator DamageTime() 
     {
-        yield return null;
+        yield return new WaitForSeconds(1);
         isDamaged = false;
         enemyDamaged= false ;
         cc.enabled = true;
