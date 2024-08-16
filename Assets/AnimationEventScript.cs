@@ -7,10 +7,12 @@ public class AnimationEventScript : MonoBehaviour
     public UIManager manager;
 
     BossPhaseTransition phaseTransition;
+    BossAnimationManager animationManager;
 
     private void Start()
     {
         phaseTransition = GetComponentInParent<BossPhaseTransition>();
+        animationManager = GetComponent<BossAnimationManager>();
     }
     public void HideBossHpBar()
     {
@@ -23,6 +25,12 @@ public class AnimationEventScript : MonoBehaviour
         {
             phaseTransition.PhaseTransition();
         }
+    }
+
+    public void AttackEnd()
+    {
+        print("AttackEnd");
+        animationManager.AttackAnimationEnd();
     }
     
 }

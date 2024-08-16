@@ -128,6 +128,7 @@ public class BossLocomotion : MonoBehaviour
             case MoveType.Jump:
                 if (!isJump)
                 {
+
                     return;
                 }
                 currentTime += Time.deltaTime;

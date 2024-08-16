@@ -1,35 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.TerrainTools;
 using UnityEngine;
 
 struct AttackUnit
 {
-    BossFSM.AttackState attack;
-    float delayTime;
+    public BossFSM.AttackState attack;
 
-    public AttackUnit( BossFSM.AttackState attack , float delayTime)
+    public AttackUnit( BossFSM.AttackState attack)
     {
         this.attack = attack;
-        this.delayTime = delayTime;
     }
 }
 
-struct AttackCombo
-{
-    List<AttackUnit> attackCombo;
-    int index;
-
-    float coolTime;
-    public AttackCombo(float coolTime)
-    {
-        index = 0;
-        attackCombo = new List<AttackUnit>();
-        this.coolTime = coolTime;
-    }
-}
 
 public class BossFSM : FSM
 { 
+    struct AttackCombo
+    {
+        public List<AttackState> attackCombo;
+        public float coolTime;
+
+        public AttackCombo(List<AttackState> attackCombo)
+        {
+            this.attackCombo = attackCombo;
+            this.coolTime = 0;
+        }
+    }
+
     public enum BossState
     {
         Sleep = 1,
@@ -55,11 +53,33 @@ public class BossFSM : FSM
     [SerializeField] AttackState attackState;
 
     float currentTime;
+    int comboIndex = 0;
 
     BossHealth hpController;
     BossLocomotion locomotion;
     BossAnimationManager animationManager;
     BossStatus status;
+
+    AttackCombo attackCombo1 = new AttackCombo(new List<AttackState>() { AttackState.Vertical, AttackState.Vertical });
+    AttackCombo attackCombo2 = new AttackCombo(new List<AttackState>() { AttackState.Horizontal });
+    AttackCombo attackCombo3 = new AttackCombo(new List<AttackState>() { AttackState.Horizontal, AttackState._360Low });
+    AttackCombo attackCombo4 = new AttackCombo(new List<AttackState>() { AttackState.Vertical });
+    AttackCombo attackCombo5 = new AttackCombo(new List<AttackState>() { AttackState.Horizontal, AttackState._360Low, AttackState.Upercut });
+    AttackCombo attackCombo6 = new AttackCombo(new List<AttackState>() { AttackState.Upercut, AttackState._360Low });
+    AttackCombo attackCombo7 = new AttackCombo(new List<AttackState>() { AttackState.Kick, AttackState.Upercut });
+
+    AttackCombo[] combos;
+
+    AttackCombo farAttackCombo1 = new AttackCombo(new List<AttackState>() { AttackState.DashAttack, AttackState.Horizontal, AttackState.Vertical });
+    AttackCombo farAttackCombo2 = new AttackCombo(new List<AttackState>() { AttackState.DashAttack, AttackState.Horizontal });
+    AttackCombo farAttackCombo3 = new AttackCombo(new List<AttackState>() { AttackState.DashAttack, AttackState.Vertical });
+    AttackCombo farAttackCombo4 = new AttackCombo(new List<AttackState>() { AttackState.JumpAttack, AttackState.Vertical });
+    AttackCombo farAttackCombo5 = new AttackCombo(new List<AttackState>() { AttackState.JumpAttack, AttackState.Upercut });
+
+    AttackCombo[] farCombos;
+
+
+    AttackCombo currentCombo;
 
     // Start is called before the first frame update
     void Start()
@@ -70,9 +90,8 @@ public class BossFSM : FSM
         status = GetComponent<BossStatus>();
         enemyType = EnemyType.Boss;
 
-        #region AttackCombo를 만들자
-        AttackUnit verticalUnit = new AttackUnit(AttackState.Vertical, 0.3f);
-        #endregion
+        combos = new AttackCombo[] { attackCombo1, attackCombo2, attackCombo3, attackCombo4, attackCombo5, attackCombo6, attackCombo7 };
+        farCombos = new AttackCombo[] { farAttackCombo1, farAttackCombo2, farAttackCombo3, farAttackCombo4, farAttackCombo5 };
     }
 
     // Update is called once per frame
@@ -171,45 +190,75 @@ public class BossFSM : FSM
         //공격 대기 시간이 지나면, 공격을 한다.
         if (currentTime > status.idleTime)
         {
-            currentTime = 0;
-            SelectAttackCombo();
+            //currentTime = 0;
+            //SelectAttackCombo();
+            //bossState = BossState.Attack;
+            //print("Attack delay -> attack");
+
+            comboIndex = 0;
+            //현재 fsm을 attack으로 바꾼다.
             bossState = BossState.Attack;
-            print("Attack delay -> attack");
+
+            //콤보를 고르자
+            currentCombo = SelectAttackCombo();
+
+            //현재 attack fsm을 첫 번째 항목으로 바꾼다.
+            attackState = currentCombo.attackCombo[comboIndex];
+
+            if (attackState == AttackState.JumpAttack)
+            {
+                locomotion.SetMoveDirection(BossLocomotion.MoveType.Jump);
+            }
+            else if(attackState == AttackState.DashAttack)
+            {
+                locomotion.SetMoveDirection(BossLocomotion.MoveType.Dash);
+            }
+
+            //attack combo(list)에서 첫 번째 항목의 애니메이션을 재생한다.
+            AttackAnimationStart(GetDistanceType((int)attackState), GetAttackType((int)attackState));
+            print("distance Type : " + GetDistanceType((int)attackState) + "attack Type: " + GetAttackType((int)attackState));
         }
     }
-    
+    private void AttackAnimationStart(int distanceType, int attackType)
+    {
+        animationManager.AttackAnimationStart(distanceType, attackType);
+    }
     // 이 함수는 어떤 공격을 할지 정해준다.
     // 정해진 콤보를 상태 함수로 만든다.
-    private void SelectAttackCombo()
+    private AttackCombo SelectAttackCombo()
     {
         locomotion.SetTargetPosition();
         locomotion.SetTargetDirection();
-        //만약 거리가 가까우면, horizontal 또는 vertical 공격을 한다.
-        //print(locomotion.targetDistance);
+        //만약 거리가 가까우면, 가까운 거리 공격을 하자
         if (locomotion.targetDistance < status.attackDistance)
         {
-            int randNum = Random.Range(1, 6);
-            animationManager.AttackAnimationStart(1, randNum);
-            animationManager.TurnOnRootMotion();
-            attackState = (AttackState)randNum;
+            //int randNum = Random.Range(1, 6);
+            //animationManager.AttackAnimationStart(1, randNum);
+            //animationManager.TurnOnRootMotion();
+            //attackState = (AttackState)randNum;
+            int randNum = Random.Range(0, combos.Length);
+
+            return combos[randNum];
         }
-        //만약 거리가 멀면, jump attack 이나 dash attack을 한다.
+        //만약 거리가 멀면, 원거리 공격 콤보를 하자
         else
         {
-            int randNum = Random.Range(1, 3);
-            if (randNum == 1)
-            {
-                attackState = AttackState.JumpAttack;
-                animationManager.AttackAnimationStart(2, 1);
-                locomotion.SetMoveDirection(BossLocomotion.MoveType.Jump);
+            //int randNum = Random.Range(1, 3);
+            //if (randNum == 1)
+            //{
+            //    attackState = AttackState.JumpAttack;
+            //    animationManager.AttackAnimationStart(2, 1);
+            //    locomotion.SetMoveDirection(BossLocomotion.MoveType.Jump);
                 
-            }
-            else
-            {
-                attackState = AttackState.DashAttack;
-                animationManager.AttackAnimationStart(2, 0);
-                locomotion.SetMoveDirection(BossLocomotion.MoveType.Dash);
-            }
+            //}
+            //else
+            //{
+            //    attackState = AttackState.DashAttack;
+            //    animationManager.AttackAnimationStart(2, 0);
+            //    locomotion.SetMoveDirection(BossLocomotion.MoveType.Dash);
+            //}
+            int randNum = Random.Range(0,farCombos.Length);
+            return farCombos[randNum];
         }
 
 
@@ -222,130 +271,65 @@ public class BossFSM : FSM
 
     void Attack()
     {
-        //조건에 따라 공격을 발동한다.
-        switch (attackState)
-        {
-            case AttackState.Horizontal:
-                Horizontal();
-                break;
-            case AttackState.Vertical:
-                Vertical();
-                break;
-            case AttackState._360Low:
-                _360Low();
-                break;
-            case AttackState.Kick:
-                Kick();
-                break;
-            case AttackState.Upercut:
-                Upercut();
-                break;
-            case AttackState.JumpAttack:
-                JumpAttack();
-                break;
-            case AttackState.DashAttack:
-                DashAttack();
-                break;
-        }
         //공격 애니메이션이 끝나면, 공격대기시간으로 전환한다.
 
-    }
-
-    void Horizontal()
-    {
-        //horizontal 공격을 한다.
-        //print("Horizontal");
-        if(animationManager.IsAttackAnimationEnd())
+        if (attackState == AttackState.JumpAttack)
         {
-            bossState = BossState.AttackDelay;
+            locomotion.MoveBoss(BossLocomotion.MoveType.Jump);
+            if(locomotion.IsJumping() == false)
+            {
+                animationManager.SetTrigger("JumpDown");
+                NextCombo();
+            }
 
-            //만약 플레이어랑의 거리가 멀다면
-            //플레이어한테 다가오는 방향으로 설정한다.
-            print("attack -> linear move");
-            SelectAttackDelayMovement();
         }
-    }
-    void Vertical()
-    {
-        //Vertical 공격을 한다.
-        //print("Vertical");
+        else if (attackState == AttackState.DashAttack)
+        {
+            locomotion.MoveBoss(BossLocomotion.MoveType.Dash);
+
+            if(locomotion.IsDashing() == false)
+            {
+                animationManager.SetTrigger("RunToWalk");
+                NextCombo();
+            }
+        }
+
         if (animationManager.IsAttackAnimationEnd())
         {
-            bossState = BossState.AttackDelay;
-
-            //만약 플레이어랑의 거리가 멀다면
-            //플레이어한테 다가오는 방향으로 설정한다.
-            print("attack -> linear move");
-            SelectAttackDelayMovement();
+            NextCombo();
         }
     }
 
-    void _360Low()
+    void NextCombo()
     {
-        if (animationManager.IsAttackAnimationEnd())
+        comboIndex++;
+        if (comboIndex >= currentCombo.attackCombo.Count)
         {
+            print("attack -> attack delay");
             bossState = BossState.AttackDelay;
-
-            //만약 플레이어랑의 거리가 멀다면
-            //플레이어한테 다가오는 방향으로 설정한다.
-            print("attack -> linear move");
+            animationManager.SetTrigger("AttackEnd");
             SelectAttackDelayMovement();
+            currentTime = 0;
+            comboIndex = 0;
+        }
+        else
+        {
+            attackState = currentCombo.attackCombo[comboIndex];
+            AttackAnimationStart(GetDistanceType((int)attackState), GetAttackType((int)attackState));
+            print("distance Type : " + GetDistanceType((int)attackState) + "attack Type: " + GetAttackType((int)attackState));
         }
     }
 
-    void Kick()
+    int GetDistanceType(int state)
     {
-        if (animationManager.IsAttackAnimationEnd())
-        {
-            bossState = BossState.AttackDelay;
-
-            //만약 플레이어랑의 거리가 멀다면
-            //플레이어한테 다가오는 방향으로 설정한다.
-            print("attack -> linear move");
-            SelectAttackDelayMovement();
-        }
-    }
-    void Upercut()
-    {
-        if (animationManager.IsAttackAnimationEnd())
-        {
-            bossState = BossState.AttackDelay;
-
-            //만약 플레이어랑의 거리가 멀다면
-            //플레이어한테 다가오는 방향으로 설정한다.
-            print("attack -> linear move");
-            SelectAttackDelayMovement();
-        }
-    }
-    void JumpAttack()
-    {
-        //jump attack 공격을 한다.
-        //print("JumpAttack");
-        locomotion.MoveBoss(BossLocomotion.MoveType.Jump);
-       
-        if(locomotion.IsJumping() == false)
-        {
-            bossState = BossState.AttackDelay;
-            animationManager.SetTrigger("JumpDown");
-            transform.position = locomotion.targetPosition;
-            print("attack -> linear move");
-            SelectAttackDelayMovement();
-        }
+        return (state - 1) / 5 + 1;
     }
 
-    void DashAttack()
+    int GetAttackType(int state)
     {
-        //dash attack 공격을 한다.
-        //print("DashAttack");
-        locomotion.MoveBoss(BossLocomotion.MoveType.Dash);
-        if (locomotion.IsDashing() == false)
-        {
-            bossState = BossState.AttackDelay;
-            animationManager.SetTrigger("RunToWalk");
-            print("attack -> linear move");
-            SelectAttackDelayMovement();
-        }
+        return state % 5;
     }
+   
     public void Die()
     {
         //현재 내 hp가 55% 이하라면

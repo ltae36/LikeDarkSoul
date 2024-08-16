@@ -9,6 +9,7 @@ public class BossAnimationManager : MonoBehaviour
     BossLocomotion locomotion;
     [SerializeField] Animator animator;
 
+    [SerializeField] bool isAttack = false;
 
     //public AnimationCurve myCurve;
 
@@ -54,8 +55,12 @@ public class BossAnimationManager : MonoBehaviour
         animator.SetTrigger("WalkToAttack");
         animator.SetInteger("DistanceType", distanceType);
         animator.SetFloat("AttackType", attackType);
+        isAttack = true;
     }
-
+    public void AttackAnimationEnd()
+    {
+        isAttack = false;
+    }
     public void TurnOffRootMotion()
     {
         animator.applyRootMotion = false;
@@ -81,16 +86,19 @@ public class BossAnimationManager : MonoBehaviour
 
     public bool IsAttackAnimationEnd()
     {
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        string stateName = "Base Layer.Attack.AttackCombo";
+        //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        //string stateName = "Base Layer.Attack.AttackCombo";
 
-        int attackHash = Animator.StringToHash(stateName);
-        if (stateInfo.fullPathHash == attackHash)
-        {
-            if (stateInfo.normalizedTime > 0.89f)
-                return true;
-        }
-        return false;
+        //int attackHash = Animator.StringToHash(stateName);
+        //if (stateInfo.fullPathHash == attackHash)
+        //{
+        //    //print(stateInfo.normalizedTime +" "+ (stateInfo.normalizedTime > 0.8f));
+        //    if (stateInfo.normalizedTime > 0.8f)
+        //        return true;
+        //}
+        //return false;
+
+        return !isAttack;
 
     }
     /// <summary>
