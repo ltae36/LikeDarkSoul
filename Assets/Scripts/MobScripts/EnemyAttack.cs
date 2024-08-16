@@ -7,12 +7,25 @@ public class EnemyAttack : DamageCount
 {
     public float damage;
 
-    public EnemyFSM fsm;
-    EnemyState state;
+    public FSM fsm;
+    EnemyFSM enemyFSM;
+    BossFSM bossFSM;
 
     private void Start()
     {
-        fsm = GetComponentInParent<EnemyFSM>();
+        if (fsm == null)
+            Debug.LogError("Fsm 이 없습니다!");
+        else
+        {
+            if(fsm is EnemyFSM)
+            {
+                enemyFSM = (EnemyFSM)fsm;
+            }
+            if(fsm is BossFSM)
+            {
+                bossFSM = (BossFSM)fsm;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -25,9 +38,16 @@ public class EnemyAttack : DamageCount
         else if (other.gameObject.tag == "Player") 
         {
             // 플레이어에게 맞으면 플레이어에게 대미지를 준다.
-            if (other.gameObject.GetComponentInChildren<StatManager>() != null && fsm.undeadState == EnemyState.Attack)
+            if (other.gameObject.GetComponentInChildren<StatManager>() != null )
             {
-                other.gameObject.GetComponentInChildren<StatManager>().HP -= damage;
+                if (fsm is EnemyFSM && enemyFSM.undeadState == EnemyState.Attack )
+                {
+                    other.gameObject.GetComponentInChildren<StatManager>().HP -= damage;
+                }
+                else if(fsm is BossFSM && bossFSM.bossState == BossFSM.BossState.Attack)
+                {
+                    other.gameObject.GetComponentInChildren<StatManager>().HP -= damage;
+                }
             }
         }
     }

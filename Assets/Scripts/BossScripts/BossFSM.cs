@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossFSM : MonoBehaviour
+public class BossFSM : FSM
 { 
     public enum BossState
     {
@@ -31,7 +31,7 @@ public class BossFSM : MonoBehaviour
     [SerializeField] float idleTime =3;
 
     [Header("State")]
-    [SerializeField]BossState bossState;
+    public BossState bossState;
     [SerializeField] AttackState attackState;
 
     float currentTime;
@@ -45,6 +45,7 @@ public class BossFSM : MonoBehaviour
         hpController = GetComponent<BossHealth>();
         locomotion = GetComponent<BossLocomotion>();
         animationManager = GetComponent<BossAnimationManager>();
+        enemyType = EnemyType.Boss;
     }
 
     // Update is called once per frame

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyFSM : MonoBehaviour
+public class EnemyFSM : FSM
 {
 
     public GameObject awakeTrigger;
@@ -36,6 +36,7 @@ public class EnemyFSM : MonoBehaviour
         locomotion = GetComponent<BossLocomotion>();
         animationManager = GetComponent<EnemyAnimationManager>();
         check = GetComponent<HitCheck>();
+        enemyType = EnemyType.Enemy;
     }
 
     void Update()
