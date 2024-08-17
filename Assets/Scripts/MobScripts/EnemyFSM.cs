@@ -1,12 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyFSM : FSM
 {
     public GameObject awakeTrigger;
 
+    public GameObject enemyRagdoll;
+    public GameObject enemyModeling;
+    public BoxCollider swordCollider;
 
     public enum EnemyState 
     {
@@ -100,9 +104,7 @@ public class EnemyFSM : FSM
         //일어나는 상태
         //만약 awake 애니메이션이 끝나면...
         if (animationManager.IsAwakeAnimationEnd())
-        {
-            cc.enabled = true;
-            
+        {   
             locomotion.SetTargetPosition();
             locomotion.SetTargetDirection();
 
@@ -169,6 +171,7 @@ public class EnemyFSM : FSM
 
         if(locomotion.targetDistance < attackRange)
         {
+            swordCollider.enabled = true;
             undeadState = EnemyState.Attack;
             animationManager.AttackAnimationStart();
         }
@@ -210,6 +213,7 @@ public class EnemyFSM : FSM
 
         if (currentTime>attackDelayTime)
         {
+            swordCollider.enabled=true;
             undeadState = EnemyState.Attack;
             animationManager.AttackAnimationStart();
             currentTime = 0;
@@ -217,15 +221,26 @@ public class EnemyFSM : FSM
     }
     private void Hitted()
     {
-        // 피격 애니메이션이 재생된다.
-        animationManager.HitAnimationStart();
+        if (animationManager.IsHitAnimationEnd())
+        {
+            undeadState = EnemyState.AttackDelay;
 
+        }
     }
 
     public void Death()
     {
-        // hp가 0이 되면 사망 애니메이션이 재생되고 래그돌 상태가 된다.
-        // 컴포넌트는 비활성화 된다.
+        if (animationManager.IsHitAnimationFullyEnd())
+        {
+            // hp가 0이 되면 사망 애니메이션이 재생되고 래그돌 상태가 된다.
+            // 컴포넌트는 비활성화 된다.
+            CopyAnimCharacterTransformToRagdoll(enemyModeling.transform, enemyRagdoll.transform);
+            enemyModeling.SetActive(false);
+            GetComponent<CharacterController>().enabled = false;
+            enemyRagdoll.SetActive(true);
+
+            this.enabled = false;
+        }
     }
 
     public void TakeDamage(int damage)
@@ -238,11 +253,26 @@ public class EnemyFSM : FSM
 
             undeadState = EnemyState.Hit;
 
-            if(status.health <= 0)
+            // 피격 애니메이션이 재생된다.
+            animationManager.HitAnimationStart();
+
+            if (status.health <= 0)
             {
+                animationManager.DeadAnimationStart();
+                //레그돌 상태가 된다.
                 undeadState = EnemyState.Die;
             }
         }
 
+    }
+    void CopyAnimCharacterTransformToRagdoll(Transform origin, Transform rag) 
+    {
+        rag.transform.SetLocalPositionAndRotation(origin.transform.localPosition, origin.transform.localRotation);
+
+        //print("origin vs rag" + origin.transform.childCount+" " + rag.transform.childCount+" "+(origin.transform.childCount == rag.transform.childCount));
+        for (int i = 0; i < origin.transform.childCount; i++) 
+        {
+            CopyAnimCharacterTransformToRagdoll(origin.transform.GetChild(i), rag.transform.GetChild(i)); 
+        } 
     }
 }
