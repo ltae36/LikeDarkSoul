@@ -10,15 +10,7 @@ public class FollowCamera : MonoBehaviour
     CameraControll camCon;
 
     public float fov = 20;
-    public float rayDist = 500.0f;
-    public GameObject player;
 
-    Vector3 myPos;
-    public Transform origin;
-    public Transform cuPos;
-
-    Ray ray;
-    RaycastHit hit;
 
     void Start()
     {

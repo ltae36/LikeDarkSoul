@@ -30,9 +30,9 @@ public class BossPhaseTransition : MonoBehaviour
         boss2.SetActive(true);
         
         boss2.transform.position = boss1.transform.position;
-        boss2.GetComponent<Animator>().rootPosition = boss1.GetComponent<Animator>().rootPosition;
+       // boss2.GetComponent<Animator>().rootPosition = boss1.GetComponent<Animator>().rootPosition;
 
-        CopyAnimCharacterTransformToRagdoll(boss1.transform, boss2.transform);
+        //CopyAnimCharacterTransformToRagdoll(boss1.transform, boss2.transform);
         boss1.SetActive(false);
 
 

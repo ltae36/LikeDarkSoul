@@ -16,13 +16,13 @@ public class EnemyHit : MonoBehaviour
             Debug.LogError("Enemy FSM 이 존재하지 않습니다.");
 
         print(other.tag);
-        if (other.CompareTag("Player"))
-        {
-            playerMove.PlayerHit(damage);   
-        }
-        else if (other.CompareTag("Shield"))
+        if (other.CompareTag("Shield"))
         {
             fsm.EnemyStateToShield();
+        }
+        else if (other.CompareTag("Player"))
+        {
+            playerMove.PlayerHit(damage);   
         }
     }
 }
