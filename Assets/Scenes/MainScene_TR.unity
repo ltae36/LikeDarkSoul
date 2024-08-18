@@ -11003,8 +11003,8 @@ MonoBehaviour:
   ragDoll: {fileID: 2893317455017155543}
   uDie: {fileID: 676835286}
   blackOut: {fileID: 1955380449}
-  hpController1: {fileID: 0}
-  hpController2: {fileID: 0}
+  hpController1: {fileID: 1432083093}
+  hpController2: {fileID: 695328996}
 --- !u!4 &1639118874 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2226403721244638050, guid: e87330d35e671334589c46782990b33a,
@@ -13450,6 +13450,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2039478270}
   m_CullTransparentMesh: 1
+--- !u!65 &2041588850 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 3701486530128998778, guid: e87330d35e671334589c46782990b33a,
+    type: 3}
+  m_PrefabInstance: {fileID: 257319273867295391}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2042913594
 GameObject:
   m_ObjectHideFlags: 0
@@ -13917,6 +13923,7 @@ MonoBehaviour:
   attack: {fileID: 0}
   swordCol: {fileID: 2057937270}
   effect: {fileID: 0}
+  shieldCol: {fileID: 0}
 --- !u!114 &2088830813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14333,6 +14340,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6295144419191916061, guid: e87330d35e671334589c46782990b33a,
+        type: 3}
+      propertyPath: shieldCol
+      value: 
+      objectReference: {fileID: 2041588850}
     - target: {fileID: 7093771904092976685, guid: e87330d35e671334589c46782990b33a,
         type: 3}
       propertyPath: se

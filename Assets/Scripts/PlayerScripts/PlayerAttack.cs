@@ -14,6 +14,7 @@ public class PlayerAttack : MonoBehaviour
 
     public Collider swordCol;
     public GameObject effect;
+    public Collider shieldCol;
 
     void Start()
     { 
@@ -27,8 +28,9 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-
-        attack.SetBool("Shield", Input.GetMouseButton(1));
+        bool isShield = Input.GetMouseButton(0);
+        attack.SetBool("Shield", isShield);
+        shieldCol.enabled = isShield;
 
         // 마우스 왼클릭을 하면 공격을 한다.
         if (Input.GetMouseButtonDown(0))
