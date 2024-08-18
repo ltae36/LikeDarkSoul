@@ -13,6 +13,7 @@ public class PlayerAttack : MonoBehaviour
     int comboCount;
 
     public Collider swordCol;
+    public GameObject effect;
 
     void Start()
     { 
@@ -41,6 +42,29 @@ public class PlayerAttack : MonoBehaviour
 
             // 스태미너가 감소한다.
             stat.stam -= stat.useStam;
-        }      
+            if (comboCount >= 3) 
+            {
+                comboCount = 0;
+            }
+        }
+
+        // R키를 누르면 체력을 회복한다.
+        if (Input.GetKeyDown(KeyCode.R)) 
+        {
+            Heal(100);
+        }   
+        
+
+    }
+
+    void Heal(float amount)
+    {
+        // hp를 회복한다.
+        Instantiate(effect, transform.position, transform.localRotation);
+        attack.SetTrigger("Heal");
+        if (stat.HP >= 453)
+        {
+            stat.HP += amount;
+        }
     }
 }
