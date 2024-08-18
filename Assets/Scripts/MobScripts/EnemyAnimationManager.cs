@@ -103,4 +103,25 @@ public class EnemyAnimationManager : MonoBehaviour
     {
         animator.SetBool("Dead", true);
     }
+
+    public bool IsShieldAnimationEnd()
+    {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        string stateName = "Base Layer.Shield";
+
+        int hitHash = Animator.StringToHash(stateName);
+        if (stateInfo.fullPathHash == hitHash)
+        {
+            if (stateInfo.normalizedTime > 0.8f)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void ShieldAnimationStart()
+    {
+        animator.SetTrigger("Shield");
+    }
 }

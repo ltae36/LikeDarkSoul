@@ -14,4 +14,5 @@ public class PlayerAnimationEvent : MonoBehaviour
     {
         swordCollider.enabled = false;
     }
+
 }

@@ -39,7 +39,8 @@ public class StatManager : MonoBehaviour
         defense,
         damaged,
         move,
-        dead
+        dead,
+        groggy
     }
 
     public PlayerState mystate = PlayerState.idle;
@@ -227,7 +228,7 @@ public class StatManager : MonoBehaviour
         {
             mystate = PlayerState.idle;
         }
-        Recovery(5);
+        //if (stam < fullStamina) Recovery(5);
     }
 
     private void Damaged()
@@ -295,6 +296,17 @@ public class StatManager : MonoBehaviour
         yield return new WaitForSeconds(sec);
         mystate = state;
         isBeingIdle = false;
+    }
+
+    public void SubtractStamia (float amount)
+    {
+        stam -= amount;
+
+        if(stam < 0)
+        {
+            mystate = PlayerState.groggy;
+            inAction = false;
+        }
     }
 
 }

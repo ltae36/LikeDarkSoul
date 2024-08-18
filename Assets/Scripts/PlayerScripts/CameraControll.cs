@@ -15,20 +15,20 @@ public class CameraControll : MonoBehaviour
     public float playerDistance = 10f;
 
 
-    float mouseY;
-    public float mouseX;
+    float mouseY = 90;
+    public float mouseX = 30;
 
     private void Start()
     {
         // 시작 카메라 위치는 캐릭터의 뒤쪽으로 고정
-        transform.rotation = Quaternion.Euler(0, 90, 0);
+        //transform.rotation = Quaternion.Euler(0, 90, 0);
     }
 
     void Update()
     {
-        Invoke("HandleRotate", 2.5f);
+        //Invoke("HandleRotate", 2.5f);
         HandleMove();
-        //HandleRotate();
+        HandleRotate();
 
     }
 
