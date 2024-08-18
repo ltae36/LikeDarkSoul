@@ -13,7 +13,7 @@ public class PlayerAttack : MonoBehaviour
     int comboCount;
 
     public Collider swordCol;
-
+    public BoxCollider shieldCol;
     void Start()
     { 
         
@@ -26,8 +26,10 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-
-        attack.SetBool("Shield", Input.GetMouseButton(1));
+        bool isShield = Input.GetMouseButton(1);
+        attack.SetBool("Shield", isShield);
+        //shield를 들어올렸으면, 쉴드 콜라이더를 켜주고, 쉴드를 내렸으면, 쉴드 콜라이더를 꺼주자
+        shieldCol.enabled = isShield;
 
         // 마우스 왼클릭을 하면 공격을 한다.
         if (Input.GetMouseButtonDown(0))

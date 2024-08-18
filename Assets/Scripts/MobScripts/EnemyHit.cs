@@ -15,9 +15,14 @@ public class EnemyHit : MonoBehaviour
         if (fsm == null)
             Debug.LogError("Enemy FSM 이 존재하지 않습니다.");
 
-        if (other.gameObject.CompareTag("Player") && fsm.undeadState == EnemyFSM.EnemyState.Attack)
+        print(other.tag);
+        if (other.CompareTag("Player"))
         {
             playerMove.PlayerHit(damage);   
+        }
+        else if (other.CompareTag("Shield"))
+        {
+            fsm.EnemyStateToShield();
         }
     }
 }

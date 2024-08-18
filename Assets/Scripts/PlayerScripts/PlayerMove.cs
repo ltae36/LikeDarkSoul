@@ -106,7 +106,6 @@ public class PlayerMove : MonoBehaviour
             else 
             {
                 Run(3.0f);
-                Run(3.0f);
             }
 
         }

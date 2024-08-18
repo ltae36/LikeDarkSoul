@@ -21,7 +21,8 @@ public class EnemyFSM : FSM
         Attack,
         AttackDelay,
         Hit,
-        Die
+        Die,
+        Shield
     }
 
     public EnemyState undeadState;
@@ -75,7 +76,28 @@ public class EnemyFSM : FSM
             case EnemyState.Die:
                 Death();
                 break;
+            case EnemyState.Shield:
+                Shield();
+                break;
 
+        }
+    }
+
+    public void EnemyStateToShield()
+    {
+        undeadState = EnemyState.Shield;
+        animationManager.ShieldAnimationStart();
+    }
+    private void Shield()
+    {
+        //shield animation을 재생한다.
+
+        //만약 shield animation이 끝나면
+        if (animationManager.IsShieldAnimationEnd())
+        {
+            //어택 딜레이로 넘어간다.
+            undeadState = EnemyState.AttackDelay;
+            animationManager.AttackDelayAnimationStart();
         }
     }
 
@@ -87,7 +109,6 @@ public class EnemyFSM : FSM
 
         foreach (Collider collider in colliders)
         {
-            print(collider.gameObject.name);
             if (collider.gameObject.CompareTag("Player"))
             {
                 undeadState = EnemyState.Awake;
