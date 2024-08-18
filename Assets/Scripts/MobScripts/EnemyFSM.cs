@@ -7,6 +7,7 @@ using UnityEngine;
 public class EnemyFSM : FSM
 {
     public GameObject awakeTrigger;
+    public GameObject healthBar;
 
     public GameObject enemyRagdoll;
     public GameObject enemyModeling;
@@ -39,6 +40,7 @@ public class EnemyFSM : FSM
 
     void Start()
     {
+        healthBar.SetActive(false);
         locomotion = GetComponent<EnemyLocomotion>();
         animationManager = GetComponent<EnemyAnimationManager>();
         check = GetComponent<HitCheck>();
@@ -107,6 +109,8 @@ public class EnemyFSM : FSM
         {   
             locomotion.SetTargetPosition();
             locomotion.SetTargetDirection();
+
+            healthBar.SetActive(true);
 
             if(locomotion.targetDistance < attackRange)
             {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -13,7 +14,7 @@ public class PlayerMove : MonoBehaviour
     public float sprintSpeed = 8f;
     public float walkSpeed = 4f;
 
-    Vector3 dir;
+    public Vector3 dir;
 
     public bool isSprint = false;
     public bool isWalking = false;
@@ -23,10 +24,12 @@ public class PlayerMove : MonoBehaviour
     float onSpace;
 
     public GameObject blood;
-    
     public Vector3 camDir;
     public Camera cam;
     public StatManager stat;
+    public AudioSource footStep;
+    public AudioSource backStep;
+    public AudioSource roll;
 
     GameObject playerModel;
     Animator animator;
@@ -34,8 +37,12 @@ public class PlayerMove : MonoBehaviour
     PlayerAttack attack;
     HitCheck hit;
 
+
     void Start()
     {
+        isrun = false;
+        footStep.enabled = false;
+
         attack = GetComponent<PlayerAttack>();
         animator = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
@@ -59,28 +66,34 @@ public class PlayerMove : MonoBehaviour
         if (!stat.inAction)
         {
             dir = new Vector3(h, 0, v);
+
         }
         else
         {
             dir = Vector3.zero;
         }
-        //dir = new Vector3(h, 0, v);
 
         // 지면에서 떨어져 y값이 줄어들면 추락한 것으로 판단하고 사망한다.
         if(transform.position.y < -8) 
         {
             fallDeath = true;
         }
-
+        else 
+        {
+            fallDeath = false;
+        }
 
         camDir = cameraRotationY * dir; // 카메라의 로컬 로테이션y 값을 dir에 적용한다.
 
         // CharacterController를 이용한 이동
         cc.Move(camDir * moveSpeed * Time.deltaTime);
 
-        // 이동 상태가 아닐 경우(키 WASD 키입력이 없을 경우)
         if (dir != Vector3.zero)
         {
+            isrun = true;
+
+            footStep.enabled = true;
+
             // 방향전환
             Quaternion rot = Quaternion.LookRotation(camDir, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, rot, turnSpeed * Time.deltaTime);
@@ -101,6 +114,7 @@ public class PlayerMove : MonoBehaviour
             }
             else if (Input.GetKeyUp(KeyCode.Space) && stat.mystate == StatManager.PlayerState.move) 
             {
+                roll.Play();
                 animator.SetTrigger("Roll 1");
             }
             else 
@@ -109,74 +123,26 @@ public class PlayerMove : MonoBehaviour
                 Run(3.0f);
             }
 
+
         }
-        else 
+        // 이동 상태가 아닐 경우(키 WASD 키입력이 없을 경우)
+        else
         {
+            isrun = false;
+
+            footStep.enabled = false;
+
             // 제자리라면 스페이스바를 눌렀을 때 뒤로 물러난다.
             if (Input.GetKeyDown(KeyCode.Space)) 
             {
                 stat.stam -= stat.useStam;
+                backStep.Play();
                 animator.SetTrigger("Jump_Back");
             }
         }
 
         // WASD를 누르면 해당 방향으로 달리는 애니메이션이 재생된다.
         animator.SetBool("Run", dir != Vector3.zero);
-
-        #region 애니메이션 재생
-
-
-
-        #region 구르기 애니메이션
-        //if (stat.mystate == StatManager.PlayerState.move)
-        //{
-
-        //    if (Input.GetKey(KeyCode.W))
-        //    {
-        //        animator.SetFloat("Roll", 0);
-        //    }
-        //    else if (Input.GetKey(KeyCode.A))
-        //    {
-        //        animator.SetFloat("Roll", 1);
-        //    }
-        //    else if (Input.GetKey(KeyCode.S))
-        //    {
-        //        animator.SetFloat("Roll", 3);
-        //    }
-        //    else if (Input.GetKey(KeyCode.D))
-        //    {
-        //        animator.SetFloat("Roll", 4);
-        //    }
-
-        //    if (Input.GetKeyUp(KeyCode.Space))
-        //    {
-        //        animator.SetTrigger("Roll 1");
-        //    }
-        //}
-
-
-        //if (Input.GetKeyUp(KeyCode.Space))
-        //{
-        //    // 움직이지 않는 상태에서 스페이스바를 눌렀다 떼면 뒤로 점프한다.
-        //    if (dir == Vector3.zero)
-        //    {
-        //        animator.SetTrigger("Jump_Back");
-        //    }
-
-        //    // 움직이는 상태에서 스페이스바를 누르면 해당 방향으로 구른다.
-        //    else if (stat.mystate == StatManager.PlayerState.move)
-        //    {
-        //        animator.SetFloat("Roll", 3);
-        //        animator.SetFloat("Roll", 0);
-        //        animator.SetFloat("Roll", 1);
-        //        animator.SetFloat("Roll", 4);
-
-        //    }
-        //}
-        #endregion
-
-        #endregion
-
     }
 
     void Walk(float sec) 
@@ -200,16 +166,6 @@ public class PlayerMove : MonoBehaviour
         isWalking = false;
         isSprint = false;
 
-        //if (isWalking) 
-        //{
-        //    moveSpeed += runSpeed * Time.deltaTime;
-        //    moveSpeed = Mathf.Clamp(moveSpeed, 0, runSpeed);
-        //}
-        //else if (isSprint) 
-        //{
-        //    moveSpeed -= runSpeed * Time.deltaTime;
-        //    moveSpeed = Mathf.Clamp(moveSpeed, runSpeed, 20);
-        //}
         moveSpeed = Mathf.Lerp(moveSpeed, runSpeed, sec);
         animator.SetFloat("MoveSpeed", moveSpeed);
     }
