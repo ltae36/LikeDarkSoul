@@ -67,4 +67,40 @@ public class EnemyAnimationManager : MonoBehaviour
         }
         return false;
     }
+
+    public bool IsHitAnimationEnd()
+    {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        string stateName = "Base Layer.Hit";
+
+        int hitHash = Animator.StringToHash(stateName);
+        if(stateInfo.fullPathHash == hitHash)
+        {
+            if(stateInfo.normalizedTime > 0.62f)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool IsHitAnimationFullyEnd()
+    {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        string stateName = "Base Layer.Hit";
+
+        int hitHash = Animator.StringToHash(stateName);
+        if (stateInfo.fullPathHash == hitHash)
+        {
+            if (stateInfo.normalizedTime > 0.98f)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public void DeadAnimationStart()
+    {
+        animator.SetBool("Dead", true);
+    }
 }
