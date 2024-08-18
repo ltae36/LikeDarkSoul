@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using static BossLocomotion;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 using UnityEngine.EventSystems;
 using static UnityEngine.GraphicsBuffer;
 using UnityEngine.UIElements;

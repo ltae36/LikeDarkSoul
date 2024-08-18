@@ -1,0 +1,79 @@
+# Blender 3.6.0 MTL File: 'None'
+# www.blender.org
+
+newmtl assets_textures_Default
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+illum 9
+map_Kd c5110_a.png
+map_Ks c5110_r.png
+map_d c5110_a.png
+map_Bump c5110_n.png
+
+newmtl assets_textures__00__Material__12
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+illum 9
+map_Kd c5110_jarei_body_01_a.png
+map_Ks c5110_jarei_body_01_r.png
+map_d c5110_jarei_body_01_a.png
+map_Bump c5110_jarei_body_01_n.png
+
+newmtl assets_textures__04__Arm01
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+illum 9
+map_Kd c5110_a.png
+map_Ks c5110_r.png
+map_d c5110_a.png
+map_Bump c5110_n.png
+
+newmtl assets_textures_kosiamar
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+illum 9
+map_Kd c5110_a.png
+map_Ks c5110_r.png
+map_d c5110_a.png
+map_Bump c5110_n.png
+
+newmtl assets_textures_kosinuno_cloth
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+illum 9
+map_Kd c5110_a.png
+map_Ks c5110_r.png
+map_d c5110_a.png
+map_Bump c5110_n.png
+
+newmtl assets_textures_maekake_cloth
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+illum 9
+map_Kd c5110_a.png
+map_Ks c5110_r.png
+map_d c5110_a.png
+map_Bump c5110_n.png
+
+newmtl assets_textures_sousyoku_cloth
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+illum 9
+map_Kd c5110_a.png
+map_Ks c5110_r.png
+map_d c5110_a.png
+map_Bump c5110_n.png
