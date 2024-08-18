@@ -1,0 +1,68 @@
+# Blender 3.6.0 MTL File: 'None'
+# www.blender.org
+
+newmtl assets_textures_Material__13
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_wp_a.png
+map_Ks c5110_wp_r.png
+map_Bump c5110_wp_n.png
+
+newmtl assets_textures__01__02___Default
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_jarei_horn_01_a.png
+map_Ks c5110_jarei_horn_01_r.png
+map_Bump c5110_jarei_horn_01_n.png
+
+newmtl assets_textures__01__02___Default.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_jarei_mouth_a.png
+map_Ks c5110_jarei_mouth_r.png
+map_Bump c5110_jarei_mouth_n.png
+
+newmtl assets_textures__01__Material__12
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_jarei_body_01_a.png
+map_Ks c5110_jarei_body_01_r.png
+map_Bump c5110_jarei_body_01_n.png
+
+newmtl assets_textures__01__Material__17
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_jarei_eye_a.png
+map_Ks c5110_jarei_eye_r.png
+map_Bump c5110_jarei_eye_n.png
+
+newmtl assets_textures__05__Arm02
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+illum 9
+map_Kd c5110_a.png
+map_Ks c5110_r.png
+map_d c5110_a.png
+map_Bump c5110_n.png

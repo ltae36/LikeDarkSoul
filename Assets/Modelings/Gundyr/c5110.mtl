@@ -1,0 +1,192 @@
+# Blender MTL File: 'None'
+# Material Count: 14
+
+newmtl assets_textures_Default
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 0.000000
+illum 2
+map_Kd c5110_a.png
+map_Bump  c5110_n.png
+map_Ks  c5110_r.png
+map_d  c5110_a.png
+
+newmtl assets_textures_Material__13
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_wp_a.png
+map_Bump  c5110_wp_n.png
+map_Ks  c5110_wp_r.png
+
+newmtl assets_textures__00__Material__12
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 0.000000
+illum 2
+map_Kd c5110_jarei_body_01_a.png
+map_Bump  c5110_jarei_body_01_n.png
+map_Ks  c5110_jarei_body_01_r.png
+map_d  c5110_jarei_body_01_a.png
+
+newmtl assets_textures__01__02___Default
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_jarei_horn_01_a.png
+map_Bump  c5110_jarei_horn_01_n.png
+map_Ks  c5110_jarei_horn_01_r.png
+
+newmtl assets_textures__01__02___Default.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_jarei_mouth_a.png
+map_Bump  c5110_jarei_mouth_n.png
+map_Ks  c5110_jarei_mouth_r.png
+
+newmtl assets_textures__01__Material__12
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_jarei_body_01_a.png
+map_Bump  c5110_jarei_body_01_n.png
+map_Ks  c5110_jarei_body_01_r.png
+
+newmtl assets_textures__01__Material__17
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_jarei_eye_a.png
+map_Bump  c5110_jarei_eye_n.png
+map_Ks  c5110_jarei_eye_r.png
+
+newmtl assets_textures__02__c5280_weapon
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 1.000000
+illum 2
+map_Kd c5110_WP_A_0634_a.png
+map_Bump  c5110_WP_A_0634_n.png
+map_Ks  c5110_WP_A_0634_r.png
+
+newmtl assets_textures__04__Arm01
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 0.000000
+illum 2
+map_Kd c5110_a.png
+map_Bump  c5110_n.png
+map_Ks  c5110_r.png
+map_d  c5110_a.png
+
+newmtl assets_textures__05__Arm02
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 0.000000
+illum 2
+map_Kd c5110_a.png
+map_Bump  c5110_n.png
+map_Ks  c5110_r.png
+map_d  c5110_a.png
+
+newmtl assets_textures_kosiamar
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 0.000000
+illum 2
+map_Kd c5110_a.png
+map_Bump  c5110_n.png
+map_Ks  c5110_r.png
+map_d  c5110_a.png
+
+newmtl assets_textures_kosinuno_cloth
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 0.000000
+illum 2
+map_Kd c5110_a.png
+map_Bump  c5110_n.png
+map_Ks  c5110_r.png
+map_d  c5110_a.png
+
+newmtl assets_textures_maekake_cloth
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 0.000000
+illum 2
+map_Kd c5110_a.png
+map_Bump  c5110_n.png
+map_Ks  c5110_r.png
+map_d  c5110_a.png
+
+newmtl assets_textures_sousyoku_cloth
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.550000
+d 0.000000
+illum 2
+map_Kd c5110_a.png
+map_Bump  c5110_n.png
+map_Ks  c5110_r.png
+map_d  c5110_a.png
