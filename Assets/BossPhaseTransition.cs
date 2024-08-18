@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class BossPhaseTransition : MonoBehaviour
@@ -21,16 +22,24 @@ public class BossPhaseTransition : MonoBehaviour
     {
         yield return new WaitForSeconds(transitionTime);
 
-        Vector3 tempPos = boss1.transform.position;
-        Quaternion tempRot = boss1.transform.rotation;
-        Destroy(boss1);
-
-        yield return null;
+        boss1.GetComponent<CharacterController>().enabled = false;
         boss2.SetActive(true);
-        boss2.transform.position = tempPos;
-        boss2.transform.rotation = tempRot;
+        
+        boss2.transform.position = boss1.transform.position;
+        boss2.GetComponent<Animator>().rootPosition = boss1.GetComponent<Animator>().rootPosition;
 
-        boss2.GetComponent<Animator>().rootPosition = tempPos;
-        boss2.GetComponent<Animator>().rootRotation = tempRot;
+        CopyAnimCharacterTransformToRagdoll(boss1.transform, boss2.transform);
+        boss1.SetActive(false);
+    }
+
+    void CopyAnimCharacterTransformToRagdoll(Transform origin, Transform rag)
+    {
+        rag.transform.SetLocalPositionAndRotation(origin.transform.localPosition, origin.transform.localRotation);
+
+        //print("origin vs rag" + origin.transform.childCount+" " + rag.transform.childCount+" "+(origin.transform.childCount == rag.transform.childCount));
+        for (int i = 0; i < origin.transform.childCount; i++)
+        {
+            CopyAnimCharacterTransformToRagdoll(origin.transform.GetChild(i), rag.transform.GetChild(i));
+        }
     }
 }

@@ -3,15 +3,6 @@ using System.Collections.Generic;
 using UnityEditor.TerrainTools;
 using UnityEngine;
 
-struct AttackUnit
-{
-    public BossFSM.AttackState attack;
-
-    public AttackUnit( BossFSM.AttackState attack)
-    {
-        this.attack = attack;
-    }
-}
 
 
 public class BossFSM : FSM
@@ -166,7 +157,7 @@ public class BossFSM : FSM
         //애니메이션이 끝나면, 공격 딜레이 상태로 전환한다. 
         if (animationManager.IsAwakeAnimationEnd())
         {
-            
+            animationManager.TurnOnRootMotion();
             bossState = BossState.AttackDelay;
 
             //만약 플레이어랑의 거리가 멀다면
