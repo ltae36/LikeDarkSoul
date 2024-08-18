@@ -6,6 +6,7 @@ public class WinGame : MonoBehaviour
 {
     public BossFSM boss;
     public GameObject winUI;
+    public float waitingTime = 2.0f;
 
     private void Update()
     {
@@ -13,9 +14,14 @@ public class WinGame : MonoBehaviour
         {
             if (boss.bossState == BossFSM.BossState.Die)
             {
-                winUI.SetActive(true);
+                Invoke("StartUI", waitingTime);
+                this.enabled = false;
             }
         }
     }
 
+    void StartUI()
+    {
+        winUI.SetActive(true);
+    }
 }
