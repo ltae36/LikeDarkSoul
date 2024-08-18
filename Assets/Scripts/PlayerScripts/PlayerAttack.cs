@@ -12,7 +12,6 @@ public class PlayerAttack : MonoBehaviour
     float actionTime;
     int comboCount;
 
-
     public Collider swordCol;
 
     void Start()

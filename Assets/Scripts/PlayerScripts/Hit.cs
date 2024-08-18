@@ -6,6 +6,7 @@ public class Hit : MonoBehaviour
 {
     //public BossHealth health;
     public GameObject effect;
+    public AudioSource se;
     public int damage;
     BossHealth health;
     EnemyFSM enemyFSM;
@@ -17,7 +18,8 @@ public class Hit : MonoBehaviour
         {
             print("АјАн");
             Instantiate(effect);
-            effect.transform.position = other.transform.position;
+            se.Play();
+            effect.transform.position = transform.position;
 
             if(other.gameObject.CompareTag("Boss"))
             {
