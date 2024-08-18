@@ -18,12 +18,17 @@ public class CameraControll : MonoBehaviour
     float mouseY;
     public float mouseX;
 
-
+    private void Start()
+    {
+        // 시작 카메라 위치는 캐릭터의 뒤쪽으로 고정
+        transform.rotation = Quaternion.Euler(0, 90, 0);
+    }
 
     void Update()
     {
+        Invoke("HandleRotate", 2.5f);
         HandleMove();
-        HandleRotate();
+        //HandleRotate();
 
     }
 

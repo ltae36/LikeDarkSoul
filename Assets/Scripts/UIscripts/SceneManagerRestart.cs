@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class SceneManagerRestart : MonoBehaviour
 {
     StatManager stat;
-    public float sceneReloadingTime = 6.0f;
+    public float sceneReloadingTime = 10.0f;
 
     void Start()
     {

@@ -108,7 +108,7 @@ public class StatManager : MonoBehaviour
                 Damaged();
                 break;
             case PlayerState.dead:
-                Invoke("Dead", 5f);
+                Invoke("Dead", 1f);
                 //Dead();
                 break;
         }
