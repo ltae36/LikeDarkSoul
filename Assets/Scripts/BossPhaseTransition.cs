@@ -7,12 +7,16 @@ public class BossPhaseTransition : MonoBehaviour
 {
     GameObject boss1;
     GameObject boss2;
+
+    BossEffect bossEffect;
+
     public float transitionTime = 0.1f;
 
     private void Start()
     {
         boss1 = transform.Find("Boss1").gameObject;
         boss2 = transform.Find("Boss2").gameObject;
+        bossEffect = GetComponent<BossEffect>();
     }
     public void PhaseTransition()
     {
@@ -30,6 +34,9 @@ public class BossPhaseTransition : MonoBehaviour
 
         CopyAnimCharacterTransformToRagdoll(boss1.transform, boss2.transform);
         boss1.SetActive(false);
+
+
+        bossEffect.ChangeBossToPhase2();
     }
 
     void CopyAnimCharacterTransformToRagdoll(Transform origin, Transform rag)

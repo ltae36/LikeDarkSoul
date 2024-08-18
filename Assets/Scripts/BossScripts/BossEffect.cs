@@ -6,48 +6,43 @@ public class BossEffect : MonoBehaviour
 {
     public AudioSource audioStep;
     public AudioSource voice;
-    public AudioSource clear;
 
-    public GameObject clearScene;
-    public GameObject effect;
 
-    BossFSM fSM;
+    public BossFSM phase1FSM;
+    public BossFSM phase2FSM;
+
+    BossFSM currentBoss;
 
     void Start()
     {
-        fSM = GetComponentInChildren<BossFSM>();
-        clearScene.SetActive(false);
-        effect.SetActive(false);
+
         audioStep.enabled = false;
         voice.enabled = false;
-        clear.enabled = false;
+
+
+        currentBoss = phase1FSM;
     }
 
     void Update()
     {
-        if (fSM.bossState == BossFSM.BossState.Awake || fSM.bossState == BossFSM.BossState.AttackDelay)
+        if (currentBoss.bossState == BossFSM.BossState.Awake || currentBoss.bossState == BossFSM.BossState.AttackDelay)
         {
             audioStep.enabled = true;
         }
-        else if (fSM.bossState == BossFSM.BossState.Die) 
-        {
- 
-            Invoke("BossClear", 3f);
-        }
-        else 
+        else
         {
             audioStep.enabled = false;
         }
-        if (fSM.bossState == BossFSM.BossState.Attack) 
+        
+
+        if (currentBoss.bossState == BossFSM.BossState.Attack) 
         {
             voice.enabled = true;
         }
     }
 
-    void BossClear() 
+    public void ChangeBossToPhase2()
     {
-        clear.enabled = true;
-        clearScene.SetActive(true);
-        effect.SetActive(true);
+        currentBoss = phase2FSM;
     }
 }
