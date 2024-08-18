@@ -7,6 +7,8 @@ public class AnimationEventScript : MonoBehaviour
 
     BossPhaseTransition phaseTransition;
     BossAnimationManager animationManager;
+    public BoxCollider swordCollider;
+    public BoxCollider feetCollider;
 
     private void Start()
     {
@@ -27,6 +29,21 @@ public class AnimationEventScript : MonoBehaviour
     {
         print("AttackEnd");
         animationManager.AttackAnimationEnd();
+        swordCollider.enabled = false;
+    }
+
+    public void AttackStart()
+    {
+        swordCollider.enabled = true;
     }
     
+    public void FeetAttackStart()
+    {
+        feetCollider.enabled = true;
+    }
+
+    public void FeetAttackEnd()
+    {
+        feetCollider.enabled = false;
+    }
 }

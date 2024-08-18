@@ -2,16 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAnimationEventScript : MonoBehaviour
+public class PlayerAnimationEvent : MonoBehaviour
 {
-
     public BoxCollider swordCollider;
 
-    public void AttackAnimationStart()
+    public void AttackStart()
     {
         swordCollider.enabled = true;
     }
-    public void AttackAnimationEnd()
+    public void AttackEnd()
     {
         swordCollider.enabled = false;
     }

@@ -11,6 +11,9 @@ public class GameOver : MonoBehaviour
     public GameObject uDie;
     public GameObject blackOut;
 
+    public BossHealthBarController hpController1;
+    public BossHealthBarController hpController2;
+
 
     void Start()
     {
@@ -32,6 +35,9 @@ public class GameOver : MonoBehaviour
             ragDoll.SetActive(true);
             // 블랙아웃이 실행된다.
             blackOut.SetActive (true);
+
+            hpController1.HideBossHpBar();
+            hpController2.HideBossHpBar();
         }
     }
 }
