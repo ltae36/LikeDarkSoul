@@ -34,5 +34,10 @@ public class Hit : MonoBehaviour
         }
     }
 
+    public void SetDamage1000()
+    {
+        damage = 1000;
+    }
+
 
 }

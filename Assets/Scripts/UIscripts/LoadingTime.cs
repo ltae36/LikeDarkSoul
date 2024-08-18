@@ -8,10 +8,6 @@ public class LoadingTime : MonoBehaviour
     float currentTime;
     public float StarTime = 5f;
 
-    void Start()
-    {
-        
-    }
 
     void Update()
     {

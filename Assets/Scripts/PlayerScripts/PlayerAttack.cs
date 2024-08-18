@@ -28,7 +28,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        bool isShield = Input.GetMouseButton(0);
+        bool isShield = Input.GetMouseButton(1);
         attack.SetBool("Shield", isShield);
         shieldCol.enabled = isShield;
 

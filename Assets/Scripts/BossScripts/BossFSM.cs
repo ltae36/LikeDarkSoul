@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.TerrainTools;
 using UnityEngine;
 
 
@@ -207,6 +206,7 @@ public class BossFSM : FSM
             {
                 locomotion.SetMoveDirection(BossLocomotion.MoveType.Dash);
             }
+
 
             //attack combo(list)에서 첫 번째 항목의 애니메이션을 재생한다.
             AttackAnimationStart(GetDistanceType((int)attackState), GetAttackType((int)attackState));

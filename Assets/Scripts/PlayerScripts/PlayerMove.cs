@@ -30,6 +30,7 @@ public class PlayerMove : MonoBehaviour
     public AudioSource footStep;
     public AudioSource backStep;
     public AudioSource roll;
+    public Transform feetPosition;
 
     GameObject playerModel;
     Animator animator;
@@ -94,6 +95,17 @@ public class PlayerMove : MonoBehaviour
 
             footStep.enabled = true;
 
+
+            Ray ray = new Ray(feetPosition.position, Vector3.down);
+            RaycastHit hit;
+            if(Physics.Raycast(ray, out hit, 1<<7))
+            {
+                if(hit.distance > 0.3f)
+                {
+                    StartCoroutine(GroundProcess(hit.distance));
+                }
+            }
+
             // 방향전환
             Quaternion rot = Quaternion.LookRotation(camDir, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, rot, turnSpeed * Time.deltaTime);
@@ -127,6 +139,7 @@ public class PlayerMove : MonoBehaviour
         // 이동 상태가 아닐 경우(키 WASD 키입력이 없을 경우)
         else
         {
+            animator.applyRootMotion = true;
             isrun = false;
 
             footStep.enabled = false;
@@ -144,6 +157,14 @@ public class PlayerMove : MonoBehaviour
         animator.SetBool("Run", dir != Vector3.zero);
     }
 
+    IEnumerator GroundProcess(float distance)
+    {
+        animator.applyRootMotion = false;
+        transform.position = new Vector3(transform.position.x, transform.position.y - distance, transform.position.z);
+        yield return new WaitForNextFrameUnit();
+
+
+    }
     void Walk(float sec) 
     {
         isWalking = true;

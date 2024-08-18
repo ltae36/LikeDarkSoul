@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class PlayerEvasion : MonoBehaviour
@@ -57,6 +58,8 @@ public class PlayerEvasion : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            anim.applyRootMotion = true;
+
             anim.SetTrigger("Roll 1");
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("RollBackward"))
             {

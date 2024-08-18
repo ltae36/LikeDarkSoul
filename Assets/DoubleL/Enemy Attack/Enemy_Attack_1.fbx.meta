@@ -57,6 +57,13 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
+      - time: 0.037926003
+        functionName: AttackStart
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.6589874
         functionName: AttackEnd
         data: 
@@ -64,8 +71,8 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.037926003
-        functionName: AttackStart
+      - time: 0.39844108
+        functionName: CamShake
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

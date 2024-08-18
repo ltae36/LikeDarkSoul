@@ -9,6 +9,7 @@ public class AnimationEventScript : MonoBehaviour
     BossAnimationManager animationManager;
     public BoxCollider swordCollider;
     public BoxCollider feetCollider;
+    public ShakeObject shakeCam;
 
     private void Start()
     {
@@ -45,5 +46,10 @@ public class AnimationEventScript : MonoBehaviour
     public void FeetAttackEnd()
     {
         feetCollider.enabled = false;
+    }
+
+    public void CamShake()
+    {
+        shakeCam.ShakePos();
     }
 }

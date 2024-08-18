@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraControll : MonoBehaviour
@@ -12,24 +13,72 @@ public class CameraControll : MonoBehaviour
     public float moveSpeed = 0.5f;
     public float rotationSpeed = 0.5f;
 
-    public float playerDistance = 10f;
-
+    public StatManager statManager;
+    GameObject followTarget;
 
     float mouseY = 90;
     public float mouseX = 30;
 
-    private void Start()
+    public enum CameraState
     {
-        // 시작 카메라 위치는 캐릭터의 뒤쪽으로 고정
-        //transform.rotation = Quaternion.Euler(0, 90, 0);
+        MouseInput,
+        LockOn
     }
 
-    void Update()
-    {
-        //Invoke("HandleRotate", 2.5f);
-        HandleMove();
-        HandleRotate();
+    CameraState camState = CameraState.MouseInput;
 
+    void SetMouseXY()
+    {
+        mouseX = transform.eulerAngles.x;
+        mouseY = transform.eulerAngles.y;
+    }
+
+    void LateUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (camState == CameraState.LockOn) {
+                camState = CameraState.MouseInput; 
+                SetMouseXY();
+            }
+            else 
+            {
+                //플레이어 주위에 적이 있을 때
+                Collider[] colliders = Physics.OverlapSphere(transform.position, 20.0f,1<<10);
+                if (colliders.Length > 0)
+                {
+                    Collider nearEnemy = colliders[0];
+                    foreach (Collider collider in colliders)
+                    {
+                        if(Vector3.Distance(nearEnemy.transform.position,transform.position) > Vector3.Distance(collider.transform.position,transform.position))
+                        {
+                            nearEnemy = collider;
+                        }    
+                    }
+                    followTarget = nearEnemy.gameObject;
+                    print(followTarget);
+                    camState = CameraState.LockOn; 
+                }
+
+            }
+        }
+
+        if (statManager.mystate == StatManager.PlayerState.dead)
+        {
+            this.enabled = false;
+        }
+        //Invoke("HandleRotate", 2.5f);
+        switch (camState)
+        {
+            case CameraState.MouseInput:
+                HandleRotate();
+                break;
+            case CameraState.LockOn:
+                LockOn();
+                break;
+
+        }
+        HandleMove();
     }
 
     private void HandleRotate() 
@@ -52,6 +101,10 @@ public class CameraControll : MonoBehaviour
 
     }
 
+    private void LockOn()
+    {
+        transform.forward = followTarget.transform.position - transform.position;
+    }
     void HandleMove()
     {
         //따라가는 거

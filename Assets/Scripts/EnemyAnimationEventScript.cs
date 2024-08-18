@@ -7,11 +7,11 @@ public class EnemyAnimationEventScript : MonoBehaviour
 
     public BoxCollider swordCollider;
 
-    public void AttackAnimationStart()
+    public void AttackStart()
     {
         swordCollider.enabled = true;
     }
-    public void AttackAnimationEnd()
+    public void AttackEnd()
     {
         swordCollider.enabled = false;
     }
